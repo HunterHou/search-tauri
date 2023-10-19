@@ -7,12 +7,17 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "tauri-app",
+    "productName": "search-app",
     "version": "0.0.0"
   },
   "tauri": {
     "allowlist": {
       "all": true,
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["http://**", "https://**"]
+      },
       "shell": {
         "all": false,
         "open": true

@@ -418,7 +418,19 @@
                 backgroundColor: 'rgba(0,0,0,0.1)',
               }
                 ">
-                <ElIcon :size="66">
+                <ElIcon :size="55">
+                  <VideoPlay />
+                </ElIcon>
+              </ElButton>
+              <ElButton plain title="在线" type="primary" @click="openWindow(item)" :style="{
+                height: '66px',
+                width: '66px',
+                border: 'none',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0,0,0,0.1)',
+              }
+                ">
+                <ElIcon :size="55">
                   <VideoPlay />
                 </ElIcon>
               </ElButton>
@@ -990,9 +1002,9 @@
               @click="queryRelation(view.contextmenuTarget.Actress)">
               {{ view.contextmenuTarget.Actress }}
             </el-link>
-            
-            <el-link v-if="moreTag" type="warning" v-for="   item    in    view.settingInfo.Tags   " key="default" size="large"
-              :underline="false" style="margin-left: 0.5rem" @click="queryRelation(item)">
+
+            <el-link v-if="moreTag" type="warning" v-for="   item    in    view.settingInfo.Tags   " key="default"
+              size="large" :underline="false" style="margin-left: 0.5rem" @click="queryRelation(item)">
               {{ item }}
             </el-link>
           </el-space>
@@ -1114,7 +1126,7 @@ const refreshIndexFlag = ref(false);
 const systemProperty = useSystemProperty();
 const source = ref("");
 const { copy, text } = useClipboard({ source });
-const { width: windowWidth, height: windowHeight } = useWindowSize();
+const { width: windowWidth } = useWindowSize();
 
 const searchStyle = ref({});
 
@@ -1668,6 +1680,10 @@ const playThis = async (id: string) => {
     ElMessage.error(res.Message);
   }
 };
+
+const openWindow = (item) => {
+  window.open(`/player/${item.Id}`)
+}
 
 const TransferToMp4 = async (id: string) => {
   const res = await TansferFile(id);

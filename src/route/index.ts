@@ -1,13 +1,12 @@
 import { App } from "vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import DefaultLayVue from "@/layout/DefaultLay.vue";
-import MobileLayVue from "@/layout/MobileLay.vue";
 
 export const staticRoutes: RouteRecordRaw[] = [
   {
     path: "/",
     component: DefaultLayVue,
-    redirect:'/home',
+    redirect: "/home",
     name: "root",
     meta: {
       title: "首页",
@@ -25,14 +24,22 @@ export const staticRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-
+  {
+    path: "/player/:id",
+    component: () => import("../views/playing/Player.vue"),
+    name: "player",
+    meta: {
+      title: "播放",
+      hidden: false,
+    },
+  },
   {
     path: "/filelist",
     component: DefaultLayVue,
     name: "filelist",
     meta: {
       title: "文件",
-      hidden:false,
+      hidden: false,
     },
     children: [
       {
@@ -51,7 +58,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     name: "actress",
     meta: {
       title: "图鉴",
-      hidden:false,
+      hidden: false,
     },
     children: [
       {
@@ -71,7 +78,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     name: "setting",
     meta: {
       title: "设置",
-      hidden:false,
+      hidden: false,
     },
     children: [
       {
@@ -90,7 +97,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     name: "SystemView",
     meta: {
       title: "系统信息",
-      hidden:false,
+      hidden: false,
     },
     children: [
       {

@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
 import { ElNotification } from "element-plus";
 import qs from "qs";
 import { config } from "./config";
-const server = axios.create({ baseURL: "http://localhost:10081/", timeout: config.request_timeout });
+const server = axios.create({ baseURL: "", timeout: config.request_timeout });
 server.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     if (
