@@ -6,7 +6,7 @@ import {StoreSetup} from './store/pinia'
 import {RouterSetup} from './route'
 import {ElementSetup} from './plugin/element'
 
-import Vue3videoPlay from "vue3-video-play"; // 引入组件
+// import Vue3videoPlay from "vue3-video-play"; // 引入组件
 import "vue3-video-play/dist/style.css"; // 引入css
 
 // import VMdEditor from '@kangc/v-md-editor';
@@ -34,7 +34,7 @@ const AppInit = (app:any) => {
 
 const app = createApp(Main)
 AppInit(app)
-app.use(Vue3videoPlay)
+// app.use(Vue3videoPlay)
 // app.use(VMdEditor);
 // app.use(VMdPreviewHtml);
 app.mount('#app')

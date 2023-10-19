@@ -13,9 +13,6 @@
   "tauri": {
     "allowlist": {
       "all": true,
-      "http": {
-        "scope": ["https://**","http://**"]
-      },
       "shell": {
         "all": false,
         "open": true
@@ -41,8 +38,8 @@
         "fullscreen": false,
         "resizable": true,
         "title": "tauri-app",
-        "width": 800,
-        "height": 600
+        "width": 1200,
+        "height": 800
       }
     ]
   }
