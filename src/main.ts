@@ -1,33 +1,23 @@
-import { createApp } from "vue";
-import "./style.css";
-import Main from "./App.vue";
+// FILE: main.js
 
-import { StoreSetup } from "./store/pinia";
-import { RouterSetup } from "./route";
-import { ElementSetup } from "./plugin/element";
+import { createApp } from 'vue'
+import { Quasar } from 'quasar'
 
-import Vue3videoPlay from "vue3-video-play"; // 引入组件
-import "vue3-video-play/dist/style.css"; // 引入css
+// Import icon libraries
+import '@quasar/extras/material-icons/material-icons.css'
 
-import VueMarkdownEditor from '@kangc/v-md-editor';
-import '@kangc/v-md-editor/lib/style/base-editor.css';
-import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
-import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+// Import Quasar css
+import 'quasar/src/css/index.sass'
 
-import Prism from 'prismjs';
+// Assumes your root component is App.vue
+// and placed in same folder as main.js
+import App from './App.vue'
 
-VueMarkdownEditor.use(vuepressTheme, {
-  Prism,
-});
+const myApp = createApp(App)
 
-const AppInit = (app: any) => {
-  RouterSetup(app);
-  StoreSetup(app);
-  ElementSetup(app);
-};
+myApp.use(Quasar, {
+  plugins: {}, // import Quasar plugins and add here
+})
 
-const app = createApp(Main);
-AppInit(app);
-app.use(Vue3videoPlay)
-app.use(VueMarkdownEditor)
-app.mount("#app");
+// Assumes you have a <div id="app"></div> in your index.html
+myApp.mount('#app')

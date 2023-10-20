@@ -203,6 +203,11 @@
   resolved "https://mirrors.huaweicloud.com/repository/npm/@sxzz/popperjs-es/-/popperjs-es-2.11.7.tgz#a7f69e3665d3da9b115f9e71671dae1b97e13671"
   integrity sha512-Ccy0NlLkzr0Ex2FKvh2X+OyERHXJ88XJ1MXtsI9y9fGexlaXaVTPzBCRBwIxFkORuOb+uBqeu+RqnpgYTEZRUQ==
 
+"@quasar/extras@^1.16.7":
+  version "1.16.7"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@quasar/extras/-/extras-1.16.7.tgz#9416689f2e55f594f1135383c35b9ab03875c522"
+  integrity sha512-nYF3gVE/si1YJ/D4qmAiHGwxoJIDCvTT8NI6ZmbTMPrur4J8xBKhfhfhyLoQ4k2jJZP6Rx0rUcB71FBNC2C8vQ==
+
 "@quasar/vite-plugin@^1.5.0":
   version "1.5.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@quasar/vite-plugin/-/vite-plugin-1.5.0.tgz#ebc4876fd2a11fb3721cfc1bef80d49917d4265c"
