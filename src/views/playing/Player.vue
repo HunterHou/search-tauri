@@ -11,11 +11,11 @@ import { FindFileInfo } from '../../api/file';
 
 const { params } = useRoute()
 const player = ref(null)
-const loadingMovie = async (id) => {
+const loadingMovie = async (id:string) => {
     const res = await FindFileInfo(id)
     const { Name } = res
     player.value.startPlayVideo(res)
     document.title = Name
 }
-loadingMovie(params.id)
+loadingMovie(params.id[0])
 </script>

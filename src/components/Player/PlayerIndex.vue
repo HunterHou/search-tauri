@@ -75,17 +75,16 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { reactive, ref } from 'vue'
 import {
     volumechange,
 } from "../../views/fileList/fileList";
-import { MovieModel } from '../../views/fileList';
+
 import { getFileStream, getJpg, getPng } from '../../utils/ImageUtils';
-import { QueryFileList } from '../../api/file';
+import { QueryFileList } from '@/api/file';
 import { useSystemProperty } from "@/store/System";
-import { ResultList } from '../../utils/ResultResponse';
 
 const vue3VideoPlayRef = ref(null);
 const isPlaying = ref(false);
