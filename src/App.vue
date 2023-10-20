@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { GetSettingInfo } from "./api/setting";
-import { useSystemProperty } from "./store/System";
+import { useSystemProperty } from "./store/System.js";
 import { useTitle } from '@vueuse/core'
 
 const title = ref(useTitle())
