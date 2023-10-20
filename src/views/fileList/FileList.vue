@@ -1432,7 +1432,7 @@ const editMoveout = async () => {
 };
 
 const editItemSubmit = async () => {
-  const { Id, Name, Code, Actress, Tags, MoveOut } = view.formItem;
+  const { Id, Name, Code, Actress, /* Tags, */ MoveOut } = view.formItem;
   let code = Code.trim();
   if (code && code.indexOf("-") < 0) {
     code = "-" + code;
@@ -1557,7 +1557,7 @@ const closeTag = async (clickId: string, title: string) => {
   }
 };
 
-const refreshData = async (params?: any) => {
+const refreshData = async () => {
   let title = queryParam.Keyword;
   replace({ path: thisRoute.path, query: { ...queryParam } });
   systemProperty.syncSearchParam(queryParam);
@@ -1770,7 +1770,7 @@ const thisActress = async (actress: string) => {
   refreshData();
 };
 
-const openThisFolder = async (id: string, a?: number) => {
+const openThisFolder = async (id: string) => {
   const res = await OpenFileFolder(id);
   if (res.Code === 200) {
     ElMessage.success(res.Message);
