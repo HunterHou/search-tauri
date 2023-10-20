@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
-import VueMarkdownEditor from "@kangc/v-md-editor";
+// import VueMarkdownEditor from "@kangc/v-md-editor";
 import "@kangc/v-md-editor/lib/style/base-editor.css";
-import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js";
+// import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js";
 import { GetSettingInfo } from "@/api/setting";
 import { SettingInfo } from "../settting";
 

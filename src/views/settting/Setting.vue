@@ -456,7 +456,7 @@ const handleCheckAllChange = (val) => {
   //   checkAll.value = false
   // }
 };
-const handleCheckedCitiesChange = (value) => {
+const handleCheckedCitiesChange = () => {
   console.log(view.form?.Dirs.length, view.form?.Dirs);
   console.log(view.form?.DirsLib.length, view.form?.DirsLib);
   // if (view.form?.Dirs?.length === view.form?.DirsLib?.length) {

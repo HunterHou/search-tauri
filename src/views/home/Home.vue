@@ -15,7 +15,7 @@ import { TypeSizeMap, TagSizeMap, ScanTime } from "@/api/home";
 import { onKeyStroke } from "@vueuse/core";
 import { useSystemProperty } from "@/store/System";
 
-const { push, go } = useRouter();
+const { push } = useRouter();
 const systemProperty = useSystemProperty();
 document.title = "首页";
 const indexLoading = ref(false);
