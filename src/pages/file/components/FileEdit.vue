@@ -37,7 +37,7 @@ import {
   MovieTypeOptions,
 } from '@/components/utils';
 import { FileRename } from '@/components/api/searchAPI';
-import { FileModel } from 'src/components/model/File';
+import { FileModel } from '@/components/model/File';
 
 // const props = defineProps({
 //     // ...自定义 props
