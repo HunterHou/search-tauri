@@ -12,7 +12,7 @@ export const NewWindow =async ({ title, url, wid }) => {
         focus: true,
         skipTaskbar: true,
         width: 1200,
-        height: 800,
+        height: 850,
         url
     })
     webview.once('tauri://created', function () {
