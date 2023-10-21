@@ -17,7 +17,7 @@ export const NewWindow = ({ title, url, wid }) => {
 
 export const OpenBySystem = async ({ Path }) => {
     console.log('OpenBySystem', Path)
-    const command = new Command('cmd', ['start', Path])
+    const command = new Command('startCMD', [Path])
     const child = await command.spawn();
     console.log('pid:', child.pid);
 }

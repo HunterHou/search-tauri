@@ -21,7 +21,8 @@
       "shell": {
         "all": true,
         "open": true,
-        "execute": true
+        "execute": true,
+        "scope": [{"name":"startCMD","cmd": "cmd","args": true}]
       },
       "clipboard": {
         "all": true, 
