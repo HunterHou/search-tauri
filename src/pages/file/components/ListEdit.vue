@@ -168,9 +168,9 @@ import { useQuasar } from 'quasar';
 import { useDialogPluginComponent } from 'quasar';
 import { reactive, ref, watch } from 'vue';
 
-import { MovieTypeOptions } from '../../../components/utils';
-import { buttonEnum } from '../../../components/model/Setting';
-import { MovieTypeSelects } from '../../../components/utils';
+import { MovieTypeOptions } from '@/components/utils';
+import { buttonEnum } from '@/components/model/Setting';
+import { MovieTypeSelects } from '@/components/utils';
 import {
   ResetMovieType,
   SearchAPI,
@@ -183,8 +183,8 @@ import {
   TansferFile,
   CloseTag,
   AddTag
-} from '../../../components/api/searchAPI';
-import { PostSettingInfo } from 'src/components/api/settingAPI';
+} from '@/components/api/searchAPI';
+import { PostSettingInfo } from '@/components/api/settingAPI';
 
 const $q = useQuasar();
 

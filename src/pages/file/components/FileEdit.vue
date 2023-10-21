@@ -35,8 +35,8 @@ import {
   formatTitle,
   formatCode,
   MovieTypeOptions,
-} from '../../../components/utils';
-import { FileRename } from '../../../components/api/searchAPI';
+} from '@/components/utils';
+import { FileRename } from '@/components/api/searchAPI';
 import { FileModel } from 'src/components/model/File';
 
 // const props = defineProps({

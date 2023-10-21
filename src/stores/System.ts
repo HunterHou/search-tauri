@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { FileModel, FileQuery } from 'components/model/File';
-import { SettingInfo } from 'components/model/Setting';
+import { FileModel, FileQuery } from '@/components/model/File';
+import { SettingInfo } from '@/components/model/Setting';
 
 export const useSystemProperty = defineStore({
   id: 'system',

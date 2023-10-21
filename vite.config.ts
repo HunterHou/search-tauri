@@ -5,6 +5,15 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
+  pluginOptions: {
+    quasar: {
+      importStrategy: 'kebab',
+      rtlSupport: false
+    }
+  },
+  transpileDependencies: [
+    'quasar'
+  ],
   plugins: [
     vue(),
   ],
@@ -33,4 +42,7 @@ export default defineConfig(async () => ({
   // 3. to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.app/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ["VITE_", "TAURI_"],
+  define:{
+    'process.env':{}
+  }
 }));

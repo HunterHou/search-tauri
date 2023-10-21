@@ -59,11 +59,11 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-import Playing from 'src/components/PlayingVideo.vue';
-import { useSystemProperty } from '../stores/System';
+import Playing from '@/components/PlayingVideo.vue';
+import { useSystemProperty } from '@/stores/System';
 import { useQuasar } from 'quasar';
-import EssentialLink from 'components/EssentialLink.vue';
-import ShutdownComponent from 'components/ShutdownComponent.vue';
+import EssentialLink from '@/components/EssentialLink.vue';
+import ShutdownComponent from '@/components/ShutdownComponent.vue';
 
 import { useRoute } from 'vue-router';
 const systemProperty = useSystemProperty();

@@ -97,16 +97,16 @@ import { useQuasar } from 'quasar'
 import { useDialogPluginComponent } from 'quasar';
 import { onMounted, reactive, ref } from 'vue';
 
-import { formatTitle } from '../../../components/utils';
-import { GetSettingInfo } from '../../../components/api/settingAPI';
+import { formatTitle } from '@/components/utils';
+import { GetSettingInfo } from '@/components/api/settingAPI';
 import {
   QueryDirImageBase64, OpenFileFolder,
   DownImageList, FileRename, DeleteFile,
   PlayMovie
-} from '../../../components/api/searchAPI';
-import { getJpg, getTempImage } from 'src/components/utils/images';
-import { useSystemProperty } from '../../../stores/System';
-import Playing from 'src/components/PlayingVideo.vue';
+} from '@/components/api/searchAPI';
+import { getJpg, getTempImage } from '@/components/utils/images';
+import { useSystemProperty } from '@/stores/System';
+import Playing from '@/components/PlayingVideo.vue';
 
 const $q = useQuasar()
 const systemProperty = useSystemProperty();
