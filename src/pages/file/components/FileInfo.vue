@@ -87,7 +87,7 @@
           </q-field>
         </div>
         <div v-if="showDetail == 'image'">
-          <q-img fit="fit" v-for="item in view.prewiewImages" :key="item.Id" :src="getTempImage(item.Id)"
+          <q-img fit="fit" v-for="item in view.prewiewImages" :key="item.Id" :src="convertFileSrc(item.Path)"
             style="width: 100%;height: auto;"></q-img>
         </div>
       </div>
@@ -106,7 +106,6 @@ import {
   DownImageList, FileRename, DeleteFile,
   PlayMovie
 } from '@/components/api/searchAPI';
-import { getTempImage } from '@/components/utils/images';
 import { useSystemProperty } from '@/stores/System';
 import Playing from '@/components/PlayingVideo.vue';
 import { convertFileSrc } from '@tauri-apps/api/tauri';

@@ -25,7 +25,7 @@
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fill" :src="getActressImage(item.Name)" class="item-img" @click="searchFiles(item.Name)">
+        <q-img fit="fill" :src="convertFileSrc(item.Path)" class="item-img" @click="searchFiles(item.Name)">
           <div style="
               padding: 0;
               margin: 0;
@@ -61,7 +61,7 @@
 
 <script setup>
 import { onMounted, reactive } from 'vue';
-import { getActressImage } from '../../components/utils/images';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { QueryActressList } from '../../components/api/actressAPI';
 import { useSystemProperty } from '../../stores/System';
 import { useRouter } from 'vue-router';
