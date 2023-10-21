@@ -62,7 +62,7 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             if file.is_empty() {
                 continue;
             }
-            println!("{:?}", file);
+            // println!("{:?}", file);
             filelist.push(file);
         }
     }
