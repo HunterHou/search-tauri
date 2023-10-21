@@ -1,7 +1,12 @@
-import { WebviewWindow } from '@tauri-apps/api/window'
+import { WebviewWindow ,getAll} from '@tauri-apps/api/window'
 import { Command, open } from '@tauri-apps/api/shell';
 
-export const NewWindow = ({ title, url, wid }) => {
+export const NewWindow =async ({ title, url, wid }) => {
+    const wins = getAll()
+    const indexWindow=wins.findIndex(item=>item.label ==wid)
+    if(indexWindow>=0){
+      await  wins[indexWindow].close()
+    }
     const webview = new WebviewWindow(wid, {
         title: title,
         focus: true,

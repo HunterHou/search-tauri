@@ -277,7 +277,6 @@ const showButton = (name) => {
   return listButtons.value.indexOf(name) >= 0;
 };
 
-import { WebviewWindow } from '@tauri-apps/api/window'
 
 const openPlay = (item) => {
   const url = `#/playing/${item.Id}`
@@ -287,8 +286,9 @@ const openPlay = (item) => {
   // } else {
   //   window.open(url)
   // }
-  const wid =  `player${item.Id}`
+  const wid =  `player`
   NewWindow({ wid, title: item.Name, url })
+
 
 }
 
