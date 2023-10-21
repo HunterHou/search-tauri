@@ -77,7 +77,7 @@
       >
         <q-img
           fit="cover"
-          easier
+          loading="lazy" 
           draggable
           :src="getPng(item.Id)"
           class="item-img"

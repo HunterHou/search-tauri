@@ -85,8 +85,7 @@
 
     <div class="row justify-center q-gutter-sm q-mr-sm q-mt-sm mainlist">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <!-- <q-img fit="fit" easier draggable :src="getPng(item.Id)" class="item-img" @click="() => { -->
-        <q-img fit="fit" easier draggable :src="convertFileSrc(item.Png)" class="item-img" @click="() => {
+        <q-img fit="fit" loading="lazy" draggable :src="convertFileSrc(item.Png)" class="item-img" @click="() => {
           fileInfoRef.open({ item, cb: refreshIndex });
         }">
           <template v-slot:loading>
@@ -286,7 +285,7 @@ const openPlay = (item) => {
   // } else {
   //   window.open(url)
   // }
-  const wid =  `player`
+  const wid = `player`
   NewWindow({ wid, title: item.Name, url })
 
 
@@ -412,7 +411,7 @@ const fetchSearch = async () => {
   console.log(data);
   view.resultData = { ...data };
   const { ResultSize, ResultCnt } = data
-  const title= `搜索 ${Keyword || ''} : ${ResultSize} {${ResultCnt}}`
+  const title = `搜索 ${Keyword || ''} : ${ResultSize} {${ResultCnt}}`
   document.title = title
   appWindow?.setTitle(title)
 };

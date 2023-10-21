@@ -25,7 +25,7 @@
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fill" :src="convertFileSrc(item.Path)" class="item-img" @click="searchFiles(item.Name)">
+        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Url)" class="item-img" @click="searchFiles(item.Name)">
           <div style="
               padding: 0;
               margin: 0;
@@ -51,25 +51,27 @@
             </q-chip>
           </div>
           <div class="absolute-bottom text-body1 text-center" style="padding: 4px" @click.stop="() => { }">
-            <q-btn flat style="color: #59d89d" :label="item.Name?.substring(0, 10)" />
+            <q-btn flat style="color: #59d89d" :label="item.Name?.substring(0, 10)" @click="viewImages(item)" />
           </div>
         </q-img>
       </q-card>
     </div>
+    <ViewActress ref="viewAct" />
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { QueryActressList } from '../../components/api/actressAPI';
 import { useSystemProperty } from '../../stores/System';
 import { useRouter } from 'vue-router';
+import ViewActress from './compenonts/ViewActress.vue';
 
 const { push } = useRouter();
 
 const systemProperty = useSystemProperty();
-
+const viewAct = ref(null)
 const view = reactive({
   currentData: {},
   queryParam: {
@@ -90,6 +92,10 @@ const searchFiles = (name) => {
   console.log(name);
   push({ path: '/search', query: { Keyword: name, from: 'index' } });
 };
+
+const viewImages = (item) => {
+  viewAct.value?.open(item)
+}
 
 const currentPageChange = (e) => {
   console.log('view.queryParam.Page', e);

@@ -46,7 +46,7 @@
           <Playing ref="vue3VideoPlayRef" mode="drawer" />
         </div>
         <div v-if="showDetail == 'detail'">
-          <q-img fit="fit" easier draggable :src="convertFileSrc(view?.item?.Jpg)"
+          <q-img fit="fit" loading="lazy" draggable :src="convertFileSrc(view?.item?.Jpg)"
             style="min-width:600px ;max-height: 50vh">
           </q-img>
           <q-field label="Code" stack-label>
@@ -87,8 +87,8 @@
           </q-field>
         </div>
         <div v-if="showDetail == 'image'">
-          <q-img fit="fit" v-for="item in view.prewiewImages" :key="item.Id" :src="convertFileSrc(item.Path)"
-            style="width: 100%;height: auto;"></q-img>
+          <q-img fit="fit" loading="lazy" v-for="item in view.prewiewImages" :key="item.Id"
+            :src="convertFileSrc(item.Path)" style="width: 100%;height: auto;"></q-img>
         </div>
       </div>
     </q-card>

@@ -63,7 +63,7 @@
   <div style="overflow: auto; background-color: rgba(0, 0, 0, 0.4)">
     <div class="row justify-center">
       <q-card class="q-ma-sm example-item" v-for="item in [...view.playList]" :key="item.Id">
-        <q-img fit="cover" easier draggable :src="getPng(item.Id)" class="item-img" @click="open(item)">
+        <q-img fit="cover"  loading="lazy" draggable :src="getPng(item.Id)" class="item-img" @click="open(item)">
           <div style="
               padding: 0;
               margin: 0;
