@@ -5,9 +5,9 @@ import App from './App.vue'
 import { createApp } from 'vue'
 import { Quasar } from 'quasar'
 import quasarUserOptions from './quasar-user-options'
-import router from './router'
+import route from './router'
 
 const myApp = createApp(App)
 myApp.use(Quasar, quasarUserOptions)
-myApp.use(router)
+myApp.use(route)
 myApp.mount('#app')

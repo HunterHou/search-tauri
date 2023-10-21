@@ -43,6 +43,8 @@ export default defineConfig(async () => ({
   // https://tauri.app/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ["VITE_", "TAURI_"],
   define:{
-    'process.env':{}
+    'process.env':{
+      VUE_ROUTER_MODE:'hash',
+    }
   }
 }));
