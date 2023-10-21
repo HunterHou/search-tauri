@@ -305,9 +305,9 @@ const commonExec = async (exec) => {
   const { Code, Message } = await exec;
   console.log(Code, Message);
   if (Code != 200) {
-    $q.notify({ message: `${Message}` });
+    $q.notify({ type: 'positive', message: `${Message}`, multiLine: true, position: 'bottom-right', multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ message: `${Message}` });
+    $q.notify({ type: 'negative', message: `${Message}`, multiLine: true, position: 'bottom-right', multiLine: true, position: 'bottom-right' });
   }
 };
 
@@ -365,9 +365,9 @@ const moveThis = async (item) => {
         view.resultData.Data.splice(i, 1);
       }
     }
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'positive', message: res.Message, multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   }
 };
 

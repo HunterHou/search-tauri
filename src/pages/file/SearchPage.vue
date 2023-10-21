@@ -285,11 +285,11 @@ const openPlay = (item) => {
   //   window.open(url)
   // }
   const webview = new WebviewWindow("player", {
-    title:item.Name,
-    focus:true,
-    skipTaskbar:true,
-    width:1200,
-    height:800,
+    title: item.Name,
+    focus: true,
+    skipTaskbar: true,
+    width: 1200,
+    height: 800,
     url
   })
   webview.once('tauri://created', function () {
@@ -367,7 +367,7 @@ const commonExec = async (exec, refresh) => {
   const { Code, Message } = (await exec) || {};
   console.log(Code, Message);
   if (Code != 200) {
-    $q.notify({ message: `${Message}` });
+    $q.notify({type:'positive', message: `${Message}`, multiLine: true, position: 'bottom-right' });
   } else {
     if (refresh) {
       refreshIndex();
@@ -384,7 +384,7 @@ onKeyStroke(['Enter'], () => {
 
 const copyText = async (str) => {
   await copy(str);
-  $q.notify({ message: `${str}` });
+  $q.notify({ type:'positive', message: `${str}` , multiLine: true, position: 'bottom-right' });
 };
 
 const openRightDrawer = (item) => {
@@ -422,9 +422,9 @@ const moveThis = async (item) => {
   const res = await FileRename({ ...item, NoRefresh: true, MoveOut: true });
   console.log(res);
   if (res.Code == 200) {
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'negative', message: res.Message , multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   }
 };
 
@@ -434,7 +434,7 @@ const refreshIndex = async () => {
   const { Code, Message } = await RefreshAPI('/api/refreshIndex');
   console.log(Code, Message);
   if (Code == '200') {
-    $q.notify({ type: 'negative', message: Message });
+    $q.notify({ type: 'negative', message: Message, multiLine: true, position: 'bottom-right' });
     await fetchSearch();
   }
   refreshIndexLoading.value = false;
@@ -443,9 +443,9 @@ const refreshIndex = async () => {
 const setMovieType = async (Id, Type) => {
   const { Code, Message } = await ResetMovieType(Id, Type);
   if (Code === '200') {
-    $q.notify({ type: 'negative', message: Message });
+    $q.notify({ type: 'negative', message: Message , multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ type: 'warning', message: Message });
+    $q.notify({ type: 'warning', message: Message , multiLine: true, position: 'bottom-right' });
   }
 };
 

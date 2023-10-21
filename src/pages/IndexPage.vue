@@ -155,19 +155,19 @@ const openThis = async (data) => {
   const { Name } = data;
   const res = await OpenFolerByPath({ dirpath: Name });
   if (res.Code == 200) {
-    $q.notify({ type: 'positive', message: '执行成功' });
+    $q.notify({ type: 'positive', message: '执行成功' , multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ type: 'warning', message: '执行失败' });
+    $q.notify({ type: 'warning', message: '执行失败' , multiLine: true, position: 'bottom-right' });
   }
 };
 const deleteThis = async (data) => {
   const { Name } = data;
   const res = await DeleteFolerByPath({ dirpath: Name });
   if (res.Code == 200) {
-    $q.notify({ type: 'positive', message: '执行成功' });
+    $q.notify({ type: 'positive', message: '执行成功' , multiLine: true, position: 'bottom-right' });
     refreshIndex();
   } else {
-    $q.notify({ type: 'warning', message: '执行失败' });
+    $q.notify({ type: 'warning', message: '执行失败' , multiLine: true, position: 'bottom-right' });
   }
 };
 const refreshIndex = async () => {

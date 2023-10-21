@@ -116,7 +116,7 @@ const editItemSubmit = async (MoveOut) => {
       view.callback();
     }
   } else {
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'negative', message: res.Message , multiLine: true, position: 'bottom-right' });
   }
 };
 

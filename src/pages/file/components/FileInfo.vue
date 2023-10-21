@@ -39,7 +39,8 @@
 
       <div style="margin-top: 0;height: 96%;overflow: auto;">
         <div v-if="showDetail == 'web'" style="overflow: auto;">
-          <iframe :frameborder="0"  :allowfullscreen="true" width="100%" height="900px" :src="`${view.settingInfo.BaseUrl}${view.item.Code}`"></iframe>
+          <iframe :frameborder="0" :allowfullscreen="true" width="100%" height="900px"
+            :src="`${view.settingInfo.BaseUrl}${view.item.Code}`"></iframe>
         </div>
         <div v-if="showDetail == 'movie'">
           <Playing ref="vue3VideoPlayRef" mode="drawer" />
@@ -118,17 +119,30 @@ const showDetail = ref('detail')
 const commonExec = async (exec) => {
   const { Code, Message } = (await exec) || {};
   if (Code != 200) {
-    $q.notify({ message: `${Message}` });
+    $q.notify({ type: 'negative', message: `${Message}`, multiLine: true, position: 'bottom-right' });
   }
 }
 
+import { WebviewWindow } from '@tauri-apps/api/window'
+
 const openPlay = (item) => {
   const url = `#/playing/${item.Id}`
-  if ($q.platform.is.electron) {
-    window.electron.createWindow({ router: url })
-  } else {
-    window.open(url)
-  }
+  // if ($q.platform.is.electron) {
+  //   window.electron.createWindow({ router: url })
+  // } else {
+  //   window.open(url)
+  // }
+  const webview = new WebviewWindow("player", {
+    title: item.Name,
+    focus: true,
+    skipTaskbar: true,
+    width: 1200,
+    height: 800,
+    url
+  })
+  webview.once('tauri://created', function () {
+    console.log("tauri://created")
+  })
 
 }
 
@@ -142,9 +156,9 @@ const showMovie = () => {
 const moveThis = async (item) => {
   const res = await FileRename({ ...item, NoRefresh: true, MoveOut: true });
   if (res.Code == 200) {
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ type: 'negative', message: res.Message });
+    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   }
 };
 
