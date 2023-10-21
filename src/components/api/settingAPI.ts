@@ -1,5 +1,5 @@
 import { axios } from '../../boot/axios';
-import { SettingInfo } from '../model/Setting';
+import { SettingInfo } from '../model/SettingModel';
 
 export const GetSettingInfo = async () => {
   const res = await axios.get('/api/buttoms');
