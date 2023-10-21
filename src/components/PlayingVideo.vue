@@ -189,7 +189,7 @@ const fetchGetSettingInfo = async () => {
 };
 
 const stop = () => {
-  optionsPC.src = null;
+  optionsPC.src = '';
 };
 const hideThis = () => {
   systemProperty.drawerRight = false;

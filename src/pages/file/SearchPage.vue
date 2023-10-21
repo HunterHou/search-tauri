@@ -274,13 +274,27 @@ const showButton = (name) => {
   return listButtons.value.indexOf(name) >= 0;
 };
 
+import { WebviewWindow } from '@tauri-apps/api/window'
+
 const openPlay = (item) => {
   const url = `#/playing/${item.Id}`
-  if ($q.platform.is.electron) {
-    window.electron.createWindow({ router: url })
-  } else {
-    window.open(url)
-  }
+  // if ($q.platform.is.electron) {
+  //   // window.electron.createWindow({ router: url })
+
+  // } else {
+  //   window.open(url)
+  // }
+  const webview = new WebviewWindow("player", {
+    title:item.Name,
+    focus:true,
+    skipTaskbar:true,
+    width:1200,
+    height:800,
+    url
+  })
+  webview.once('tauri://created', function () {
+    console.log("tauri://created")
+  })
 
 }
 
