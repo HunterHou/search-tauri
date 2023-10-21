@@ -1,5 +1,5 @@
 import { WebviewWindow } from '@tauri-apps/api/window'
-import { Command } from '@tauri-apps/api/shell';
+import { Command, open } from '@tauri-apps/api/shell';
 
 export const NewWindow = ({ title, url, wid }) => {
     const webview = new WebviewWindow(wid, {
@@ -15,9 +15,24 @@ export const NewWindow = ({ title, url, wid }) => {
     })
 }
 
-export const OpenBySystem = async ({ Path }) => {
+export const CmdBySystem = async ({ Path }) => {
     console.log('OpenBySystem', Path)
     const command = new Command('startCMD', [Path])
-    const child = await command.spawn();
-    console.log('pid:', child.pid);
+    command.on('close', data => {
+        console.log(`command finished with code ${data.code} and signal ${data.signal}`)
+    });
+    command.on('error', error => console.error(`command error: "${error}"`));
+    command.stdout.on('data', line => console.log(`command stdout: "${line}"`));
+    command.stderr.on('data', line => console.log(`command stderr: "${line}"`));
+    command.spawn()
+    
+
+}
+
+export const OpenBySystem = async ({ Path }) => {
+    open("file://" + Path).then(res => {
+        console.log('res', res)
+    }).catch(err => {
+        console.log('err', err)
+    })
 }

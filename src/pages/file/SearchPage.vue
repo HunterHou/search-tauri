@@ -224,7 +224,7 @@ import {
 import { GetSettingInfo } from '@/components/api/settingAPI';
 import { formatCode, formatTitle, MovieTypeOptions, MovieTypeSelects } from '../../components/utils';
 import { getPng } from '@/components/utils/images';
-import { NewWindow, OpenBySystem } from '@/components/utils/system';
+import { NewWindow } from '@/components/utils/system';
 import { useSystemProperty } from '@/stores/System';
 import FileEdit from './components/FileEdit.vue';
 import FileInfo from './components/FileInfo.vue';
@@ -252,13 +252,11 @@ const listButtons = computed(() => {
 
 const playBySystem = (item) => {
   const { Path } = item
-  // if ($q.platform.is.electron) {
-
-  //   window.electron.openBySystem({ Path })
-  // } else {
-  //   commonExec(PlayMovie(item.Id))
-  // }
-  OpenBySystem({ Path })
+  if ($q.platform.is.electron) {
+    window.electron.openBySystem({ Path })
+  } else {
+    commonExec(PlayMovie(item.Id))
+  }
 
 }
 
@@ -283,6 +281,7 @@ const openPlay = (item) => {
   const url = `#/playing/${item.Id}`
   // if ($q.platform.is.electron) {
   //   // window.electron.createWindow({ router: url })
+
   // } else {
   //   window.open(url)
   // }
@@ -323,12 +322,11 @@ const focusEvent = (e) => {
 
 const openFolder = (item) => {
   const { Path } = item
-  // if ($q.platform.is.electron) {
-  //   window.electron.showInFolder(item.Path)
-  // } else {
-  //   commonExec(OpenFileFolder(item.Id))
-  // }
-  OpenBySystem({ Path })
+  if ($q.platform.is.electron) {
+    window.electron.showInFolder(item.Path)
+  } else {
+    commonExec(OpenFileFolder(item.Id))
+  }
 
 }
 
