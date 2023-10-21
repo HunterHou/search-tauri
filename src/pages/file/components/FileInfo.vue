@@ -46,7 +46,8 @@
           <Playing ref="vue3VideoPlayRef" mode="drawer" />
         </div>
         <div v-if="showDetail == 'detail'">
-          <q-img fit="fit" easier draggable :src="getJpg(view.item.Id)" style="min-width:600px ;max-height: 50vh">
+          <q-img fit="fit" easier draggable :src="convertFileSrc(view?.item?.Jpg)"
+            style="min-width:600px ;max-height: 50vh">
           </q-img>
           <q-field label="Code" stack-label>
             <template v-slot:control>
@@ -105,9 +106,10 @@ import {
   DownImageList, FileRename, DeleteFile,
   PlayMovie
 } from '@/components/api/searchAPI';
-import { getJpg, getTempImage } from '@/components/utils/images';
+import { getTempImage } from '@/components/utils/images';
 import { useSystemProperty } from '@/stores/System';
 import Playing from '@/components/PlayingVideo.vue';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 const $q = useQuasar()
 const systemProperty = useSystemProperty();

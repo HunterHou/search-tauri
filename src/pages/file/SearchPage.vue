@@ -287,7 +287,8 @@ const openPlay = (item) => {
   // } else {
   //   window.open(url)
   // }
-  NewWindow({ wid: 'player', title: item.Name, url })
+  const wid =  `player${item.Id}`
+  NewWindow({ wid, title: item.Name, url })
 
 }
 
