@@ -1,16 +1,16 @@
-import { api } from '../../boot/axios';
+import { axios } from '../../boot/axios';
 
 export const TypeSizeMap = async () => {
-  const res = await api.get('/api/typeSizeMap');
+  const res = await axios.get('/api/typeSizeMap');
   return res && res.data;
 };
 
 export const TagSizeMap = async () => {
-  const res = await api.get('/api/tagSizeMap');
+  const res = await axios.get('/api/tagSizeMap');
   return res && res.data;
 };
 
 export const ScanTime = async () => {
-  const res = await api.get('/api/scanTime');
+  const res = await axios.get('/api/scanTime');
   return res && res.data;
 };
