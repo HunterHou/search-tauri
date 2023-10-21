@@ -208,7 +208,7 @@ import {
 } from '../../components/api/settingAPI';
 import MutiSelector from '../../components/MutiSelector.vue';
 import MutiInput from '../../components/MutiInput.vue';
-import { buttonEnum } from '../../components/model/Setting';
+import { buttonEnum } from '../../components/model/SettingModel';
 
 const $q = useQuasar();
 const tab = ref('search');
@@ -249,4 +249,3 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped></style>
-../../components/model/SettingModel

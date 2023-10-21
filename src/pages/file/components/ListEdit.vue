@@ -169,7 +169,7 @@ import { useDialogPluginComponent } from 'quasar';
 import { reactive, ref, watch } from 'vue';
 
 import { MovieTypeOptions } from '@/components/utils';
-import { buttonEnum } from '@/components/model/Setting';
+import { buttonEnum } from '@/components/model/SettingModel';
 import { MovieTypeSelects } from '@/components/utils';
 import {
   ResetMovieType,
