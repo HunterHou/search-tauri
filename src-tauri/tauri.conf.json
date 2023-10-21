@@ -37,6 +37,10 @@
         "open": true,
         "save": true
       },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
+      },
       "fs": {
         "all": true, 
         "readFile": true,
@@ -47,7 +51,8 @@
         "removeDir": true,
         "removeFile": true,
         "renameFile": true,
-        "exists": true
+        "exists": true,
+        "scope": ["*","d://","e://","f://","g://","/"]
       },
       "os": {
         "all": true 
@@ -79,7 +84,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "tauri-app",
+        "title": "search-app",
         "width": 1200,
         "height": 800
       }

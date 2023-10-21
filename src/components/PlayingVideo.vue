@@ -120,6 +120,7 @@ import { getPng } from './utils/images';
 import { SearchAPI, DeleteFile, RefreshAPI } from './api/searchAPI';
 import { GetSettingInfo } from './api/settingAPI';
 import { useRouter } from 'vue-router';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 const systemProperty = useSystemProperty();
 const vue3VideoPlayRef = ref(null);
@@ -165,7 +166,8 @@ watch(drawerRight, (v) => {
 
 const open = (v) => {
   view.playing = v
-  optionsPC.src = getFileStream(v.Id);
+  // optionsPC.src = getFileStream(v.Id);
+  optionsPC.src = convertFileSrc(v.Path);
   optionsPC.webFullScreen = true;
   const top = document.querySelector('.topRef')
   if (top) {
@@ -248,7 +250,7 @@ const optionsPC = reactive({
   height: 'auto', //播放器高度
   color: '#409eff', //主题色
   title: view.playing?.Title, //视频名称
-  src: getFileStream(view.playing.Id), //视频源
+  src:  convertFileSrc(view.playing.Path), //视频源
   muted: false, //静音
   preload: 'false',
   webFullScreen: false,

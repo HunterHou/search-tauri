@@ -106,9 +106,11 @@ const fetchSearch = async () => {
   console.log(data);
   view.resultData = data;
 };
+import { appWindow } from '@tauri-apps/api/window';
 
 onMounted(() => {
   document.title = '图鉴'
+  appWindow?.setTitle('图鉴')
   fetchSearch();
 });
 </script>

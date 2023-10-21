@@ -96,10 +96,12 @@ import {
 import { TypeSizeMap, TagSizeMap, ScanTime } from '../components/api/homeAPI';
 import { onKeyStroke } from '@vueuse/core';
 import { useSystemProperty } from '../stores/System';
+import { appWindow } from '@tauri-apps/api/window';
 
 const { push } = useRouter();
 const systemProperty = useSystemProperty();
 document.title = '分析';
+appWindow?.setTitle('分析')
 
 const $q = useQuasar();
 const indexLoading = ref(false);

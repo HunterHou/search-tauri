@@ -400,6 +400,8 @@ const nextPage = (n) => {
   currentPageChange()
 }
 
+import { appWindow } from '@tauri-apps/api/window';
+
 const fetchSearch = async () => {
   saveParam()
   const { Keyword } = view.queryParam
@@ -407,7 +409,9 @@ const fetchSearch = async () => {
   console.log(data);
   view.resultData = { ...data };
   const { ResultSize, ResultCnt } = data
-  document.title = `搜索 ${Keyword || ''} : ${ResultSize} {${ResultCnt}}`
+  const title= `搜索 ${Keyword || ''} : ${ResultSize} {${ResultCnt}}`
+  document.title = title
+  appWindow?.setTitle(title)
 };
 
 const moveThis = async (item) => {

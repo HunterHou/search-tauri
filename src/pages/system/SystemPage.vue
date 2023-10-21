@@ -19,9 +19,10 @@ const fetchSearch = async () => {
   console.log(data);
   view.settingInfo = data;
 };
-
+import { appWindow } from '@tauri-apps/api/window';
 onMounted(() => {
   document.title = '系统信息'
+  appWindow?.setTitle('系统信息')
   fetchSearch();
 });
 </script>

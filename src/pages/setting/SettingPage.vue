@@ -240,9 +240,10 @@ const queryIpAddr = async () => {
     view.ipAddr = `http://${Data}:10081`;
   }
 };
-
+import { appWindow } from '@tauri-apps/api/window';
 onMounted(() => {
   document.title = '设置'
+  appWindow?.setTitle('设置')
   fetchSearch();
   queryIpAddr();
 });
