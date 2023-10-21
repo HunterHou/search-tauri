@@ -220,11 +220,12 @@ import {
   RefreshAPI,
   ResetMovieType,
   SearchAPI
-} from '../../components/api/searchAPI';
-import { GetSettingInfo } from '../../components/api/settingAPI';
+} from '@/components/api/searchAPI';
+import { GetSettingInfo } from '@/components/api/settingAPI';
 import { formatCode, formatTitle, MovieTypeOptions, MovieTypeSelects } from '../../components/utils';
-import { getPng } from '../../components/utils/images';
-import { useSystemProperty } from '../../stores/System';
+import { getPng } from '@/components/utils/images';
+import { NewWindow, OpenBySystem } from '@/components/utils/system';
+import { useSystemProperty } from '@/stores/System';
 import FileEdit from './components/FileEdit.vue';
 import FileInfo from './components/FileInfo.vue';
 import ListEdit from './components/ListEdit.vue';
@@ -250,12 +251,14 @@ const listButtons = computed(() => {
 });
 
 const playBySystem = (item) => {
-  if ($q.platform.is.electron) {
-    const { Path } = item
-    window.electron.openBySystem({ Path })
-  } else {
-    commonExec(PlayMovie(item.Id))
-  }
+  const { Path } = item
+  // if ($q.platform.is.electron) {
+
+  //   window.electron.openBySystem({ Path })
+  // } else {
+  //   commonExec(PlayMovie(item.Id))
+  // }
+  OpenBySystem({ Path })
 
 }
 
@@ -280,21 +283,10 @@ const openPlay = (item) => {
   const url = `#/playing/${item.Id}`
   // if ($q.platform.is.electron) {
   //   // window.electron.createWindow({ router: url })
-
   // } else {
   //   window.open(url)
   // }
-  const webview = new WebviewWindow("player", {
-    title: item.Name,
-    focus: true,
-    skipTaskbar: true,
-    width: 1200,
-    height: 800,
-    url
-  })
-  webview.once('tauri://created', function () {
-    console.log("tauri://created")
-  })
+  NewWindow({ wid: 'player', title: item.Name, url })
 
 }
 
@@ -316,12 +308,12 @@ const view = reactive({
 
 const searchCode = (item) => {
   const url = `${view.settingInfo.BaseUrl}${item.Code}`
-  console.log(url)
-  if ($q.platform.is.electron) {
-    window.electron.createWindow({ router: url, width: 1280, height: 1000, titleBarStyle: '', })
-  } else {
-    window.open(url)
-  }
+  // if ($q.platform.is.electron) {
+  //   window.electron.createWindow({ router: url, width: 1280, height: 1000, titleBarStyle: '', })
+  // } else {
+  //   window.open(url)
+  // }
+  NewWindow({ wid: 'searchCode', title: item.Name, url })
 };
 
 const focusEvent = (e) => {
@@ -330,11 +322,13 @@ const focusEvent = (e) => {
 };
 
 const openFolder = (item) => {
-  if ($q.platform.is.electron) {
-    window.electron.showInFolder(item.Path)
-  } else {
-    commonExec(OpenFileFolder(item.Id))
-  }
+  const { Path } = item
+  // if ($q.platform.is.electron) {
+  //   window.electron.showInFolder(item.Path)
+  // } else {
+  //   commonExec(OpenFileFolder(item.Id))
+  // }
+  OpenBySystem({ Path })
 
 }
 
@@ -367,7 +361,7 @@ const commonExec = async (exec, refresh) => {
   const { Code, Message } = (await exec) || {};
   console.log(Code, Message);
   if (Code != 200) {
-    $q.notify({type:'positive', message: `${Message}`, multiLine: true, position: 'bottom-right' });
+    $q.notify({ type: 'positive', message: `${Message}`, multiLine: true, position: 'bottom-right' });
   } else {
     if (refresh) {
       refreshIndex();
@@ -384,7 +378,7 @@ onKeyStroke(['Enter'], () => {
 
 const copyText = async (str) => {
   await copy(str);
-  $q.notify({ type:'positive', message: `${str}` , multiLine: true, position: 'bottom-right' });
+  $q.notify({ type: 'positive', message: `${str}`, multiLine: true, position: 'bottom-right' });
 };
 
 const openRightDrawer = (item) => {
@@ -422,7 +416,7 @@ const moveThis = async (item) => {
   const res = await FileRename({ ...item, NoRefresh: true, MoveOut: true });
   console.log(res);
   if (res.Code == 200) {
-    $q.notify({ type: 'negative', message: res.Message , multiLine: true, position: 'bottom-right' });
+    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   } else {
     $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   }
@@ -443,9 +437,9 @@ const refreshIndex = async () => {
 const setMovieType = async (Id, Type) => {
   const { Code, Message } = await ResetMovieType(Id, Type);
   if (Code === '200') {
-    $q.notify({ type: 'negative', message: Message , multiLine: true, position: 'bottom-right' });
+    $q.notify({ type: 'negative', message: Message, multiLine: true, position: 'bottom-right' });
   } else {
-    $q.notify({ type: 'warning', message: Message , multiLine: true, position: 'bottom-right' });
+    $q.notify({ type: 'warning', message: Message, multiLine: true, position: 'bottom-right' });
   }
 };
 

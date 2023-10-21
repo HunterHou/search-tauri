@@ -19,8 +19,9 @@
         "scope": ["http://**", "https://**"]
       },
       "shell": {
-        "all": false,
-        "open": true
+        "all": true,
+        "open": true,
+        "execute": true
       },
       "clipboard": {
         "all": true, 
