@@ -31,13 +31,13 @@ export default defineConfig(async () => ({
   server: {
     port: 1420,
     // strictPort: true,
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:10081/",
-        changeOrigin: true,
-      },
-    },
-    host: "0.0.0.0",
+    // proxy: {
+    //   "/api": {
+    //     target: "http://127.0.0.1:10081/",
+    //     changeOrigin: true,
+    //   },
+    // },
+    // host: "0.0.0.0",
     hmr: true,
   },
   // 3. to make use of `TAURI_DEBUG` and other env variables
