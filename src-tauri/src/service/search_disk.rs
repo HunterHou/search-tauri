@@ -1,6 +1,7 @@
 use std::io::Result;
 use walkdir::WalkDir;
 use std::path::Path;
+use std::time::SystemTime;
 use crate::datamodel::file_model::FileModel as FileModel;
 
 
@@ -10,6 +11,18 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     for entry in walker {
         let entry = entry.unwrap();
         if entry.path().is_file() {
+            let mut size = 0;
+            let mut created = SystemTime::now();
+            match entry.metadata() {
+                Ok(meta) => {
+                    size = meta.len();
+                    match meta.created() {
+                        Ok(value) => created = value,
+                        _ => {}
+                    };
+                }
+                _ => {}
+            }
             let filepath = Path::new(entry.path());
             // println!("{:?}", filepath.parent());
             // println!("{:?}", filepath.file_stem());
@@ -43,7 +56,9 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 dirpath,
                 path,
                 filename,
-                extname);
+                extname,
+                size,
+                created);
             if file.is_empty() {
                 continue;
             }
@@ -59,14 +74,13 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
     let mut filelist: Vec<FileModel> = Vec::new();
     for dir_path in dir_paths {
         match visit_dirs(dir_path) {
-            Ok(value) =>{
+            Ok(value) => {
                 for val in value {
                     filelist.push(val)
                 }
-            },
+            }
             Err(err) => println!("{}", err)
         }
     }
     Ok(filelist)
-
 }

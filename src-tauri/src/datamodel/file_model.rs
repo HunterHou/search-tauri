@@ -1,5 +1,12 @@
 // 数据模型 文件
+
+use std::time::SystemTime;
+use serde::{Deserialize, Serialize};
+use crate::utils::int_to_show::int_to_size_str;
+
+
 #[derive(Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct FileModel {
     pub Id: String,
     pub Name: String,
@@ -13,8 +20,8 @@ pub struct FileModel {
     pub DirPath: String,
     pub Title: String,
     pub SizeStr: String,
-    pub Size: i64,
-    pub MTime: i64,
+    pub Size: u64,
+    pub MTime: SystemTime,
 }
 
 impl FileModel {
@@ -37,12 +44,12 @@ impl FileModel {
             Title: "".to_string(),
             SizeStr: "".to_string(),
             Size: 0,
-            MTime: 0,
+            MTime: SystemTime::now(),
         };
     }
 
 
-    pub fn from_path(dirpath: String, path: String, name: String, ext: String) -> FileModel {
+    pub fn from_path(dirpath: String, path: String, name: String, ext: String, size: u64, created: SystemTime) -> FileModel {
         let path_bac = &String::from(path);
         return FileModel {
             Id: String::from(path_bac),
@@ -56,9 +63,9 @@ impl FileModel {
             Path: String::from(path_bac),
             DirPath: dirpath,
             Title: "".to_string(),
-            SizeStr: "".to_string(),
-            Size: 0,
-            MTime: 0,
+            SizeStr: int_to_size_str(size),
+            Size: size,
+            MTime: created,
         };
     }
 }

@@ -1,4 +1,4 @@
-pub fn int_to_size_str(size: i64) -> String {
+pub fn int_to_size_str(size: u64) -> String {
     if size < 1024 {
         return format!("{}", size);
     } else if size < 1024 * 1024 {

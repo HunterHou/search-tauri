@@ -7,6 +7,7 @@ mod service;
 mod datamodel;
 
 use service::search_disk as searchDisk;
+use crate::datamodel::file_model::FileModel;
 // fn main() {
 //     let base_dir =["d://emby";1];
 //     match searchDisk::search_disk(base_dir.to_vec()) {
@@ -25,14 +26,21 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn refresh_disk(name: &str)  {
+fn refresh_disk(name: &str) -> String {
+    println!("refresh_disk {:?}", name);
     let base_dir = ["d://emby"; 1];
+    let mut filelist: Vec<FileModel> = Vec::new();
     match searchDisk::search_disk(base_dir.to_vec()) {
-        Ok(values) => for value in values {
-            println!("main {:?}", value);
-        },
+        Ok(values) => {
+            filelist = values
+            // for value in values {
+            //     println!("main {:?}", value);
+            // }
+        }
+        // Err(err) => Err(err)
         _ => {}
     }
+    serde_json::to_string(&filelist).unwrap()
 }
 
 
