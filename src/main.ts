@@ -1,5 +1,6 @@
-import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
+import '@quasar/extras/material-icons/material-icons.css'
+import '@quasar/extras/themify/themify.css'
 
 import App from './App.vue'
 import { createApp } from 'vue'
