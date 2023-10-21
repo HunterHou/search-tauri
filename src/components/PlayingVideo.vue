@@ -250,7 +250,7 @@ const optionsPC = reactive({
   height: 'auto', //播放器高度
   color: '#409eff', //主题色
   title: view.playing?.Title, //视频名称
-  src:  convertFileSrc(view.playing.Path), //视频源
+  src:  '', //视频源 convertFileSrc(view.playing.Path)
   muted: false, //静音
   preload: 'false',
   webFullScreen: false,
