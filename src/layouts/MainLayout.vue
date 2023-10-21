@@ -94,9 +94,9 @@ const vue3VideoPlayRef = ref(null);
 
 watch(playing, (v) => {
   if (v && v.Id) {
-    vue3VideoPlayRef.value.open(v);
+    vue3VideoPlayRef.value && vue3VideoPlayRef.value.open(v);
   } else {
-    vue3VideoPlayRef.value.stop();
+    vue3VideoPlayRef.value &&  vue3VideoPlayRef.value.stop();
   }
 });
 

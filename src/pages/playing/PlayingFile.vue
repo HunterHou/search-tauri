@@ -12,7 +12,7 @@ const { params } = useRoute();
 
 const fetchSearch = async (id) => {
   const data = await FindFileInfo(id);
-  vue3VideoPlayRef.value.open(data)
+  vue3VideoPlayRef.value && vue3VideoPlayRef.value.open(data)
 };
 onMounted(()=>{
   const { id } = params

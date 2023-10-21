@@ -175,7 +175,7 @@ const open = (v) => {
     replace(`/playing/${v.Id}`)
   }
   setTimeout(() => {
-    vue3VideoPlayRef.value.play();
+    vue3VideoPlayRef.value && vue3VideoPlayRef.value.play();
   }, 100);
   if (!view.queryParam.Keyword) {
     view.queryParam.Keyword = v.Actress;

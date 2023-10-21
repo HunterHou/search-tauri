@@ -135,7 +135,7 @@ const openPlay = (item) => {
 const showMovie = () => {
   showDetail.value = 'movie';
   setTimeout(() => {
-    vue3VideoPlayRef.value.open(view.item)
+    vue3VideoPlayRef.value && vue3VideoPlayRef.value.open(view.item)
   }, 100);
 }
 
@@ -222,7 +222,7 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const onDialogClose = () => {
   showDetail.value = 'detail'
-  vue3VideoPlayRef.value.stop()
+  vue3VideoPlayRef.value && vue3VideoPlayRef.value.stop()
   showDialog.value = false
   onDialogHide()
 }
