@@ -85,7 +85,8 @@
 
     <div class="row justify-center q-gutter-sm q-mr-sm q-mt-sm mainlist">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fit" easier draggable :src="getPng(item.Id)" class="item-img" @click="() => {
+        <!-- <q-img fit="fit" easier draggable :src="getPng(item.Id)" class="item-img" @click="() => { -->
+        <q-img fit="fit" easier draggable :src="convertFileSrc(item.Png)" class="item-img" @click="() => {
           fileInfoRef.open({ item, cb: refreshIndex });
         }">
           <template v-slot:loading>
@@ -209,6 +210,7 @@
 import { useQuasar } from 'quasar';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import {
   AddTag,
   CloseTag,
