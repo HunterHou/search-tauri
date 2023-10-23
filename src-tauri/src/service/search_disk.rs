@@ -34,7 +34,7 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             }
 
             let mut path = "".to_string();
-            match filepath.file_stem() {
+            match filepath.file_name() {
                 Some(value) => match value.to_str() {
                     Some(val) => path = format!("{}", String::from(val)),
                     _ => {},
@@ -42,7 +42,7 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 _ => {}
             }
             let mut filename = "".to_string();
-            match filepath.file_name() {
+            match filepath.file_stem() {
                 Some(value) => match value.to_str() {
                     Some(val) => filename = format!("{}", String::from(val)),
                     _ => {}
