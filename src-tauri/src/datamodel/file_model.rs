@@ -4,7 +4,7 @@ use crate::utils::int_to_show::int_to_size_str;
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug,Clone)]
 pub struct FileModel {
     pub Id: String,
     pub Name: String,
@@ -22,11 +22,6 @@ pub struct FileModel {
     pub MTime: SystemTime,
 }
 
-impl Clone for FileModel {
-    fn clone(&self) -> FileModel {
-        *self
-    }
-}
 
 impl FileModel {
     pub fn is_empty(&self) -> bool {

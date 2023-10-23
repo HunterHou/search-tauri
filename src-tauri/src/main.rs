@@ -14,7 +14,7 @@ use std::{collections::HashMap, sync::Mutex};
 
 lazy_static! {
     static ref STATIC_DATA: Mutex<HashMap<String, FileModel>> = {
-        let mut map = HashMap::new();
+        let map = HashMap::new();
         Mutex::new(map)
     };
 }
@@ -61,7 +61,7 @@ fn search_index(name: &str) -> String {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, refresh_disk])
+        .invoke_handler(tauri::generate_handler![greet, refresh_disk,search_index])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
