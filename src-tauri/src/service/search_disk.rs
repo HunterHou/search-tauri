@@ -1,3 +1,4 @@
+use crate::STATIC_DATA;
 use crate::datamodel::file_model::FileModel;
 use std::io::Result;
 use std::path::Path;
@@ -63,8 +64,14 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             if file.is_empty() {
                 continue;
             }
+            let val = file.clone();
+            STATIC_DATA
+                .lock()
+                .unwrap()
+                .insert(String::from(&val.Id), val);
             // println!("{:?}", file);
             filelist.push(file);
+            
         }
     }
     Ok(filelist)

@@ -44,6 +44,7 @@ impl FileModel {
             SizeStr: "".to_string(),
             Size: 0,
             MTime: SystemTime::now(),
+            Tags: Vec::new(),
         };
     }
 
@@ -71,6 +72,7 @@ impl FileModel {
             SizeStr: int_to_size_str(size),
             Size: size,
             MTime: created,
+            Tags: Vec::new(),
         };
     }
 }
