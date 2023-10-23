@@ -4,7 +4,7 @@ use crate::utils::int_to_show::int_to_size_str;
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
 
-#[derive(Serialize, Deserialize, Debug,Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FileModel {
     pub Id: String,
     pub Name: String,
@@ -20,8 +20,8 @@ pub struct FileModel {
     pub SizeStr: String,
     pub Size: u64,
     pub MTime: SystemTime,
+    pub Tags: Vec<String>,
 }
-
 
 impl FileModel {
     pub fn is_empty(&self) -> bool {
@@ -55,7 +55,7 @@ impl FileModel {
         size: u64,
         created: SystemTime,
     ) -> FileModel {
-        let path_bac = &String::from("".to_string()+&dirpath+"\\"+&path);
+        let path_bac = &String::from("".to_string() + &dirpath + "\\" + &path);
         return FileModel {
             Id: String::from(path_bac),
             Name: name,
