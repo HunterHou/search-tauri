@@ -13,7 +13,7 @@ use lazy_static::lazy_static;
 use std::{collections::HashMap, sync::Mutex};
 
 lazy_static! {
-    static ref STATIC_DATA: Mutex<HashMap<String,FileModel>> = {
+    static ref STATIC_DATA: Mutex<HashMap<String, FileModel>> = {
         let mut map = HashMap::new();
         Mutex::new(map)
     };
@@ -35,8 +35,12 @@ fn refresh_disk(name: &str) -> String {
             for value in values {
                 println!("main {:?}", &value);
                 let val = value.clone();
+                STATIC_DATA
+                .lock()
+                .unwrap()
+                .insert(String::from(&value.Id), val);
                 filelist.push(value);
-                STATIC_DATA.lock().unwrap().insert(String::from(val.Id), value);
+               
             }
         }
         // Err(err) => Err(err)
@@ -46,18 +50,11 @@ fn refresh_disk(name: &str) -> String {
 }
 #[tauri::command]
 fn search_index(name: &str) -> String {
-    println!("refresh_disk {:?}", name);
-
-    let mut filelist: Vec<FileModel> = Vec::new();
-    let mut map:HashMap<String,FileModel>;
-    map =STATIC_DATA.into_inner().into(); 
-    
-    for (val) in map.keys() {
-        match map.get(val)  {
-            Ok(val):filelist.push(val),
-            _:{}
-        }
-        
+    println!("search_index {:?}", name);
+    let mut filelist: Vec<&FileModel> = Vec::new();
+    let map = STATIC_DATA.lock().unwrap();
+    for value in map.values() {
+        filelist.push(value);
     }
     serde_json::to_string(&filelist).unwrap()
 }
