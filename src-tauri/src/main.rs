@@ -34,11 +34,11 @@ fn refresh_disk(name: &str) -> String {
         Ok(values) => {
             for value in values {
                 println!("main {:?}", &value);
-                let val = value.clone();
-                STATIC_DATA
-                .lock()
-                .unwrap()
-                .insert(String::from(&value.Id), val);
+                // let val = value.clone();
+                // STATIC_DATA
+                // .lock()
+                // .unwrap()
+                // .insert(String::from(&value.Id), val);
                 filelist.push(value);
                
             }
