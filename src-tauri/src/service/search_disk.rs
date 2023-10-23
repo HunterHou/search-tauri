@@ -1,9 +1,8 @@
+use crate::datamodel::file_model::FileModel;
 use std::io::Result;
-use walkdir::WalkDir;
 use std::path::Path;
 use std::time::SystemTime;
-use crate::datamodel::file_model::FileModel as FileModel;
-
+use walkdir::WalkDir;
 
 fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let walker = WalkDir::new(dir).into_iter();
@@ -34,31 +33,33 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 _ => {}
             }
 
-
             let mut path = "".to_string();
-            match filepath.parent() {
-                Some(value) => path = format!("{}", value.display()),
+            match filepath.file_stem() {
+                Some(value) => match value.to_str() {
+                    Some(val) => path = format!("{}", String::from(val)),
+                    _ => {},
+                },
                 _ => {}
             }
             let mut filename = "".to_string();
-            match filepath.parent() {
-                Some(value) => filename = format!("{}", value.display()),
+            match filepath.file_name() {
+                Some(value) => match value.to_str() {
+                    Some(val) => filename = format!("{}", String::from(val)),
+                    _ => {}
+                },
                 _ => {}
             }
 
             let mut extname = "".to_string();
-            match filepath.parent() {
-                Some(value) => extname = format!("{}", value.display()),
+            match filepath.extension() {
+                Some(value) => match value.to_str() {
+                    Some(val) => extname = format!("{}", String::from(val)),
+                    _ => {}
+                },
                 _ => {}
             }
 
-            let mut file = FileModel::from_path(
-                dirpath,
-                path,
-                filename,
-                extname,
-                size,
-                created);
+            let file = FileModel::from_path(dirpath, path, filename, extname, size, created);
             if file.is_empty() {
                 continue;
             }
@@ -69,7 +70,6 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     Ok(filelist)
 }
 
-
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
     let mut filelist: Vec<FileModel> = Vec::new();
     for dir_path in dir_paths {
@@ -79,7 +79,7 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
                     filelist.push(val)
                 }
             }
-            Err(err) => println!("{}", err)
+            Err(err) => println!("{}", err),
         }
     }
     Ok(filelist)

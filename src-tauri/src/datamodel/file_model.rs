@@ -55,7 +55,7 @@ impl FileModel {
         size: u64,
         created: SystemTime,
     ) -> FileModel {
-        let path_bac = &String::from(path);
+        let path_bac = &String::from("".to_string()+&dirpath+"\\"+&path);
         return FileModel {
             Id: String::from(path_bac),
             Name: name,
