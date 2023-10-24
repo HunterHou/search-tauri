@@ -1,5 +1,8 @@
 // 数据模型 文件
-use super::super::utils::int_to_show::int_to_size_str;
+use super::super::utils::do_file_name::{
+    actress_from_name, code_from_name, int_to_size_str, movie_type_from_name, tags_from_name,
+    title_from_name, vm_jpg_from_name, vm_png_from_name,
+};
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
 
@@ -27,26 +30,6 @@ impl FileModel {
         self.Id == ""
     }
 
-    pub fn new() -> FileModel {
-        return FileModel {
-            Id: "".to_string(),
-            Name: "".to_string(),
-            Code: "".to_string(),
-            MovieType: "".to_string(),
-            FileType: "".to_string(),
-            Png: "".to_string(),
-            Jpg: "".to_string(),
-            Actress: "".to_string(),
-            Path: "".to_string(),
-            DirPath: "".to_string(),
-            Title: "".to_string(),
-            SizeStr: "".to_string(),
-            Size: 0,
-            MTime: SystemTime::now(),
-            Tags: Vec::new(),
-        };
-    }
-
     pub fn from_path(
         dirpath: String,
         path: String,
@@ -55,23 +38,30 @@ impl FileModel {
         size: u64,
         created: SystemTime,
     ) -> FileModel {
+        let code = code_from_name(&name);
+        let actress = actress_from_name(&name);
+        let movie_type = movie_type_from_name(&name);
+        let title = title_from_name(&name);
+        let png = vm_png_from_name(&path);
+        let jpg = vm_jpg_from_name(&path);
+        let tags = tags_from_name(&name);
         let path_bac = &String::from("".to_string() + &dirpath + "\\" + &path);
         return FileModel {
             Id: String::from(path_bac),
             Name: name,
-            Code: "".to_string(),
-            MovieType: "".to_string(),
+            Code: code,
+            MovieType: movie_type,
             FileType: ext,
-            Png: "".to_string(),
-            Jpg: "".to_string(),
-            Actress: "".to_string(),
+            Png: png,
+            Jpg: jpg,
+            Actress: actress,
             Path: String::from(path_bac),
             DirPath: dirpath,
-            Title: "".to_string(),
+            Title: title,
             SizeStr: int_to_size_str(size),
             Size: size,
             MTime: created,
-            Tags: Vec::new(),
+            Tags: tags,
         };
     }
 }

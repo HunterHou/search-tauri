@@ -10,7 +10,7 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let walker = WalkDir::new(dir).into_iter();
     let mut filelist: Vec<FileModel> = Vec::new();
     for entryItem in walker {
-        let mut entry :DirEntry=todo!();
+        let mut entry :DirEntry;
         match entryItem {
             Ok(v) => v ,
             Err(error)=> panic!("{}",error) ,
