@@ -1,4 +1,3 @@
-pub mod  controller;
 pub mod  datamodel;
 pub mod  database;
 pub mod  service;
