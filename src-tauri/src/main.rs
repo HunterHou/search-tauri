@@ -3,8 +3,8 @@
 
 // =======================================================================================
 mod bin;
-use bin::{datamodel,service,static_param};
-use datamodel::file_model::FileModel;
+use bin::{data_model, service, static_param};
+use data_model::file_model::FileModel;
 use service::search_disk as searchDisk;
 use static_param::STATIC_LIST;
 

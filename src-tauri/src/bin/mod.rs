@@ -1,12 +1,12 @@
-pub mod  datamodel;
-pub mod  database;
-pub mod  service;
-pub mod  utils;
+pub mod data_model;
+pub mod database;
+pub mod service;
+pub mod utils;
 
 pub mod static_param {
     use lazy_static::lazy_static;
     use std::{collections::HashMap, sync::Mutex};
-    use super::datamodel::file_model::FileModel;
+    use super::data_model::file_model::FileModel;
 
     lazy_static! {
         pub static ref STATIC_DATA: Mutex<HashMap<String, FileModel>> = {

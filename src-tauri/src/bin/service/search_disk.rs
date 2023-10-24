@@ -1,15 +1,21 @@
 use super::super::static_param::STATIC_DATA;
-use super::super::datamodel::file_model::FileModel;
+use super::super::data_model::file_model::FileModel;
 use std::io::Result;
 use std::path::Path;
 use std::time::SystemTime;
 use walkdir::WalkDir;
+use walkdir::DirEntry;
 
 fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let walker = WalkDir::new(dir).into_iter();
     let mut filelist: Vec<FileModel> = Vec::new();
-    for entry in walker {
-        let entry = entry.unwrap();
+    for entryItem in walker {
+        let mut entry :DirEntry=todo!();
+        match entryItem {
+            Ok(v) => v ,
+            Err(error)=> panic!("{}",error) ,
+        };
+        
         if entry.path().is_file() {
             let mut size = 0;
             let mut created = SystemTime::now();
