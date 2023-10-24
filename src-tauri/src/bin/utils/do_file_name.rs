@@ -40,7 +40,7 @@ pub fn actress_from_name(name: &str) -> String {
 }
 
 pub fn movie_type_from_name(name: &str) -> String {
-    let start = name.find("《").unwrap();
+    let start = name.find("《");
     let mut end = name.find("》").unwrap();
     if end >= name.len() {
         end = name.len()
