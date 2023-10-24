@@ -1,18 +1,21 @@
-use super::super::static_param::STATIC_DATA;
 use super::super::data_model::file_model::FileModel;
+use super::super::database::db;
+use super::super::static_param::STATIC_DATA;
+use rusqlite::NO_PARAMS;
+use std::fmt::format;
 use std::io::Result;
 use std::path::Path;
 use std::time::SystemTime;
-use walkdir::WalkDir;
 use walkdir::DirEntry;
+use walkdir::WalkDir;
 
 fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let walker = WalkDir::new(dir).into_iter();
     let mut filelist: Vec<FileModel> = Vec::new();
     for entry_item in walker {
-        let entry :DirEntry=match entry_item {
-            Ok(v) => v ,
-            Err(error)=> panic!("{}",error) ,
+        let entry: DirEntry = match entry_item {
+            Ok(v) => v,
+            Err(error) => panic!("{}", error),
         };
         if entry.path().is_file() {
             let mut size = 0;
@@ -42,7 +45,7 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             match filepath.file_name() {
                 Some(value) => match value.to_str() {
                     Some(val) => path = format!("{}", String::from(val)),
-                    _ => {},
+                    _ => {}
                 },
                 _ => {}
             }
@@ -75,7 +78,6 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 .insert(String::from(&val.Id), val);
             // println!("{:?}", file);
             filelist.push(file);
-            
         }
     }
     Ok(filelist)
@@ -86,12 +88,29 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
     for dir_path in dir_paths {
         match visit_dirs(dir_path) {
             Ok(value) => {
-                for val in value {
-                    filelist.push(val)
-                }
+                // for val in value {
+                //     filelist.push(val)
+                // }
+                add_to_db(&value);
             }
             Err(err) => println!("{}", err),
         }
     }
     Ok(filelist)
+}
+
+pub fn add_to_db(files: &Vec<FileModel>) {
+    let conn = db::db_connection();
+    let mut sql = String::from("begin; ");
+    for file in files {
+        let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr) 
+             values ({},{},{},{},{},{},{},{},{},{},{},{},{},{},{});",
+            file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr);
+        sql.push_str(&items);
+    }
+    sql.push_str(" commit;");
+    let res = conn.execute_batch(&sql);
+    if res.is_err() {
+        println!("executing sql err:{}", res.err().unwrap());
+    }
 }

@@ -3,10 +3,11 @@
 
 // =======================================================================================
 mod bin;
-use bin::{data_model, service, static_param};
+use bin::{data_model, service, static_param,database::db};
 use data_model::file_model::FileModel;
 use service::search_disk as searchDisk;
 use static_param::STATIC_LIST;
+
 
 
 
@@ -21,6 +22,7 @@ fn refresh_disk(name: &str) -> String {
     println!("refresh_disk {:?}", name);
     let base_dir = ["d://emby"; 1];
     let _filelist: Vec<FileModel> = Vec::new();
+    db::init_db();
     match searchDisk::search_disk(base_dir.to_vec()) {
         Ok(values) => {
             STATIC_LIST.lock().unwrap().extend_from_slice(&values)

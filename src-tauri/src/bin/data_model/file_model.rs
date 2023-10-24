@@ -21,7 +21,7 @@ pub struct FileModel {
     pub Title: String,
     pub SizeStr: String,
     pub Size: u64,
-    pub MTime: SystemTime,
+    pub MTime: String,
     pub Tags: Vec<String>,
 }
 
@@ -60,7 +60,7 @@ impl FileModel {
             Title: title,
             SizeStr: int_to_size_str(size),
             Size: size,
-            MTime: created,
+            MTime: "".to_string(),
             Tags: tags,
         };
     }
