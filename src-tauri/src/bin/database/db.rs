@@ -8,7 +8,7 @@ pub fn db_connection() -> rusqlite::Connection {
 pub fn init_db() {
     let conn = db_connection();
     println!("Initializing table t_file");
-    let res = match conn.execute("create or replace table t_file(
+    let res = match conn.execute("create  table IF NOT EXISTS t_file(
         id integer primary key autoincrement,
         name text,
         path text,
@@ -17,7 +17,7 @@ pub fn init_db() {
     )", []) {
         Ok(val) => val,
         Err(err) => {
-            println!("{}", err);
+            println!("Initializied Fail:{}", err);
             0
         },
     };
