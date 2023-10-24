@@ -40,8 +40,12 @@ pub fn actress_from_name(name: &str) -> String {
 }
 
 pub fn movie_type_from_name(name: &str) -> String {
-    let start = name.find("《");
-    let mut end = name.find("》").unwrap();
+    let v1 = name.find("{{");
+    if v1.is_none() {
+        return String::from(name);
+    }
+    let start =v1.unwrap();
+    let mut end = name.find("}}").unwrap();
     if end >= name.len() {
         end = name.len()
     }
@@ -65,8 +69,12 @@ pub fn vm_jpg_from_name(name: &str) -> String {
 }
 
 pub fn tags_from_name(name: &str) -> Vec<String> {
-    let start = name.find("{{").unwrap();
-    let mut end = name.find("}}").unwrap();
+    let v1 = name.find("《");
+    if v1.is_none() {
+        return Vec::new();
+    }
+    let start = v1.unwrap()+2;
+    let mut end = name.find("》").unwrap();
     if end >= name.len() {
         end = name.len()
     }
