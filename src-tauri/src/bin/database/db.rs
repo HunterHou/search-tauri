@@ -2,7 +2,7 @@ use rusqlite::{Connection};
 
 pub fn db_connection() -> rusqlite::Connection {
     println!("db_connection...");
-    Connection::open("./search.db").unwrap();
+    Connection::open("./search.db").unwrap()
 }
 pub fn init_db() {
     let conn = db_connection();
