@@ -1,4 +1,4 @@
-use crate::STATIC_DATA;
+use crate::static_param::STATIC_DATA;
 use crate::datamodel::file_model::FileModel;
 use std::io::Result;
 use std::path::Path;

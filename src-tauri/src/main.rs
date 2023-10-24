@@ -2,26 +2,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // =======================================================================================
-mod datamodel;
-mod service;
-mod utils;
-
-use crate::datamodel::file_model::FileModel;
+mod bin;
+use bin::{datamodel,service,utils,static_param};
+use datamodel::file_model::FileModel;
 use service::search_disk as searchDisk;
+use static_param::STATIC_LIST;
 
-use lazy_static::lazy_static;
-use std::{collections::HashMap, sync::Mutex};
 
-lazy_static! {
-    static ref STATIC_DATA: Mutex<HashMap<String, FileModel>> = {
-        let map = HashMap::new();
-        Mutex::new(map)
-    };
-    static ref STATIC_LIST:Mutex<Vec<FileModel>> ={
-        let list:Vec<FileModel> =Vec::<FileModel>::new();
-        Mutex::new(list)
-    };
-}
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
