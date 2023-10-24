@@ -101,16 +101,23 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
 
 pub fn add_to_db(files: &Vec<FileModel>) {
     let conn = db::db_connection();
-    let mut sql = String::from("begin; ");
+    let mut sql = String::from("BEGIN; ");
     for file in files {
         let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr) 
-             values ({},{},{},{},{},{},{},{},{},{},{},{},{},{},{});",
+             values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}');",
             file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr);
+        // let res = conn.execute(&items, NO_PARAMS);
+        // println!("executing sql:{}", &items);
+        // if res.is_err() {
+        //     println!("executing sql err:{}", res.err().unwrap());
+        // }
         sql.push_str(&items);
     }
-    sql.push_str(" commit;");
+    sql.push_str(" COMMIT;");
     let res = conn.execute_batch(&sql);
+    // println!("executing sql:{}", sql);
     if res.is_err() {
         println!("executing sql err:{}", res.err().unwrap());
     }
+    let _ = conn.close();
 }

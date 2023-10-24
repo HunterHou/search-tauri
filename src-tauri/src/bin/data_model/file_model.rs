@@ -46,6 +46,7 @@ impl FileModel {
         let jpg = vm_jpg_from_name(&path);
         let tags = tags_from_name(&name);
         let path_bac = &String::from("".to_string() + &dirpath + "\\" + &path);
+        created.elapsed().ok();
         return FileModel {
             Id: String::from(path_bac),
             Name: name,

@@ -13,7 +13,7 @@ pub fn init_db() {
         Err(err) => println!("drop Fail:{}", err),
     };
     match conn.execute("create  table t_file(
-        Id integer primary key autoincrement,
+        Id text primary key,
         Name text,
         Code text,
         MovieType text,

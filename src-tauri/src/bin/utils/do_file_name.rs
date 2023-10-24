@@ -55,7 +55,7 @@ pub fn movie_type_from_name(name: &str) -> String {
     if v1.is_none() {
         return String::from(name);
     }
-    let start = v1.unwrap();
+    let start = v1.unwrap()+2;
     let mut end = name.find("}}").unwrap();
     if end >= name.len() {
         end = name.len()
@@ -64,6 +64,17 @@ pub fn movie_type_from_name(name: &str) -> String {
 }
 
 pub fn title_from_name(name: &str) -> String {
+    let str =String::from(name);
+    let res:Vec<&str> =str.split("]").collect();
+    
+    if res.len()>0 {
+        let title =res.get(res.len()-1);
+        if title.is_some() {
+            let result =title.unwrap().to_string();
+            println!("{}",&result);
+            return result;
+        }
+    }
     return String::from(name);
 }
 
