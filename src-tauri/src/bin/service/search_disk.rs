@@ -1,5 +1,5 @@
-use crate::bin::static_param::STATIC_DATA;
-use crate::bin::datamodel::file_model::FileModel;
+use super::super::static_param::STATIC_DATA;
+use super::super::datamodel::file_model::FileModel;
 use std::io::Result;
 use std::path::Path;
 use std::time::SystemTime;
