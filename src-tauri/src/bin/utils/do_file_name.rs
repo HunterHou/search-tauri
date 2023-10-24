@@ -36,7 +36,18 @@ pub fn code_from_name(name: &str) -> String {
 }
 
 pub fn actress_from_name(name: &str) -> String {
-    return String::from(name);
+    let res = String::from(name);
+    let vecs: Vec<&str> = res.split("[").collect();
+    for str in vecs {
+        let item1 = str;
+        let index = item1.find("-");
+        if index.is_none() && str.len() > 0 {
+            println!("actress_from_name :{} ",&str[0..str.len()-1] );
+            return String::from(&str[0..str.len()-1]);
+        }
+        continue;
+    }
+    return String::from("");
 }
 
 pub fn movie_type_from_name(name: &str) -> String {
@@ -44,7 +55,7 @@ pub fn movie_type_from_name(name: &str) -> String {
     if v1.is_none() {
         return String::from(name);
     }
-    let start =v1.unwrap();
+    let start = v1.unwrap();
     let mut end = name.find("}}").unwrap();
     if end >= name.len() {
         end = name.len()
@@ -73,12 +84,13 @@ pub fn tags_from_name(name: &str) -> Vec<String> {
     if v1.is_none() {
         return Vec::new();
     }
-    let start = v1.unwrap()+2;
+    let start = v1.unwrap() + 3;
     let mut end = name.find("》").unwrap();
     if end >= name.len() {
         end = name.len()
     }
     let tag_str = String::from(&name[start..end]);
+
     let mut tags = Vec::new();
     let location: Vec<&str> = tag_str.split(",").collect();
     for str in location {
