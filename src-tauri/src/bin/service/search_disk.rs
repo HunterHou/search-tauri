@@ -9,13 +9,11 @@ use walkdir::DirEntry;
 fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let walker = WalkDir::new(dir).into_iter();
     let mut filelist: Vec<FileModel> = Vec::new();
-    for entryItem in walker {
-        let mut entry :DirEntry;
-        match entryItem {
+    for entry_item in walker {
+        let entry :DirEntry=match entry_item {
             Ok(v) => v ,
             Err(error)=> panic!("{}",error) ,
         };
-        
         if entry.path().is_file() {
             let mut size = 0;
             let mut created = SystemTime::now();
