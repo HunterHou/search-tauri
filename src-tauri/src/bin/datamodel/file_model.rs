@@ -1,6 +1,5 @@
 // 数据模型 文件
-
-use crate::utils::int_to_show::int_to_size_str;
+use crate::bin::utils::int_to_show::int_to_size_str;
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
 

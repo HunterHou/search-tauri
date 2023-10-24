@@ -6,7 +6,7 @@ pub mod  utils;
 pub mod static_param {
     use lazy_static::lazy_static;
     use std::{collections::HashMap, sync::Mutex};
-    use crate::datamodel::file_model::FileModel;
+    use super::datamodel::file_model::FileModel;
 
     lazy_static! {
         pub static ref STATIC_DATA: Mutex<HashMap<String, FileModel>> = {
