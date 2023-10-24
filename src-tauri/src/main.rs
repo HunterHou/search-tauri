@@ -3,7 +3,7 @@
 
 // =======================================================================================
 mod bin;
-use bin::{datamodel,service,utils,static_param};
+use bin::{datamodel,service,static_param};
 use datamodel::file_model::FileModel;
 use service::search_disk as searchDisk;
 use static_param::STATIC_LIST;
@@ -20,7 +20,7 @@ fn greet(name: &str) -> String {
 fn refresh_disk(name: &str) -> String {
     println!("refresh_disk {:?}", name);
     let base_dir = ["d://emby"; 1];
-    let filelist: Vec<FileModel> = Vec::new();
+    let _filelist: Vec<FileModel> = Vec::new();
     match searchDisk::search_disk(base_dir.to_vec()) {
         Ok(values) => {
             STATIC_LIST.lock().unwrap().extend_from_slice(&values)
