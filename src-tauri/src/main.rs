@@ -3,10 +3,10 @@
 
 // =======================================================================================
 mod bin;
-use bin::{data_model, database::db, service, static_param};
+use bin::{data_model, database::db, service /*, static_param */};
 use data_model::file_model::FileModel;
 use service::search_disk as searchDisk;
-use static_param::STATIC_LIST;
+// use static_param::STATIC_LIST;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -41,7 +41,8 @@ fn search_index(name: &str) -> String {
         };
         serde_json::to_string(&list).unwrap()
     }else {
-        serde_json::to_string(&(Vec::new())).unwrap()
+        let res:Vec<String> = Vec::new();
+        serde_json::to_string(&res).unwrap()
     }
 
 }

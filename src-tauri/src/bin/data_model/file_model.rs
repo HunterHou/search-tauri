@@ -20,7 +20,7 @@ pub struct FileModel {
     pub DirPath: String,
     pub Title: String,
     pub SizeStr: String,
-    pub Size: u64,
+    pub Size: i64,
     pub MTime: String,
     pub Tags: Vec<String>,
 }
@@ -35,7 +35,7 @@ impl FileModel {
         path: String,
         name: String,
         ext: String,
-        size: u64,
+        size: i64,
         created: SystemTime,
     ) -> FileModel {
         let code = code_from_name(&name);

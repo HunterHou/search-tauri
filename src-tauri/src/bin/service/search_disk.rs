@@ -21,11 +21,11 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             Err(error) => panic!("{}", error),
         };
         if entry.path().is_file() {
-            let mut size = 0;
+            let mut size:i64 = 0;
             let mut created = SystemTime::now();
             match entry.metadata() {
                 Ok(meta) => {
-                    size = meta.len();
+                    size = meta.len() as i64;
                     match meta.created() {
                         Ok(value) => created = value,
                         _ => {}
@@ -137,13 +137,13 @@ pub fn search_index() -> Result<Vec<FileModel>> {
     ).unwrap();
     let res = stmt
         .query_map(NO_PARAMS, |row| {
-            // let tagStr = String::from().split(",").collect();
-            //    row.get(14).unwrap();
-            //    let mut tags:Vec<String> =Vec::new();
-            // for tagi in tagStr  {
-            //     tags.push(String::from(tagi))
-            // }
-            // let sizes = String::from(row.get(12).unwrap()).parse::<u64>?;
+            let c14: String = row.get(14).unwrap();
+            let c1414: Vec<&str> = c14.split(",").collect();
+            let mut tags: Vec<String> = Vec::new();
+            for tagi in c1414 {
+                tags.push(String::from(tagi))
+            }
+            let sizes:i64 = row.get(12).unwrap();
             let v = FileModel {
                 Id: row.get(0).unwrap(),
                 Name: row.get(1).unwrap(),
@@ -157,9 +157,9 @@ pub fn search_index() -> Result<Vec<FileModel>> {
                 DirPath: row.get(9).unwrap(),
                 Title: row.get(10).unwrap(),
                 SizeStr: row.get(11).unwrap(),
-                Size: 1,
+                Size: sizes,
                 MTime: row.get(13).unwrap(),
-                Tags: Vec::new(),
+                Tags: tags,
             };
             Ok(v)
         })
