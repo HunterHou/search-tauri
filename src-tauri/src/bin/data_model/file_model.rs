@@ -61,7 +61,7 @@ impl FileModel {
             Title: title,
             SizeStr: int_to_size_str(size),
             Size: size,
-            MTime: created.elapsed().ok().unwrap(),
+            MTime: mtime,
             Tags: tags,
         };
     }

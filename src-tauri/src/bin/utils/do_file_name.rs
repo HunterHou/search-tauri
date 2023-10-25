@@ -17,7 +17,7 @@ pub fn int_to_size_str(size: u64) -> String {
 }
 
 pub fn system_time_to_string(system_time:&SystemTime) -> String {
-    let datetime: DateTime<Utc> = system_time.into();
+    let datetime: DateTime<Utc> = (*system_time).into();
     datetime.format("%Y-%m-%d %H:%M:%S").to_string()
 }
 
