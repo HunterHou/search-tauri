@@ -1,12 +1,10 @@
-use std::fmt::Error;
 use super::super::data_model::file_model::FileModel;
 use super::super::database::db;
 use super::super::static_param::STATIC_DATA;
+use rusqlite::NO_PARAMS;
 use std::io::Result;
 use std::path::Path;
 use std::time::SystemTime;
-use rusqlite::NO_PARAMS;
-use serde_json::Value::String;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
 
@@ -132,32 +130,41 @@ pub fn add_to_db(files: &Vec<FileModel>) {
     let _ = conn.close();
 }
 
-pub fn search_index() ->Result<Vec<FileModel>> {
-    let conn =db::db_connection();
+pub fn search_index() -> Result<Vec<FileModel>> {
+    let conn = db::db_connection();
     let mut stmt = conn.prepare(
         "SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file",
-    )?;
-    let res = stmt.query_map(NO_PARAMS, |row| {
-        let tagStr = String::from(row.get(14).unwrap());
-        Ok(FileModel {
-            Id: row.get(0).unwrap(),
-            Name: row.get(1).unwrap(),
-            Code: row.get(2).unwrap(),
-            MovieType: row.get(3).unwrap(),
-            FileType: row.get(4).unwrap(),
-            Png: row.get(5).unwrap(),
-            Jpg: row.get(6).unwrap(),
-            Actress: row.get(7).unwrap(),
-            Path: row.get(8).unwrap(),
-            DirPath: row.get(9).unwrap(),
-            Title: row.get(10).unwrap(),
-            SizeStr: row.get(11).unwrap(),
-            Size: row.get(12).unwrap(),
-            MTime: row.get(13).unwrap(),
-            Tags: tagStr.split(",").collect(),
+    ).unwrap();
+    let res = stmt
+        .query_map(NO_PARAMS, |row| {
+            // let tagStr = String::from().split(",").collect();
+            //    row.get(14).unwrap();
+            //    let mut tags:Vec<String> =Vec::new();
+            // for tagi in tagStr  {
+            //     tags.push(String::from(tagi))
+            // }
+            // let sizes = String::from(row.get(12).unwrap()).parse::<u64>?;
+            let v = FileModel {
+                Id: row.get(0).unwrap(),
+                Name: row.get(1).unwrap(),
+                Code: row.get(2).unwrap(),
+                MovieType: row.get(3).unwrap(),
+                FileType: row.get(4).unwrap(),
+                Png: row.get(5).unwrap(),
+                Jpg: row.get(6).unwrap(),
+                Actress: row.get(7).unwrap(),
+                Path: row.get(8).unwrap(),
+                DirPath: row.get(9).unwrap(),
+                Title: row.get(10).unwrap(),
+                SizeStr: row.get(11).unwrap(),
+                Size: 1,
+                MTime: row.get(13).unwrap(),
+                Tags: Vec::new(),
+            };
+            Ok(v)
         })
-    })?;
-    let mut resultList:Vec<FileModel>=Vec::new();
+        .unwrap();
+    let mut resultList: Vec<FileModel> = Vec::new();
     for x in res {
         if x.is_ok() {
             resultList.push(x.ok().unwrap())
