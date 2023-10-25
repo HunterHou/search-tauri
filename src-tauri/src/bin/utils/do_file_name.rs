@@ -45,9 +45,10 @@ pub fn actress_from_name(name: &str) -> String {
             // println!("actress_from_name :{} ",&str[0..str.len()-1] );
             let index = item1.find("]");
             if index.is_some() {
-                String::from(&str[0..str.len()-1]);
+                return String::from(&str[0..str.len()-1]);
+            }else {
+                return String::from(str);
             }
-            return String::from(&str);
         }
         continue;
     }
