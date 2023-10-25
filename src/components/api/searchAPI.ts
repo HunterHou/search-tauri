@@ -1,24 +1,31 @@
-import { axios } from '../../boot/axios';
-import { invoke } from '@tauri-apps/api/tauri'
+import { axios } from "../../boot/axios";
+import { invoke } from "@tauri-apps/api/tauri";
 
 export const SearchAPI = async (params: object) => {
   // const { data } = await axios.post('/api/movieList', params);
   // return data;
 
-  const params1 = { ...params, params: {...params}, FileType: ["mp4", "mkv"] }
+  const params1 = {
+    ...params,
+    params: { ...params },
+    FileType: ["mp4", "mkv"],
+    Keyword: params.Keyword || "",
+  };
   console.log(params);
-  const data = await invoke("search_index", { params: JSON.stringify(params1) })
+  const data = await invoke("search_index", {
+    params: JSON.stringify(params1),
+  });
   return data;
 };
 
 export const RefreshAPI = async (params: object) => {
-  const res = await axios.get('/api/refreshIndex', params);
+  const res = await axios.get("/api/refreshIndex", params);
   return res && res.data;
 };
 
 export const FindFileInfo = async (data: string) => {
   const res = await axios.get(`/api/info/${data}`);
-  return res&&res.data;
+  return res && res.data;
 };
 
 export const QueryDirImageBase64 = async (data: string) => {
@@ -42,12 +49,12 @@ export const DeleteFile = async (data: string) => {
 };
 
 export const SyncFileInfo = async (data: object) => {
-  const res = await axios.post('/api/sync',data);
+  const res = await axios.post("/api/sync", data);
   return res && res.data;
 };
 
 export const TransferTasksInfo = async () => {
-  const res = await axios.get('/api/transferTasks');
+  const res = await axios.get("/api/transferTasks");
   return res && res.data;
 };
 
@@ -72,7 +79,7 @@ export const DownImageList = async (data: string): Promise<unknown> => {
 };
 
 export const HeartBeatQuery = async () => {
-  const res = await axios.get('/api/heartBeat');
+  const res = await axios.get("/api/heartBeat");
   return res && res.data;
 };
 
@@ -87,17 +94,15 @@ export const CloseTag = async (id: string, title: string) => {
 };
 
 export const FileRename = async (data: unknown) => {
-  const res = await axios.post('/api/file/rename', data);
+  const res = await axios.post("/api/file/rename", data);
   return res && res.data;
 };
 
 export const OpenFolerByPath = async (data: unknown) => {
-  const res = await axios.post('/api/OpenFolerByPath', data);
+  const res = await axios.post("/api/OpenFolerByPath", data);
   return res && res.data;
 };
 export const DeleteFolerByPath = async (data: unknown) => {
-  const res = await axios.post('/api/DeleteFolerByPath', data);
+  const res = await axios.post("/api/DeleteFolerByPath", data);
   return res && res.data;
 };
-
-
