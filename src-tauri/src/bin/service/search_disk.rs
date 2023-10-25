@@ -1,8 +1,6 @@
 use super::super::data_model::file_model::FileModel;
 use super::super::database::db;
 use super::super::static_param::STATIC_DATA;
-use rusqlite::NO_PARAMS;
-use std::fmt::format;
 use std::io::Result;
 use std::path::Path;
 use std::time::SystemTime;
