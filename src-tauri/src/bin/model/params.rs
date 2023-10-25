@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize, Deserializer};
+use serde::{Deserialize, Serialize};
 
 use super::file_model::FileModel;
-
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ResultData {
     pub Data: Vec<FileModel>,
     pub Count: i64,

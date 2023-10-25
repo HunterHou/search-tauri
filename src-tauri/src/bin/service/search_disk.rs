@@ -137,9 +137,9 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     if request.FileType.len() > 0 {
         condition.push_str(&format!(
             " and FileType in ('{:?}') ",
-            &request.FileType.join(",")
+            &request.FileType.join("','")
         ));
-        println!("FileType in ('{:?}')", &request.FileType.join(","));
+        // println!("FileType in ('{:?}')", &request.FileType.join("','"));
     }
     if request.KeyWord.len() > 0 {
         condition.push_str(&format!(
@@ -154,7 +154,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         ));
     }
     let mut sql_query:String= String::from("SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file where 1=1");
-    let mut sql_count: String = String::from("SELECT ifnull(count(Id),0),ifnull(sum(Size)) 0 from t_file where 1=1");
+    let mut sql_count: String = String::from("SELECT ifnull(count(Id),0),ifnull(sum(Size),0)  from t_file where 1=1");
     sql_query.push_str(&String::from(&condition).replace("\"", ""));
     sql_count.push_str(&String::from(&condition).replace("\"", ""));
 
@@ -172,7 +172,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         &(request.PageSize * (request.Page - 1)),
         &request.PageSize
     ));
-    println!("sql:{}", &sql_query);
+    println!("sql_count:{}", &sql_count);
     let count_res = match conn.query_row(&sql_count, NO_PARAMS, |row| {
         let count: i64 = row.get(0).unwrap();
         let size: i64 = row.get(1).unwrap();
@@ -184,8 +184,10 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     rd.Count = count_res[0];
     rd.SizeStr = int_to_size_str(count_res[1]);
     if rd.Count == 0 {
+        println!("ResultData:{:?}", rd);
         return rd;
     }
+    println!("sql_query:{}", &sql_query);
     let mut stmt = conn.prepare(&sql_query).unwrap();
     let res = stmt
         .query_map(NO_PARAMS, |row| {
@@ -223,5 +225,6 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         }
     }
     rd.Data = result_list;
+    println!("ResultData:{:?}", rd);
     return rd;
 }
