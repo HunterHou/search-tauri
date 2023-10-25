@@ -76,7 +76,7 @@ pub fn title_from_name(name: &str) -> String {
         let title =res.get(res.len()-1);
         if title.is_some() {
             let result =title.unwrap().to_string();
-            println!("{}",&result);
+            // println!("{}",&result);
             return result;
         }
     }
