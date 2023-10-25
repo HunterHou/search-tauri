@@ -30,6 +30,8 @@ pub struct RequestFileParam {
     #[serde(default)]
     pub TotalSize: String,
     #[serde(default)]
+    pub TotalPage: i64,
+    #[serde(default)]
     pub ResultCnt: i64,
     #[serde(default)]
     pub ResultSize: String,
@@ -63,6 +65,7 @@ impl RequestFileParam {
             SortField: "MTime".to_string(),
             SortType: "desc".to_string(),
             FileType: vec![String::from("mp4")],
+            TotalPage:0,
         }
     }
 }
@@ -83,6 +86,7 @@ impl Default for RequestFileParam {
             SortField: Default::default(),
             SortType: Default::default(),
             FileType: Default::default(),
+            TotalPage:0,
         }
     }
 }

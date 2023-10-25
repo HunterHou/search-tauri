@@ -49,6 +49,7 @@ fn search_index(params: &str) -> RequestFileParam {
     request.TotalSize = String::from(&res.SizeStr);
     request.ResultCnt = res.Count;
     request.ResultSize = String::from(&res.SizeStr);
+    request.TotalPage = res.Count / request.PageSize;
     return request;
 }
 
