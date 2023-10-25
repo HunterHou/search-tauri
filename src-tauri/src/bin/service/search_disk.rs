@@ -1,5 +1,10 @@
-use super::super::data_model::file_model::FileModel;
+use super::super::model::params::ResultData;
+
+use super::super::model::params::RequestFileParam;
+
+use super::super::utils::do_file_name::int_to_size_str;
 use super::super::database::db;
+use super::super::model::file_model::FileModel;
 use super::super::static_param::STATIC_DATA;
 use rusqlite::NO_PARAMS;
 use std::io::Result;
@@ -21,7 +26,7 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             Err(error) => panic!("{}", error),
         };
         if entry.path().is_file() {
-            let mut size:i64 = 0;
+            let mut size: i64 = 0;
             let mut created = SystemTime::now();
             match entry.metadata() {
                 Ok(meta) => {
@@ -114,11 +119,6 @@ pub fn add_to_db(files: &Vec<FileModel>) {
         let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr) 
              values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}');",
             file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr);
-        // let res = conn.execute(&items, NO_PARAMS);
-        // println!("executing sql:{}", &items);
-        // if res.is_err() {
-        //     println!("executing sql err:{}", res.err().unwrap());
-        // }
         sql.push_str(&items);
     }
     sql.push_str(" COMMIT;");
@@ -130,11 +130,57 @@ pub fn add_to_db(files: &Vec<FileModel>) {
     let _ = conn.close();
 }
 
-pub fn search_index() -> Result<Vec<FileModel>> {
+pub fn search_index(request: RequestFileParam) -> ResultData {
     let conn = db::db_connection();
-    let mut stmt = conn.prepare(
-        "SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file",
-    ).unwrap();
+    let mut rd = ResultData::new();
+    let mut condition = String::new();
+    if request.FileType.len() > 0 {
+        condition.push_str(&format!(
+            " and FileType in ('{}') ",
+            &request.FileType.join(",")
+        ));
+    }
+    if request.KeyWord.len() > 0 {
+        condition.push_str(&format!(
+            " and (Code like '%{}%' or Path like '%{}%') ",
+            &request.KeyWord, &request.KeyWord
+        ));
+    }
+    if request.params.MovieType.len() > 0 {
+        condition.push_str(&format!(
+            " and MovieType = '{}' ",
+            &request.params.MovieType
+        ));
+    }
+    let mut sql_query:String= String::from("SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file where 1=1");
+    let mut sql_count: String = String::from("SELECT count(Id),sum(Size) from t_file where 1=1");
+    sql_count.push_str(&condition);
+
+    if request.OrderField.len() > 0 && request.OrderType.len() > 0 {
+        sql_query.push_str(&format!(
+            " order by {} {} ",
+            &request.OrderField, &request.OrderType
+        ));
+    } else {
+        sql_query.push_str(" order by MTime desc ");
+    }
+
+    sql_query.push_str(&format!(
+        " limit {},{}",
+        &(request.PageSize * (request.Page - 1)),
+        &request.PageSize
+    ));
+    println!("sql:{}", &sql_query);
+    let count_res = conn
+        .query_row(&sql_count, NO_PARAMS, |row| {
+            let count: i64 = row.get(0).unwrap();
+            let size: i64 = row.get(1).unwrap();
+            Ok([count, size])
+        })
+        .unwrap();
+    rd.Count = count_res[0];
+    rd.SizeStr = int_to_size_str(count_res[1]);
+    let mut stmt = conn.prepare(&sql_query).unwrap();
     let res = stmt
         .query_map(NO_PARAMS, |row| {
             let c14: String = row.get(14).unwrap();
@@ -143,7 +189,7 @@ pub fn search_index() -> Result<Vec<FileModel>> {
             for tagi in c1414 {
                 tags.push(String::from(tagi))
             }
-            let sizes:i64 = row.get(12).unwrap();
+            let sizes: i64 = row.get(12).unwrap();
             let v = FileModel {
                 Id: row.get(0).unwrap(),
                 Name: row.get(1).unwrap(),
@@ -170,5 +216,6 @@ pub fn search_index() -> Result<Vec<FileModel>> {
             resultList.push(x.ok().unwrap())
         }
     }
-    return Ok(resultList);
+    rd.Data = resultList;
+    return rd;
 }

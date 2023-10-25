@@ -3,8 +3,10 @@
 
 // =======================================================================================
 mod bin;
-use bin::{data_model, database::db, service /*, static_param */};
-use data_model::file_model::FileModel;
+
+use bin::{database::db, model, service /*, static_param */};
+use model::file_model::FileModel;
+use model::params::RequestFileParam;
 use service::search_disk as searchDisk;
 // use static_param::STATIC_LIST;
 
@@ -17,12 +19,12 @@ fn greet(name: &str) -> String {
 #[tauri::command]
 fn refresh_disk(name: &str) -> String {
     println!("refresh_disk {:?}", name);
-    let base_dir = vec!["d://emby","/Users/harmay/Documents"];
+    let base_dir = vec!["d://emby", "/Users/harmay/Documents"];
     let _filelist: Vec<FileModel> = Vec::new();
     db::init_db();
     let res = searchDisk::search_disk(base_dir.to_vec());
     if res.is_err() {
-        let msg =&res.err().unwrap().to_string();
+        let msg = &res.err().unwrap().to_string();
         println!("refresh_disk error:{}", &msg);
         return serde_json::to_string(msg).unwrap();
     } else {
@@ -31,20 +33,23 @@ fn refresh_disk(name: &str) -> String {
     }
 }
 #[tauri::command]
-fn search_index(name: &str) -> String {
-    println!("search_index {:?}", name);
-    let res =searchDisk::search_index();
+fn search_index(params: &str) -> RequestFileParam {
+    let mut request: RequestFileParam =match serde_json::from_str(params) {
+        Ok(v)=>v,
+        Err(_)=>RequestFileParam::new(),
+    };
+    println!("search_index {:?}", params);
+    let res = searchDisk::search_index(request.clone());
     if res.is_ok() {
-        let list:Vec<FileModel> = match res.ok() {
+        let list: Vec<FileModel> = match res.ok() {
             None => Vec::new(),
-            Some(v) => v
+            Some(v) => v,
         };
-        serde_json::to_string(&list).unwrap()
-    }else {
-        let res:Vec<String> = Vec::new();
-        serde_json::to_string(&res).unwrap()
-    }
+        request.Data.extend(list);
+    } else {
 
+    }
+    return request;
 }
 
 fn main() {

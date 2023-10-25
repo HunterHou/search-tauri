@@ -96,8 +96,8 @@ import {invoke} from '@tauri-apps/api/tauri'
 invoke("refresh_disk", {name: 'zhangsan'}).then(res => {
   console.log("refresh_disk", JSON.parse(res))
   
-  invoke("search_index", {name: 'zhangsan'}).then(res => {
-  console.log("search_index", JSON.parse(res))
+  invoke("search_index", {params: JSON.stringify({})}).then(res => {
+  console.log("search_index", res)
 
 }).catch(err => {
   console.log(err)

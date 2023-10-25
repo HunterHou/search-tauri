@@ -86,7 +86,7 @@
 
     <div class="row justify-center q-gutter-sm q-mr-sm q-mt-sm mainlist">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fit" loading="lazy" draggable :src="convertFileSrc(item.Png)" class="item-img" @click="() => {
+        <q-img fit="fit" loading="lazy" draggable :src="convertFileSrc(item.Jpg)" class="item-img" @click="() => {
           fileInfoRef.open({ item, cb: refreshIndex });
         }">
           <template v-slot:loading>
@@ -253,11 +253,6 @@ const listButtons = computed(() => {
   return view.settingInfo.Buttons;
 });
 
-invoke("refresh_disk", {name: 'zhangsan'}).then(res => {
-  console.log("refresh_disk", JSON.parse(res))
-}).catch(err => {
-  console.log(err)
-})
 const playBySystem = (item) => {
   const {Path} = item
   if ($q.platform.is.electron) {
@@ -414,7 +409,8 @@ import {appWindow} from '@tauri-apps/api/window';
 const fetchSearch = async () => {
   saveParam()
   const {Keyword} = view.queryParam
-  const data = await SearchAPI(view.queryParam);
+  // const data = await SearchAPI(view.queryParam);
+  const data =await invoke("search_index",{params:JSON.stringify(view.queryParam)})
   console.log(data);
   view.resultData = {...data};
   const {ResultSize, ResultCnt} = data
