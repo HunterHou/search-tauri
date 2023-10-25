@@ -1,3 +1,4 @@
+use std::fmt::Error;
 use super::super::data_model::file_model::FileModel;
 use super::super::database::db;
 use super::super::static_param::STATIC_DATA;
@@ -131,12 +132,11 @@ pub fn add_to_db(files: &Vec<FileModel>) {
     let _ = conn.close();
 }
 
-pub fn search_index() ->Vec<FileModel> {
+pub fn search_index() ->Result<Vec<FileModel>> {
     let conn =db::db_connection();
     let mut stmt = conn.prepare(
         "SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file",
     )?;
-
     let res = stmt.query_map(NO_PARAMS, |row| {
         let tagStr = String::from(row.get(14).unwrap());
         Ok(FileModel {
@@ -157,5 +157,11 @@ pub fn search_index() ->Vec<FileModel> {
             Tags: tagStr.split(",").collect(),
         })
     })?;
-    return res.collect();
+    let mut resultList:Vec<FileModel>=Vec::new();
+    for x in res {
+        if x.is_ok() {
+            resultList.push(x.ok().unwrap())
+        }
+    }
+    return Ok(resultList);
 }

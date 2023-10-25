@@ -33,12 +33,17 @@ fn refresh_disk(name: &str) -> String {
 #[tauri::command]
 fn search_index(name: &str) -> String {
     println!("search_index {:?}", name);
-    let mut filelist: Vec<&FileModel> = Vec::new();
-    let map = STATIC_LIST.lock().unwrap();
-    for value in map.as_slice() {
-        filelist.push(value);
+    let res =searchDisk::search_index();
+    if res.is_ok() {
+        let list:Vec<FileModel> = match res.ok() {
+            None => Vec::new(),
+            Some(v) => v
+        };
+        serde_json::to_string(&list).unwrap()
+    }else {
+        serde_json::to_string(&(Vec::new())).unwrap()
     }
-    serde_json::to_string(&filelist).unwrap()
+
 }
 
 fn main() {
