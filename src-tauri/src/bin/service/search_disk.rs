@@ -8,8 +8,12 @@ use walkdir::DirEntry;
 use walkdir::WalkDir;
 
 fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
-    let walker = WalkDir::new(dir).into_iter();
     let mut filelist: Vec<FileModel> = Vec::new();
+    if !Path::new(dir).exists() {
+        println!("dir not exists:{}", dir);
+        return Ok(filelist);
+    }
+    let walker = WalkDir::new(dir).into_iter();
     for entry_item in walker {
         let entry: DirEntry = match entry_item {
             Ok(v) => v,
@@ -90,8 +94,8 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
                 //     filelist.push(val)
                 // }
                 add_to_db(&value);
-                let count =&value.len();
-                file_count=file_count+ (*count as i32);
+                let count = &value.len();
+                file_count = file_count + (*count as i32);
             }
             Err(err) => println!("{}", err),
         }
@@ -100,6 +104,9 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
 }
 
 pub fn add_to_db(files: &Vec<FileModel>) {
+    if files.len() == 0 {
+        return;
+    }
     let conn = db::db_connection();
     let mut sql = String::from("BEGIN; ");
     for file in files {
