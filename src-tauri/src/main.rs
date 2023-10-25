@@ -34,21 +34,21 @@ fn refresh_disk(name: &str) -> String {
 }
 #[tauri::command]
 fn search_index(params: &str) -> RequestFileParam {
-    let mut request: RequestFileParam =match serde_json::from_str(params) {
-        Ok(v)=>v,
-        Err(_)=>RequestFileParam::new(),
+    // println!("search_index params{:?}", params);
+    let mut request: RequestFileParam = match serde_json::from_str(params) {
+        Ok(v) => v,
+        Err(err) => {
+            println!("serde_json::from_str {:?}", err);
+            RequestFileParam::new()
+        }
     };
-    println!("search_index {:?}", params);
+    // println!("search_index request{:?}", request);
     let res = searchDisk::search_index(request.clone());
-    if res.is_ok() {
-        let list: Vec<FileModel> = match res.ok() {
-            None => Vec::new(),
-            Some(v) => v,
-        };
-        request.Data.extend(list);
-    } else {
-
-    }
+    request.Data.extend(res.Data);
+    request.TotalCnt = res.Count;
+    request.TotalSize = String::from(&res.SizeStr);
+    request.ResultCnt = res.Count;
+    request.ResultSize = String::from(&res.SizeStr);
     return request;
 }
 

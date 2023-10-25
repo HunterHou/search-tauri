@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Deserializer};
 
 use super::file_model::FileModel;
 
@@ -19,19 +19,32 @@ impl ResultData {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RequestFileParam {
+    #[serde(default)]
     pub Page: i64,
+    #[serde(default)]
     pub PageSize: i64,
+    #[serde(default)]
     pub OnlyRepeat: bool,
-    pub params: FileModel,
-    pub Data: Vec<FileModel>,
+    #[serde(default)]
     pub TotalCnt: i64,
+    #[serde(default)]
     pub TotalSize: String,
+    #[serde(default)]
     pub ResultCnt: i64,
+    #[serde(default)]
     pub ResultSize: String,
+    #[serde(default)]
     pub KeyWord: String,
-    pub OrderField: String,
-    pub OrderType: String,
+    #[serde(default)]
+    pub SortField: String,
+    #[serde(default)]
+    pub SortType: String,
+    #[serde(default)]
     pub FileType: Vec<String>,
+    #[serde(flatten)]
+    pub params: FileModel,
+    #[serde(default)]
+    pub Data: Vec<FileModel>,
 }
 
 impl RequestFileParam {
@@ -47,8 +60,8 @@ impl RequestFileParam {
             ResultCnt: 0,
             ResultSize: "".to_string(),
             KeyWord: "".to_string(),
-            OrderField: "MTime".to_string(),
-            OrderType: "desc".to_string(),
+            SortField: "MTime".to_string(),
+            SortType: "desc".to_string(),
             FileType: vec![String::from("mp4")],
         }
     }
@@ -67,9 +80,9 @@ impl Default for RequestFileParam {
             ResultCnt: Default::default(),
             ResultSize: Default::default(),
             KeyWord: Default::default(),
-            OrderField: "MTime".to_string(),
-            OrderType: "desc".to_string(),
-            FileType: vec![String::from("mp4")],
+            SortField: Default::default(),
+            SortType: Default::default(),
+            FileType: Default::default(),
         }
     }
 }

@@ -2,10 +2,10 @@ use super::super::model::params::ResultData;
 
 use super::super::model::params::RequestFileParam;
 
-use super::super::utils::do_file_name::int_to_size_str;
 use super::super::database::db;
 use super::super::model::file_model::FileModel;
 use super::super::static_param::STATIC_DATA;
+use super::super::utils::do_file_name::int_to_size_str;
 use rusqlite::NO_PARAMS;
 use std::io::Result;
 use std::path::Path;
@@ -136,9 +136,10 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     let mut condition = String::new();
     if request.FileType.len() > 0 {
         condition.push_str(&format!(
-            " and FileType in ('{}') ",
+            " and FileType in ('{:?}') ",
             &request.FileType.join(",")
         ));
+        println!("FileType in ('{:?}')", &request.FileType.join(","));
     }
     if request.KeyWord.len() > 0 {
         condition.push_str(&format!(
@@ -153,13 +154,14 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         ));
     }
     let mut sql_query:String= String::from("SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file where 1=1");
-    let mut sql_count: String = String::from("SELECT count(Id),sum(Size) from t_file where 1=1");
-    sql_count.push_str(&condition);
+    let mut sql_count: String = String::from("SELECT ifnull(count(Id),0),ifnull(sum(Size)) 0 from t_file where 1=1");
+    sql_query.push_str(&String::from(&condition).replace("\"", ""));
+    sql_count.push_str(&String::from(&condition).replace("\"", ""));
 
-    if request.OrderField.len() > 0 && request.OrderType.len() > 0 {
+    if request.SortField.len() > 0 && request.SortType.len() > 0 {
         sql_query.push_str(&format!(
             " order by {} {} ",
-            &request.OrderField, &request.OrderType
+            &request.SortField, &request.SortType
         ));
     } else {
         sql_query.push_str(" order by MTime desc ");
@@ -171,15 +173,19 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         &request.PageSize
     ));
     println!("sql:{}", &sql_query);
-    let count_res = conn
-        .query_row(&sql_count, NO_PARAMS, |row| {
-            let count: i64 = row.get(0).unwrap();
-            let size: i64 = row.get(1).unwrap();
-            Ok([count, size])
-        })
-        .unwrap();
+    let count_res = match conn.query_row(&sql_count, NO_PARAMS, |row| {
+        let count: i64 = row.get(0).unwrap();
+        let size: i64 = row.get(1).unwrap();
+        Ok([count, size])
+    }) {
+        Ok(val) => val,
+        Err(_) => [0, 0],
+    };
     rd.Count = count_res[0];
     rd.SizeStr = int_to_size_str(count_res[1]);
+    if rd.Count == 0 {
+        return rd;
+    }
     let mut stmt = conn.prepare(&sql_query).unwrap();
     let res = stmt
         .query_map(NO_PARAMS, |row| {
@@ -210,12 +216,12 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
             Ok(v)
         })
         .unwrap();
-    let mut resultList: Vec<FileModel> = Vec::new();
+    let mut result_list: Vec<FileModel> = Vec::new();
     for x in res {
         if x.is_ok() {
-            resultList.push(x.ok().unwrap())
+            result_list.push(x.ok().unwrap())
         }
     }
-    rd.Data = resultList;
+    rd.Data = result_list;
     return rd;
 }

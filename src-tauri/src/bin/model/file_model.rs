@@ -8,20 +8,35 @@ use std::time::SystemTime;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct FileModel {
+    #[serde(default)]
     pub Id: String,
+    #[serde(default)]
     pub Name: String,
+    #[serde(default)]
     pub Code: String,
+    #[serde(default)]
     pub MovieType: String,
+    #[serde(default)]
     pub FileType: String,
+    #[serde(default)]
     pub Png: String,
+    #[serde(default)]
     pub Jpg: String,
+    #[serde(default)]
     pub Actress: String,
+    #[serde(default)]
     pub Path: String,
+    #[serde(default)]
     pub DirPath: String,
+    #[serde(default)]
     pub Title: String,
+    #[serde(default)]
     pub SizeStr: String,
+    #[serde(default)]
     pub Size: i64,
+    #[serde(default)]
     pub MTime: String,
+    #[serde(default)]
     pub Tags: Vec<String>,
 }
 
