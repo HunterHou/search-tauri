@@ -1,7 +1,7 @@
 // 数据模型 文件
 use super::super::utils::do_file_name::{
     actress_from_name, code_from_name, int_to_size_str, movie_type_from_name, tags_from_name,
-    title_from_name, vm_jpg_from_name, vm_png_from_name,
+    title_from_name, vm_jpg_from_name, vm_png_from_name, system_time_to_string,
 };
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
@@ -46,7 +46,7 @@ impl FileModel {
         let jpg = vm_jpg_from_name(&path);
         let tags = tags_from_name(&name);
         let path_bac = &String::from("".to_string() + &dirpath + "\\" + &path);
-        created.elapsed().ok();
+        let mtime = system_time_to_string(&created);
         return FileModel {
             Id: String::from(path_bac),
             Name: name,
@@ -61,7 +61,7 @@ impl FileModel {
             Title: title,
             SizeStr: int_to_size_str(size),
             Size: size,
-            MTime: "".to_string(),
+            MTime: created.elapsed().ok().unwrap(),
             Tags: tags,
         };
     }

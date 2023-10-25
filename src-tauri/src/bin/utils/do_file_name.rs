@@ -1,5 +1,6 @@
-use std::{borrow::BorrowMut, vec};
-
+use chrono::offset::Utc;
+use chrono::DateTime;
+use std::time::SystemTime;
 pub fn int_to_size_str(size: u64) -> String {
     if size < 1024 {
         return format!("{}", size);
@@ -13,6 +14,11 @@ pub fn int_to_size_str(size: u64) -> String {
         return format!("{}T", size / (1024 * 1024 * 1024 * 1024));
     }
     return format!(">{}T", 1024);
+}
+
+pub fn system_time_to_string(system_time:&SystemTime) -> String {
+    let datetime: DateTime<Utc> = system_time.into();
+    datetime.format("%Y-%m-%d %H:%M:%S").to_string()
 }
 
 pub fn code_from_name(name: &str) -> String {
