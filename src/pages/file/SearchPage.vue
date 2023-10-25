@@ -408,10 +408,7 @@ import { appWindow } from '@tauri-apps/api/window';
 const fetchSearch = async () => {
   saveParam()
   const { Keyword } = view.queryParam
-  // const data = await SearchAPI(view.queryParam);
-  const params = { ...view.queryParam, params: {...view.queryParam}, FileType: ["mp4", "mkv"] }
-  console.log(params);
-  const data = await invoke("search_index", { params: JSON.stringify(params) })
+  const data = await SearchAPI(view.queryParam);
   console.log(data);
   view.resultData = { ...data };
   const { ResultSize, ResultCnt } = data
@@ -492,7 +489,7 @@ onMounted(async () => {
     showStyle,
     from
   } = thisRoute.query;
-  await fetchGetSettingInfo();
+  fetchGetSettingInfo();
   if (Keyword) {
     view.queryParam.Keyword = Keyword;
   }

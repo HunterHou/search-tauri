@@ -141,10 +141,10 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         ));
         // println!("FileType in ('{:?}')", &request.FileType.join("','"));
     }
-    if request.KeyWord.len() > 0 {
+    if request.Keyword.len() > 0 {
         condition.push_str(&format!(
             " and (Code like '%{}%' or Path like '%{}%') ",
-            &request.KeyWord, &request.KeyWord
+            &request.Keyword, &request.Keyword
         ));
     }
     if request.params.MovieType.len() > 0 {
@@ -184,7 +184,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     rd.Count = count_res[0];
     rd.SizeStr = int_to_size_str(count_res[1]);
     if rd.Count == 0 {
-        println!("ResultData:{:?}", rd);
+        // println!("ResultData:{:?}", rd);
         return rd;
     }
     println!("sql_query:{}", &sql_query);
@@ -225,6 +225,6 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         }
     }
     rd.Data = result_list;
-    println!("ResultData:{:?}", rd);
+    // println!("ResultData:{:?}", rd);
     return rd;
 }

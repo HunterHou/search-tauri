@@ -36,7 +36,7 @@ pub struct RequestFileParam {
     #[serde(default)]
     pub ResultSize: String,
     #[serde(default)]
-    pub KeyWord: String,
+    pub Keyword: String,
     #[serde(default)]
     pub SortField: String,
     #[serde(default)]
@@ -61,7 +61,7 @@ impl RequestFileParam {
             TotalSize: "".to_string(),
             ResultCnt: 0,
             ResultSize: "".to_string(),
-            KeyWord: "".to_string(),
+            Keyword: "".to_string(),
             SortField: "MTime".to_string(),
             SortType: "desc".to_string(),
             FileType: vec![String::from("mp4")],
@@ -82,7 +82,7 @@ impl Default for RequestFileParam {
             TotalSize: Default::default(),
             ResultCnt: Default::default(),
             ResultSize: Default::default(),
-            KeyWord: Default::default(),
+            Keyword: Default::default(),
             SortField: Default::default(),
             SortType: Default::default(),
             FileType: Default::default(),
