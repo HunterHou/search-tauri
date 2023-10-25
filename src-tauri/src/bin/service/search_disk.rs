@@ -81,8 +81,8 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     Ok(filelist)
 }
 
-pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
-    let mut filelist: Vec<FileModel> = Vec::new();
+pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
+    let mut file_count: i32 = 0;
     for dir_path in dir_paths {
         match visit_dirs(dir_path) {
             Ok(value) => {
@@ -90,11 +90,13 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<Vec<FileModel>> {
                 //     filelist.push(val)
                 // }
                 add_to_db(&value);
+                let count =&value.len();
+                file_count=file_count+ (*count as i32);
             }
             Err(err) => println!("{}", err),
         }
     }
-    Ok(filelist)
+    Ok(file_count)
 }
 
 pub fn add_to_db(files: &Vec<FileModel>) {
