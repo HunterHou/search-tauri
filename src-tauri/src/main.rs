@@ -20,9 +20,14 @@ fn greet(name: &str) -> String {
 fn refresh_disk(name: &str) -> String {
     println!("refresh_disk {:?}", name);
     let base_dir = vec![
+        "d:\\emby",
+        "e:\\emby",
+        "f:\\emby",
+        "g:\\emby",
+        "h:\\emby",
+        "i:\\emby",
         "J:\\emby",
-        "d://emby",
-        "f://emby",
+        "k:\\emby",
         "/Users/harmay/Documents",
     ];
     let _filelist: Vec<FileModel> = Vec::new();
