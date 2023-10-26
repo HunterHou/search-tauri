@@ -19,7 +19,12 @@ fn greet(name: &str) -> String {
 #[tauri::command]
 fn refresh_disk(name: &str) -> String {
     println!("refresh_disk {:?}", name);
-    let base_dir = vec!["J:\\emby\\0ahd",/* "d://emby","f://emby", */ "/Users/harmay/Documents"];
+    let base_dir = vec![
+        "J:\\emby",
+        "d://emby",
+        "f://emby",
+        "/Users/harmay/Documents",
+    ];
     let _filelist: Vec<FileModel> = Vec::new();
     db::init_db();
     let res = searchDisk::search_disk(base_dir.to_vec());

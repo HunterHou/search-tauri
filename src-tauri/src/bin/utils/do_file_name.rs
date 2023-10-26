@@ -1,21 +1,23 @@
 use chrono::offset::Utc;
 use chrono::DateTime;
-use rusqlite::Row;
 use std::time::SystemTime;
 
 pub fn int_to_size_str(size: i64) -> String {
     if size < 1024 {
         return format!("{}", size);
     } else if size < 1024 * 1024 {
-        return format!("{}k", size / 1024);
+        return format!("{}k", (size as f64) / 1024.00);
     } else if size < 1024 * 1024 * 1024 {
-        return format!("{}m", size / (1024 * 1024));
+        return format!("{:.2}m", (size as f64) / (1024.00 * 1024.00));
     } else if size < 1024 * 1024 * 1024 * 1024 {
-        return format!("{}G", size / (1024 * 1024 * 1024));
+        return format!("{:.2}G", (size as f64) / (1024.00 * 1024.00 * 1024.00));
     } else if size < 1024 * 1024 * 1024 * 1024 * 1024 {
-        return format!("{}T", size / (1024 * 1024 * 1024 * 1024));
+        return format!(
+            "{:.2}T",
+            (size as f64) / (1024.00 * 1024.00 * 1024.00 * 1024.00)
+        );
     }
-    return format!(">{}T", 1024);
+    return format!(">{:.2}T", 1024);
 }
 
 pub fn system_time_to_string(system_time: &SystemTime) -> String {

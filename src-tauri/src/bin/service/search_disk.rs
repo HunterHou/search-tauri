@@ -6,10 +6,12 @@ use super::super::database::db;
 use super::super::model::file_model::FileModel;
 use super::super::static_param::STATIC_DATA;
 use super::super::utils::do_file_name::int_to_size_str;
+use chrono::DateTime;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
 use std::io::Result;
 use std::path::Path;
+use std::thread;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
@@ -102,29 +104,42 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     let mut file_count: i32 = 0;
+    let start =SystemTime::now();
+    // let mut file_list:Vec<FileModel>=Vec::new();
+    let mut handles = vec![];
     for dir_path in dir_paths {
         match visit_dirs(dir_path) {
             Ok(value) => {
-                add_to_db(&value, &dir_path, 2, None);
+                // add_to_db(&value, &dir_path, 2, None);
                 let count = &value.len();
                 file_count = file_count + (*count as i32);
+                let handle = thread::spawn(move || {
+                    add_to_db(&value, "",  None);
+                });
+                handles.push(handle);
+                // file_list.extend(value);
             }
             Err(err) => println!("{}", err),
         }
     }
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    let end =SystemTime::now().duration_since(start);
+    println!("search_disk over:{:?}",end.ok());
+    // add_to_db(&file_list,"",None);
     Ok(file_count)
 }
 
 pub fn add_to_db(
     files: &Vec<FileModel>,
     dir_path: &str,
-    window: i32,
     mut connect: Option<Connection>,
 ) {
     if files.len() == 0 {
         return;
     }
-
+    let start =SystemTime::now();
     if connect.is_none() {
         connect = Some(db::update_connection());
     }
@@ -175,6 +190,8 @@ pub fn add_to_db(
         println!("executing sql :{} \n\n\n err:{}",&sql, res.err().unwrap());
     }
     let _ = conn.close();
+    let start =SystemTime::now().duration_since(start);
+    println!("executing over :{} ,time:{:?}",&files.len(),start.ok());
 }
 
 pub fn search_index(request: RequestFileParam) -> ResultData {
