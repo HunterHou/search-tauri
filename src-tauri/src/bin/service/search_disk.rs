@@ -116,9 +116,10 @@ pub fn add_to_db(files: &Vec<FileModel>) {
     let conn = db::db_connection();
     let mut sql = String::from("BEGIN; ");
     for file in files {
-        let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr) 
-             values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}');",
-            file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr);
+        let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr)
+             values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}');",
+            file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Gif,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr
+        );
         sql.push_str(&items);
     }
     sql.push_str(" COMMIT;");
@@ -136,35 +137,58 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     let mut condition = String::new();
     if request.FileType.len() > 0 {
         condition.push_str(&format!(
-            " and FileType in ('{:?}') ",
+            " and t.FileType in ('{:?}') ",
             &request.FileType.join("','")
         ));
         // println!("FileType in ('{:?}')", &request.FileType.join("','"));
     }
     if request.Keyword.len() > 0 {
         condition.push_str(&format!(
-            " and (Code like '%{}%' or Path like '%{}%') ",
+            " and (t.Code like '%{}%' or t.Path like '%{}%') ",
             &request.Keyword, &request.Keyword
         ));
     }
     if request.params.MovieType.len() > 0 {
         condition.push_str(&format!(
-            " and MovieType = '{}' ",
+            " and t.MovieType = '{}' ",
             &request.params.MovieType
         ));
     }
-    let mut sql_query:String= String::from("SELECT Id,Name,Code,MovieType,FileType,Png,Jpg,Actress,Path,DirPath,Title,SizeStr,Size,MTime,Tags from t_file where 1=1");
-    let mut sql_count: String = String::from("SELECT ifnull(count(Id),0),ifnull(sum(Size),0)  from t_file where 1=1");
+    let mut sql_query: String = String::from(
+        "SELECT t.Id,
+                t.Name,
+                t.Code,
+                t.MovieType,
+                t.FileType,
+                t1.Path Png,
+                t2.Path Jpg,
+                t.Actress,
+                t.Path,
+                t.DirPath,
+                t.Title,
+                t.MTime,
+                t.Tags,
+                t.size,
+                t.sizeStr,
+                t3.Path Gif
+        from t_file t
+                    left join t_file t1 on t.png = t1.Path
+                    left join t_file t2 on t.jpg = t2.Path
+                    left join t_file t3 on t.gif = t3.Path
+        where 1 = 1",
+    );
+    let mut sql_count: String =
+        String::from("SELECT ifnull(count(Id),0),ifnull(sum(Size),0)  from t_file t where 1=1");
     sql_query.push_str(&String::from(&condition).replace("\"", ""));
     sql_count.push_str(&String::from(&condition).replace("\"", ""));
 
     if request.SortField.len() > 0 && request.SortType.len() > 0 {
         sql_query.push_str(&format!(
-            " order by {} {} ",
+            " order by t.{} {} ",
             &request.SortField, &request.SortType
         ));
     } else {
-        sql_query.push_str(" order by MTime desc ");
+        sql_query.push_str(" order by t.MTime desc ");
     }
 
     sql_query.push_str(&format!(
@@ -205,6 +229,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
                 MovieType: row.get(3).unwrap(),
                 FileType: row.get(4).unwrap(),
                 Png: row.get(5).unwrap(),
+                Gif: row.get(15).unwrap(),
                 Jpg: row.get(6).unwrap(),
                 Actress: row.get(7).unwrap(),
                 Path: row.get(8).unwrap(),

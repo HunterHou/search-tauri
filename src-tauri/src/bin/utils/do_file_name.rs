@@ -94,6 +94,12 @@ pub fn vm_png_from_name(name: &str) -> String {
     res.push_str(".png");
     return res;
 }
+pub fn vm_git_from_name(name: &str) -> String {
+    let mut res = String::from(name);
+    res.push_str(".gif");
+    return res;
+}
+
 
 pub fn vm_jpg_from_name(name: &str) -> String {
     let mut res = String::from(name);

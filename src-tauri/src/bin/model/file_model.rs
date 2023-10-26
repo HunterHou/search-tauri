@@ -1,7 +1,8 @@
 // 数据模型 文件
 use super::super::utils::do_file_name::{
     actress_from_name, code_from_name, int_to_size_str, movie_type_from_name,
-    system_time_to_string, tags_from_name, title_from_name, vm_jpg_from_name, vm_png_from_name,
+    system_time_to_string, tags_from_name, title_from_name, vm_git_from_name, vm_jpg_from_name,
+    vm_png_from_name,
 };
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
@@ -18,6 +19,8 @@ pub struct FileModel {
     pub MovieType: String,
     #[serde(default)]
     pub FileType: String,
+    #[serde(default)]
+    pub Gif: String,
     #[serde(default)]
     pub Png: String,
     #[serde(default)]
@@ -52,6 +55,7 @@ impl FileModel {
             Code: "".to_string(),
             MovieType: "".to_string(),
             FileType: "".to_string(),
+            Gif: "".to_string(),
             Png: "".to_string(),
             Jpg: "".to_string(),
             Actress: "".to_string(),
@@ -73,13 +77,14 @@ impl FileModel {
         size: i64,
         created: SystemTime,
     ) -> FileModel {
-        let abs_path ="".to_string() + &dirpath + "\\" + &path;
-        let abs_name ="".to_string() + &dirpath + "\\" + &name;
+        let abs_path = "".to_string() + &dirpath + "\\" + &path;
+        let abs_name = "".to_string() + &dirpath + "\\" + &name;
         let code = code_from_name(&name);
         let actress = actress_from_name(&name);
         let movie_type = movie_type_from_name(&name);
         let title = title_from_name(&name);
         let png = vm_png_from_name(&abs_name);
+        let gif = vm_git_from_name(&abs_name);
         let jpg = vm_jpg_from_name(&abs_name);
         let tags = tags_from_name(&name);
         let path_bac = &String::from(&abs_path);
@@ -91,6 +96,7 @@ impl FileModel {
             MovieType: movie_type,
             FileType: ext,
             Png: png,
+            Gif: gif,
             Jpg: jpg,
             Actress: actress,
             Path: String::from(path_bac),

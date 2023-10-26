@@ -20,6 +20,7 @@ pub fn init_db() {
         FileType text,
         Png text,
         Jpg text,
+        Gif text,
         Actress text,
         Path text,
         DirPath text,
