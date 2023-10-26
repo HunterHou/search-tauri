@@ -7,12 +7,9 @@ use super::super::model::file_model::FileModel;
 use super::super::static_param::STATIC_DATA;
 use super::super::utils::do_file_name::int_to_size_str;
 use rusqlite::Connection;
-use rusqlite::Row;
 use rusqlite::NO_PARAMS;
-use serde::de::value;
 use std::io::Result;
 use std::path::Path;
-use std::ptr::null;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
@@ -108,7 +105,7 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     for dir_path in dir_paths {
         match visit_dirs(dir_path) {
             Ok(value) => {
-                add_to_db(&value, &dir_path, 2, None);
+                add_to_db(&value, &dir_path, 1000, None);
                 let count = &value.len();
                 file_count = file_count + (*count as i32);
             }
@@ -136,33 +133,38 @@ pub fn add_to_db(
         None => db::update_connection(),
     };
 
-    // let del_sql = format!("delete from t_file where BaseDir='{}' ", dir_path);
+    let del_sql = format!("delete from t_file where BaseDir='{}' ", dir_path);
     let mut sql = String::from("BEGIN; ");
+    // let mut sql = String::new();
 
-    // let _ = conn.execute(&del_sql, NO_PARAMS);
+    let _ = conn.execute(&del_sql, NO_PARAMS);
     let mut p_size: Vec<FileModel> = Vec::new();
     let mut p = 0;
     for file in files {
-        let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr,BaseDir)
-             values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}','{}');",
+        let items = format!("\n insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr,BaseDir) values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}','{}');",
             file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Gif,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr,file.BaseDir
         );
         sql.push_str(&items);
         p_size.push(file.clone());
         p = p + 1;
-        if p % 1000 == 0 {
-            sql.push_str(" COMMIT;");
+        if p % window == 0 {
+            // sql.push_str(" COMMIT;");
             let res = conn.execute_batch(&sql);
             // println!("executing sql:{}", sql);
             if res.is_err() {
-                println!("insert err:{},dir:{} \n sql:{}", res.err().unwrap(),dir_path,&sql);
+                println!(
+                    "insert err:{},dir:{} \n\n\n sql:{}",
+                    res.err().unwrap(),
+                    dir_path,
+                    &sql
+                );
                 // add_to_db(&p_size, dir_path, &window / &window, None)
             } else {
                 println!("insert:{}", &p);
                 p = 0;
                 p_size.clear();
                 sql.clear();
-                sql=String::from("BEGIN; ")
+                sql = String::from("BEGIN; ")
             }
         }
     }

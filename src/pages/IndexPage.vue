@@ -91,20 +91,15 @@
 import { useQuasar } from 'quasar';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import {invoke} from '@tauri-apps/api/tauri'
+import { invoke } from '@tauri-apps/api/tauri'
 
-invoke("refresh_disk", {name: 'zhangsan'}).then(res => {
-  console.log("refresh_disk", JSON.parse(res))
-  
-  invoke("search_index", {params: JSON.stringify({})}).then(res => {
-  console.log("search_index", res)
-
-}).catch(err => {
-  console.log(err)
-})
-}).catch(err => {
-  console.log(err)
-})
+setTimeout(() => {
+  invoke("refresh_disk", { name: 'zhangsan' }).then(res => {
+    console.log("refresh_disk", JSON.parse(res))
+  }).catch(err => {
+    console.log(err)
+  })
+}, 1);
 
 const splitterModel = ref(50);
 const insideModel = ref(50);
