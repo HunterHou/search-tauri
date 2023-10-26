@@ -112,11 +112,9 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
         let handle = thread::spawn(move || {
             match visit_dirs(&dir) {
                 Ok(value) => {
-                    // add_to_db(&value, &dir_path, 2, None);
                     let count = &value.len();
                     file_count = file_count + (*count as i32);
                     add_to_db(&value, &dir,  None);
-                    // file_list.extend(value);
                 }
                 Err(err) => println!("{}", err),
             }
@@ -128,7 +126,6 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     }
     let end =SystemTime::now().duration_since(start);
     println!("search_disk over:{:?}",end.ok());
-    // add_to_db(&file_list,"",None);
     Ok(file_count)
 }
 
@@ -151,38 +148,13 @@ pub fn add_to_db(
 
     let del_sql = format!("delete from t_file where BaseDir='{}' ", dir_path);
     let mut sql = String::from("BEGIN; ");
-    // let mut sql = String::from("");
-
     let _ = conn.execute(&del_sql, NO_PARAMS);
-    // let mut p_size: Vec<FileModel> = Vec::new();
-    // let mut p = 0;
+
     for file in files {
         let items = format!("insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr,BaseDir)  values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}','{}');",
             file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Gif,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr,file.BaseDir
         );
         sql.push_str(&items);
-        // p_size.push(file.clone());
-        // p = p + 1;
-        // if p % window == window - 1 || p == (files.len() as i32) {
-        //     sql.push_str(" COMMIT;");
-        //     let res = conn.execute_batch(&sql);
-        //     // println!("executing sql:{}", sql);
-        //     if res.is_err() {
-        //         println!(
-        //             "insert   sql:{} \n\n\n err:{},dir:{} \n\n\n",
-        //             &sql,
-        //             res.err().unwrap(),
-        //             dir_path,
-        //         );
-        //     } else {
-        //         if p != (files.len() as i32) {
-        //             println!("insert:{}", &p);
-        //             p_size.clear();
-        //             sql.clear();
-        //             sql = String::from("BEGIN; ")
-        //         }
-        //     }
-        // }
     }
     sql.push_str(" COMMIT;");
     let res = conn.execute_batch(&sql);
