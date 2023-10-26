@@ -104,40 +104,35 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     let mut file_count: i32 = 0;
-    let start =SystemTime::now();
+    let start = SystemTime::now();
     // let mut file_list:Vec<FileModel>=Vec::new();
-    let mut handles = vec![];
+    // let mut handles = vec![];
     for dir_path in dir_paths {
-        let dir =String::from(dir_path);
-        let handle = thread::spawn(move || {
-            match visit_dirs(&dir) {
-                Ok(value) => {
-                    let count = &value.len();
-                    file_count = file_count + (*count as i32);
-                    add_to_db(&value, &dir,  None);
-                }
-                Err(err) => println!("{}", err),
+        let dir = String::from(dir_path);
+        let handle = thread::spawn(move || match visit_dirs(&dir) {
+            Ok(value) => {
+                let count = &value.len();
+                file_count = file_count + (*count as i32);
+                add_to_db(&value, &dir, None);
             }
+            Err(err) => println!("{}", err),
         });
-        handles.push(handle);
+        // handle.join().unwrap();
+        // handles.push(handle);
     }
-    for handle in handles {
-        handle.join().unwrap();
-    }
-    let end =SystemTime::now().duration_since(start);
-    println!("search_disk over:{:?}",end.ok());
+    // for handle in handles {
+    //     handle.join().unwrap();
+    // }
+    let end = SystemTime::now().duration_since(start);
+    println!("search_disk over:{:?}", end.ok());
     Ok(file_count)
 }
 
-pub fn add_to_db(
-    files: &Vec<FileModel>,
-    dir_path: &str,
-    mut connect: Option<Connection>,
-) {
+pub fn add_to_db(files: &Vec<FileModel>, dir_path: &str, mut connect: Option<Connection>) {
     if files.len() == 0 {
         return;
     }
-    let start =SystemTime::now();
+    let start = SystemTime::now();
     if connect.is_none() {
         connect = Some(db::update_connection());
     }
@@ -161,11 +156,16 @@ pub fn add_to_db(
     // println!("executing sql:{}", sql);
     if res.is_err() {
         // println!("executing sql :{} \n\n\n err:{}",&sql, res.err().unwrap());
-        println!("executing sql : \n\n\n err:{}", res.err().unwrap());
+        println!("executing sql   err:{} \n\n\n", res.err().unwrap());
     }
     let _ = conn.close();
-    let start =SystemTime::now().duration_since(start);
-    println!("executing over :{} ,time:{:?}",&files.len(),start.ok());
+    let start = SystemTime::now().duration_since(start);
+    println!(
+        "executing over :{}, dir:{} ,time:{:?} \n\n",
+        &files.len(),
+        &dir_path,
+        start.ok()
+    );
 }
 
 pub fn search_index(request: RequestFileParam) -> ResultData {
@@ -260,13 +260,13 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
                 tags.push(String::from(tagi))
             }
             let sizes: i64 = row.get(13).unwrap();
-            let id:String =row.get(0).unwrap();
-            let name:String =row.get(1).unwrap();
-            let path:String =row.get(8).unwrap();
-            let dir_path:String =row.get(9).unwrap();
-            let png:String =row.get(5).unwrap();
-            let jpg:String =row.get(6).unwrap();
-            let gif:String =row.get(15).unwrap();
+            let id: String = row.get(0).unwrap();
+            let name: String = row.get(1).unwrap();
+            let path: String = row.get(8).unwrap();
+            let dir_path: String = row.get(9).unwrap();
+            let png: String = row.get(5).unwrap();
+            let jpg: String = row.get(6).unwrap();
+            let gif: String = row.get(15).unwrap();
             let v = FileModel {
                 Id: id.replace("''", "'"),
                 Name: name.replace("''", "'"),

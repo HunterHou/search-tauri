@@ -17,6 +17,7 @@ pub fn config_connection() {
     let _ = conn.execute("PRAGMA journal_mode = OFF", NO_PARAMS);
     let _ = conn.execute("PRAGMA Synchronous = 0", NO_PARAMS);
     let _ = conn.execute("PRAGMA cache_size = 10000000000", NO_PARAMS);
+    let _ = conn.execute("PRAGMA timeout = 6000", NO_PARAMS);
     let _ = conn.execute("PRAGMA temp_store = MEMORY", NO_PARAMS);
 }
 
