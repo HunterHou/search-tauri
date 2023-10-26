@@ -1,17 +1,16 @@
 import { axios } from "../../boot/axios";
 import { invoke } from "@tauri-apps/api/tauri";
 
-export const SearchAPI = async (params: object) => {
+export const SearchAPI = async (params: any) => {
   // const { data } = await axios.post('/api/movieList', params);
   // return data;
 
   const params1 = {
     ...params,
     params: { ...params },
-    FileType: ["mp4", "mkv"],
     Keyword: params.Keyword || "",
   };
-  // console.log(params);
+  console.log(params);
   const data = await invoke("search_index", {
     params: JSON.stringify(params1),
   });

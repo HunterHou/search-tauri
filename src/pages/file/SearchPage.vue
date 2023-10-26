@@ -409,7 +409,7 @@ import { appWindow } from '@tauri-apps/api/window';
 const fetchSearch = async () => {
   saveParam()
   const { Keyword } = view.queryParam
-  const data = await SearchAPI(view.queryParam);
+  const data = await SearchAPI({...view.queryParam, FileType: view.settingInfo.VideoTypes||['mp4','mkv']});
   // console.log(data);
   view.resultData = { ...data };
   const { ResultSize, ResultCnt } = data
