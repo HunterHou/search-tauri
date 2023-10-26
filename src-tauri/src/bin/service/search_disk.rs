@@ -77,10 +77,10 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             }
 
             let file = FileModel::from_path(
-                String::from(dir),
-                dirpath,
-                path,
-                filename,
+                String::from(dir.replace("'", "''")),
+                dirpath.replace("'", "''"),
+                path.replace("'", "''"),
+                filename.replace("'", "''"),
                 extname,
                 size,
                 created,
@@ -105,7 +105,7 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     for dir_path in dir_paths {
         match visit_dirs(dir_path) {
             Ok(value) => {
-                add_to_db(&value, &dir_path, 20, None);
+                add_to_db(&value, &dir_path, 2, None);
                 let count = &value.len();
                 file_count = file_count + (*count as i32);
             }
@@ -138,43 +138,43 @@ pub fn add_to_db(
     // let mut sql = String::from("");
 
     let _ = conn.execute(&del_sql, NO_PARAMS);
-    let mut p_size: Vec<FileModel> = Vec::new();
-    let mut p = 0;
+    // let mut p_size: Vec<FileModel> = Vec::new();
+    // let mut p = 0;
     for file in files {
         let items = format!("insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr,BaseDir)  values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}','{}');",
             file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Gif,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr,file.BaseDir
         );
         sql.push_str(&items);
-        p_size.push(file.clone());
-        p = p + 1;
-        if p % window == 0 {
-            sql.push_str(" COMMIT;");
-            let res = conn.execute_batch(&sql);
-            // println!("executing sql:{}", sql);
-            if res.is_err() {
-                println!(
-                    "insert   sql:{} \n\n\n err:{},dir:{}",
-                    &sql,
-                    res.err().unwrap(),
-                    dir_path,
-                );
-                // add_to_db(&p_size, dir_path, &window / &window, None)
-            } else {
-                println!("insert:{}", &p);
-                p = 0;
-                p_size.clear();
-                sql.clear();
-                sql = String::from("BEGIN; ")
-            }
-        }
+        // p_size.push(file.clone());
+        // p = p + 1;
+        // if p % window == window - 1 || p == (files.len() as i32) {
+        //     sql.push_str(" COMMIT;");
+        //     let res = conn.execute_batch(&sql);
+        //     // println!("executing sql:{}", sql);
+        //     if res.is_err() {
+        //         println!(
+        //             "insert   sql:{} \n\n\n err:{},dir:{} \n\n\n",
+        //             &sql,
+        //             res.err().unwrap(),
+        //             dir_path,
+        //         );
+        //     } else {
+        //         if p != (files.len() as i32) {
+        //             println!("insert:{}", &p);
+        //             p_size.clear();
+        //             sql.clear();
+        //             sql = String::from("BEGIN; ")
+        //         }
+        //     }
+        // }
     }
-    // sql.push_str(" COMMIT;");
-    // let res = conn.execute_batch(&sql);
+    sql.push_str(" COMMIT;");
+    let res = conn.execute_batch(&sql);
     // println!("executing sql:{}", sql);
-    // if res.is_err() {
-    // println!("executing sql err:{}", res.err().unwrap());
-    // }
-    // let _ = conn.close();
+    if res.is_err() {
+        println!("executing sql :{} \n\n\n err:{}",&sql, res.err().unwrap());
+    }
+    let _ = conn.close();
 }
 
 pub fn search_index(request: RequestFileParam) -> ResultData {
@@ -258,7 +258,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         // println!("ResultData:{:?}", rd);
         return rd;
     }
-    // println!("sql_query:{}", &sql_query);
+    println!("sql_query:{}", &sql_query);
     let mut stmt = conn.prepare(&sql_query).unwrap();
     let res = stmt
         .query_map(NO_PARAMS, |row| {
@@ -269,23 +269,30 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
                 tags.push(String::from(tagi))
             }
             let sizes: i64 = row.get(13).unwrap();
+            let id:String =row.get(0).unwrap();
+            let name:String =row.get(1).unwrap();
+            let path:String =row.get(8).unwrap();
+            let dir_path:String =row.get(9).unwrap();
+            let png:String =row.get(5).unwrap();
+            let jpg:String =row.get(6).unwrap();
+            let gif:String =row.get(15).unwrap();
             let v = FileModel {
-                Id: row.get(0).unwrap(),
-                Name: row.get(1).unwrap(),
+                Id: id.replace("''", "'"),
+                Name: name.replace("''", "'"),
                 Code: row.get(2).unwrap(),
                 MovieType: row.get(3).unwrap(),
                 FileType: row.get(4).unwrap(),
-                Png: row.get(5).unwrap(),
-                Jpg: row.get(6).unwrap(),
+                Png: png.replace("''", "'"),
+                Jpg: jpg.replace("''", "'"),
                 Actress: row.get(7).unwrap(),
-                Path: row.get(8).unwrap(),
-                DirPath: row.get(9).unwrap(),
+                Path: path.replace("''", "'"),
+                DirPath: dir_path.replace("''", "'"),
                 Title: row.get(10).unwrap(),
                 MTime: row.get(11).unwrap(),
                 Tags: tags,
                 Size: sizes,
                 SizeStr: row.get(14).unwrap(),
-                Gif: row.get(15).unwrap(),
+                Gif: gif.replace("''", "'"),
                 BaseDir: row.get(16).unwrap(),
             };
             Ok(v)
