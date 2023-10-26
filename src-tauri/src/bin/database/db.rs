@@ -13,11 +13,9 @@ pub fn update_connection() -> Connection {
 pub fn init_db() {
     let conn = update_connection();
     println!("Initializing table t_file");
-    match conn.execute("drop table if exists t_file", NO_PARAMS) {
-        Ok(val) => println!("drop success :{}", val),
-        Err(err) => println!("drop Fail:{}", err),
-    };
-    match conn.execute("create  table t_file(
+    match conn.execute_batch(" begin ;
+    drop table if exists t_file;
+    create  table t_file(
         Id text primary key,
         Name text,
         Code text,
@@ -35,8 +33,8 @@ pub fn init_db() {
         size integer,
         sizeStr text,
         BaseDir text
-    )", NO_PARAMS) {
-        Ok(val) => println!("create Fail:{}", val),
+    ); commit;") {
+        Ok(val) => println!("create success:{:?}", val),
         Err(err) => println!("create Fail:{}", err),
     };
 }
