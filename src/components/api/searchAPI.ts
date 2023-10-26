@@ -11,16 +11,20 @@ export const SearchAPI = async (params: object) => {
     FileType: ["mp4", "mkv"],
     Keyword: params.Keyword || "",
   };
-  console.log(params);
+  // console.log(params);
   const data = await invoke("search_index", {
     params: JSON.stringify(params1),
   });
   return data;
 };
 
-export const RefreshAPI = async (params: object) => {
-  const res = await axios.get("/api/refreshIndex", params);
-  return res && res.data;
+export const RefreshAPI = async () => {
+  // const res = await axios.get("/api/refreshIndex", params);
+  console.log('RefreshAPI')
+  const res = await invoke("refresh_disk", {
+    name: "refresh_disk",
+  });
+  return res;
 };
 
 export const FindFileInfo = async (data: string) => {

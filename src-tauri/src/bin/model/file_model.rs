@@ -10,6 +10,8 @@ use std::time::SystemTime;
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct FileModel {
     #[serde(default)]
+    pub BaseDir: String,
+    #[serde(default)]
     pub Id: String,
     #[serde(default)]
     pub Name: String,
@@ -50,6 +52,7 @@ impl FileModel {
 
     pub fn new() -> FileModel {
         FileModel {
+            BaseDir: "".to_string(),
             Id: "".to_string(),
             Name: "".to_string(),
             Code: "".to_string(),
@@ -70,6 +73,7 @@ impl FileModel {
     }
 
     pub fn from_path(
+        base_dir: String,
         dirpath: String,
         path: String,
         name: String,
@@ -90,6 +94,7 @@ impl FileModel {
         let path_bac = &String::from(&abs_path);
         let mtime = system_time_to_string(&created);
         return FileModel {
+            BaseDir: base_dir,
             Id: String::from(path_bac),
             Name: name,
             Code: code,

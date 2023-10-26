@@ -6,9 +6,13 @@ use super::super::database::db;
 use super::super::model::file_model::FileModel;
 use super::super::static_param::STATIC_DATA;
 use super::super::utils::do_file_name::int_to_size_str;
+use rusqlite::Connection;
+use rusqlite::Row;
 use rusqlite::NO_PARAMS;
+use serde::de::value;
 use std::io::Result;
 use std::path::Path;
+use std::ptr::null;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
@@ -75,7 +79,15 @@ fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 _ => {}
             }
 
-            let file = FileModel::from_path(dirpath, path, filename, extname, size, created);
+            let file = FileModel::from_path(
+                String::from(dir),
+                dirpath,
+                path,
+                filename,
+                extname,
+                size,
+                created,
+            );
             if file.is_empty() {
                 continue;
             }
@@ -99,7 +111,7 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
                 // for val in value {
                 //     filelist.push(val)
                 // }
-                add_to_db(&value);
+                add_to_db(&value, &dir_path, 1000, None);
                 let count = &value.len();
                 file_count = file_count + (*count as i32);
             }
@@ -109,30 +121,65 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     Ok(file_count)
 }
 
-pub fn add_to_db(files: &Vec<FileModel>) {
+pub fn add_to_db(
+    files: &Vec<FileModel>,
+    dir_path: &str,
+    window: i32,
+    mut connect: Option<Connection>,
+) {
     if files.len() == 0 {
         return;
     }
-    let conn = db::db_connection();
+
+    if connect.is_none() {
+        connect = Some(db::update_connection());
+    }
+    let conn: Connection = match connect {
+        Some(value) => value,
+        None => db::update_connection(),
+    };
+
+    let del_sql = format!("delete from t_file where BaseDir='{}' ", dir_path);
     let mut sql = String::from("BEGIN; ");
+
+    let _ = conn.execute(&del_sql, NO_PARAMS);
+    let mut pSize: Vec<FileModel> = Vec::new();
+    let mut p = 0;
     for file in files {
-        let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr)
-             values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}');",
-            file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Gif,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr
+        let items = format!(" insert into t_file(Id,Name,Code,MovieType,FileType,Png,Jpg,Gif,Actress,Path,DirPath,Title,MTime,Tags,Size,SizeStr,BaseDir)
+             values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},'{}','{}');",
+            file.Id,file.Name,file.Code,file.MovieType,file.FileType,file.Png,file.Jpg,file.Gif,file.Actress,file.Path,file.DirPath,file.Title,file.MTime,file.Tags.join(","),file.Size,file.SizeStr,file.BaseDir
         );
         sql.push_str(&items);
+        pSize.push(file.clone());
+        p = p + 1;
+        if p % 1000 == 0 {
+            sql.push_str(" COMMIT;");
+            let res = conn.execute_batch(&sql);
+            // println!("executing sql:{}", sql);
+            if res.is_err() {
+                println!("insert err:{}", res.err().unwrap());
+                add_to_db(&pSize, dir_path, &window / 2, None)
+            } else {
+                println!("insert:{}", &p);
+                p = 0;
+                pSize.clear();
+                sql.clear();
+                sql=String::from("BEGIN; ")
+            }
+        }
     }
-    sql.push_str(" COMMIT;");
-    let res = conn.execute_batch(&sql);
+    // sql.push_str(" COMMIT;");
+    // let res = conn.execute_batch(&sql);
     // println!("executing sql:{}", sql);
-    if res.is_err() {
-        println!("executing sql err:{}", res.err().unwrap());
-    }
-    let _ = conn.close();
+    // if res.is_err() {
+    // println!("executing sql err:{}", res.err().unwrap());
+    // }
+    // let _ = conn.close();
 }
 
 pub fn search_index(request: RequestFileParam) -> ResultData {
-    let conn = db::db_connection();
+    let conn = db::query_connection();
     let mut rd = ResultData::new();
     let mut condition = String::new();
     if request.FileType.len() > 0 {
@@ -160,8 +207,8 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
                 t.Code,
                 t.MovieType,
                 t.FileType,
-                t1.Path Png,
-                t2.Path Jpg,
+                ifnull(t1.Path,'')  Png,
+                ifnull(t2.Path,'') Jpg,
                 t.Actress,
                 t.Path,
                 t.DirPath,
@@ -170,7 +217,8 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
                 t.Tags,
                 t.size,
                 t.sizeStr,
-                t3.Path Gif
+                ifnull(t3.Path,'') Gif,
+                t.BaseDir
         from t_file t
                     left join t_file t1 on t.png = t1.Path
                     left join t_file t2 on t.jpg = t2.Path
@@ -196,7 +244,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         &(request.PageSize * (request.Page - 1)),
         &request.PageSize
     ));
-    println!("sql_count:{}", &sql_count);
+    // println!("sql_count:{}", &sql_count);
     let count_res = match conn.query_row(&sql_count, NO_PARAMS, |row| {
         let count: i64 = row.get(0).unwrap();
         let size: i64 = row.get(1).unwrap();
@@ -211,17 +259,17 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         // println!("ResultData:{:?}", rd);
         return rd;
     }
-    println!("sql_query:{}", &sql_query);
+    // println!("sql_query:{}", &sql_query);
     let mut stmt = conn.prepare(&sql_query).unwrap();
     let res = stmt
         .query_map(NO_PARAMS, |row| {
-            let c14: String = row.get(14).unwrap();
+            let c14: String = row.get(12).unwrap();
             let c1414: Vec<&str> = c14.split(",").collect();
             let mut tags: Vec<String> = Vec::new();
             for tagi in c1414 {
                 tags.push(String::from(tagi))
             }
-            let sizes: i64 = row.get(12).unwrap();
+            let sizes: i64 = row.get(13).unwrap();
             let v = FileModel {
                 Id: row.get(0).unwrap(),
                 Name: row.get(1).unwrap(),
@@ -229,16 +277,17 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
                 MovieType: row.get(3).unwrap(),
                 FileType: row.get(4).unwrap(),
                 Png: row.get(5).unwrap(),
-                Gif: row.get(15).unwrap(),
                 Jpg: row.get(6).unwrap(),
                 Actress: row.get(7).unwrap(),
                 Path: row.get(8).unwrap(),
                 DirPath: row.get(9).unwrap(),
                 Title: row.get(10).unwrap(),
-                SizeStr: row.get(11).unwrap(),
-                Size: sizes,
-                MTime: row.get(13).unwrap(),
+                MTime: row.get(11).unwrap(),
                 Tags: tags,
+                Size: sizes,
+                SizeStr: row.get(14).unwrap(),
+                Gif: row.get(15).unwrap(),
+                BaseDir: row.get(16).unwrap(),
             };
             Ok(v)
         })

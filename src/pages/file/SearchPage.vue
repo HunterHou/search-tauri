@@ -85,9 +85,10 @@
 
     <div class="row justify-center q-gutter-sm q-mr-sm q-mt-sm mainlist">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fit" loading="lazy" draggable :src="convertFileSrc(item.Jpg)" class="item-img" @click="() => {
-          fileInfoRef.open({ item, cb: refreshIndex });
-        }">
+        <q-img fit="fit" loading="lazy" draggable
+          :src="convertFileSrc(item.Png || item.Jpg || item.Gif || 'public/icon.png')" class="item-img" @click="() => {
+            fileInfoRef.open({ item, cb: refreshIndex });
+          }">
           <template v-slot:loading>
             <div class="text-subtitle1 text-white">
               Loading...
@@ -409,7 +410,7 @@ const fetchSearch = async () => {
   saveParam()
   const { Keyword } = view.queryParam
   const data = await SearchAPI(view.queryParam);
-  console.log(data);
+  // console.log(data);
   view.resultData = { ...data };
   const { ResultSize, ResultCnt } = data
   const title = `搜索 ${Keyword || ''} : ${ResultSize} {${ResultCnt}}`
@@ -430,7 +431,7 @@ const moveThis = async (item) => {
 const refreshIndexLoading = ref(false);
 const refreshIndex = async () => {
   refreshIndexLoading.value = true;
-  const { Code, Message } = await RefreshAPI('/api/refreshIndex');
+  const { Code, Message } = await RefreshAPI();
   console.log(Code, Message);
   if (Code == '200') {
     $q.notify({ type: 'negative', message: Message, multiLine: true, position: 'bottom-right' });

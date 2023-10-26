@@ -63,7 +63,9 @@
   <div style="overflow: auto; background-color: rgba(0, 0, 0, 0.4)">
     <div class="row justify-center">
       <q-card class="q-ma-sm example-item" v-for="item in [...view.playList]" :key="item.Id">
-        <q-img fit="cover"  loading="lazy" draggable :src="convertFileSrc(item.Jpg)" class="item-img" @click="open(item)">
+        <q-img fit="cover" loading="lazy" draggable
+          :src="convertFileSrc(item.Jpg || item.Png || item.Gif || 'public/icon.png')" class="item-img"
+          @click="open(item)">
           <div style="
               padding: 0;
               margin: 0;
@@ -250,7 +252,7 @@ const optionsPC = reactive({
   height: 'auto', //播放器高度
   color: '#409eff', //主题色
   title: view.playing?.Title, //视频名称
-  src:  '', //视频源 convertFileSrc(view.playing.Path)
+  src: '', //视频源 convertFileSrc(view.playing.Path)
   muted: false, //静音
   preload: 'false',
   webFullScreen: false,

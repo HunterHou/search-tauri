@@ -1,12 +1,17 @@
 use rusqlite::{Connection,NO_PARAMS};
 
-pub fn db_connection() -> Connection {
-    println!("db_connection...");
+pub fn query_connection() -> Connection {
+    println!("query_connection...");
+    Connection::open("./search.db").unwrap()
+}
+
+pub fn update_connection() -> Connection {
+    println!("update_connection...");
     Connection::open("./search.db").unwrap()
 }
 
 pub fn init_db() {
-    let conn = db_connection();
+    let conn = update_connection();
     println!("Initializing table t_file");
     match conn.execute("drop table if exists t_file", NO_PARAMS) {
         Ok(val) => println!("drop success :{}", val),
@@ -28,7 +33,8 @@ pub fn init_db() {
         MTime text,
         Tags text,
         size integer,
-        sizeStr text
+        sizeStr text,
+        BaseDir text
     )", NO_PARAMS) {
         Ok(val) => println!("create Fail:{}", val),
         Err(err) => println!("create Fail:{}", err),

@@ -1,6 +1,8 @@
 use chrono::offset::Utc;
 use chrono::DateTime;
+use rusqlite::Row;
 use std::time::SystemTime;
+
 pub fn int_to_size_str(size: i64) -> String {
     if size < 1024 {
         return format!("{}", size);
@@ -64,12 +66,15 @@ pub fn actress_from_name(name: &str) -> String {
 pub fn movie_type_from_name(name: &str) -> String {
     let v1 = name.find("{{");
     if v1.is_none() {
-        return String::from(name);
+        return String::from("");
     }
-    let start = v1.unwrap()+2;
+    let start = v1.unwrap()+"{{".len();
     let mut end = name.find("}}").unwrap();
     if end >= name.len() {
         end = name.len()
+    }
+    if start>end {
+        return String::from("");
     }
     return String::from(&name[start..end]);
 }
@@ -112,10 +117,13 @@ pub fn tags_from_name(name: &str) -> Vec<String> {
     if v1.is_none() {
         return Vec::new();
     }
-    let start = v1.unwrap() + 3;
-    let mut end = name.find("》").unwrap();
-    if end >= name.len() {
-        end = name.len()
+    let start = v1.unwrap() + "《".len();
+    let end = match name.find("》") {
+        Some(v) => v,
+        None => name.len(),
+    };
+    if start > end {
+        return Vec::new();
     }
     let tag_str = String::from(&name[start..end]);
 
