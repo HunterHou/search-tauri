@@ -109,7 +109,7 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
     // let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
-        let handle = thread::spawn(move || match visit_dirs(&dir) {
+        thread::spawn(move || match visit_dirs(&dir) {
             Ok(value) => {
                 let count = &value.len();
                 file_count = file_count + (*count as i32);
@@ -117,12 +117,8 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32> {
             }
             Err(err) => println!("{}", err),
         });
-        // handle.join().unwrap();
-        // handles.push(handle);
     }
-    // for handle in handles {
-    //     handle.join().unwrap();
-    // }
+
     let end = SystemTime::now().duration_since(start);
     println!("search_disk over:{:?}", end.ok());
     Ok(file_count)
@@ -156,7 +152,7 @@ pub fn add_to_db(files: &Vec<FileModel>, dir_path: &str, mut connect: Option<Con
     // println!("executing sql:{}", sql);
     if res.is_err() {
         // println!("executing sql :{} \n\n\n err:{}",&sql, res.err().unwrap());
-        println!("executing sql   err:{} \n\n\n", res.err().unwrap());
+        println!("executing sql :  err:{} \n\n\n", res.err().unwrap());
     }
     let _ = conn.close();
     let start = SystemTime::now().duration_since(start);
