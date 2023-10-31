@@ -4,6 +4,7 @@
 // =======================================================================================
 mod bin;
 
+use bin::model::params::ResultData;
 use bin::{database::db, model, service /*, static_param */};
 use model::file_model::FileModel;
 use model::params::RequestFileParam;
@@ -45,7 +46,7 @@ fn refresh_disk(name: &str) -> String {
 #[tauri::command]
 fn search_index(params: &str) -> RequestFileParam {
     // println!("search_index params{:?}", params);
-    let mut request: RequestFileParam = match serde_json::from_str(params) {
+    let request: RequestFileParam = match serde_json::from_str(params) {
         Ok(v) => v,
         Err(err) => {
             println!("serde_json::from_str {:?}", err);
@@ -53,8 +54,14 @@ fn search_index(params: &str) -> RequestFileParam {
         }
     };
     // println!("search_index request{:?}", request);
-    let res = searchDisk::search_index(request.clone());
-    request.Data.extend(res.Data);
+    let res: model::params::ResultData = searchDisk::search_index(request.clone());
+    wrapper_request(&request,&res);
+    return request;
+}
+
+fn wrapper_request( req: &RequestFileParam,res:&ResultData)->RequestFileParam {
+    let mut request = req.clone();
+    request.Data.extend(res.Data.to_vec());
     request.TotalCnt = res.Count;
     request.TotalSize = String::from(&res.SizeStr);
     request.ResultCnt = res.Count;
@@ -64,7 +71,7 @@ fn search_index(params: &str) -> RequestFileParam {
     } else {
         1
     };
-    return request;
+    return request; 
 }
 
 fn main() {
