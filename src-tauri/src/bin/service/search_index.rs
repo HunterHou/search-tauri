@@ -11,7 +11,7 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     let mut file_count: i32 = 0;
     let start = SystemTime::now();
     // let mut file_list:Vec<FileModel>=Vec::new();
-    // let mut handles = vec![];
+    let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
         let handle = thread::spawn(move || match visit_dirs(&dir) {
@@ -22,8 +22,12 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
             }
             Err(err) => println!("{}", err),
         });
+        handles.push(handle);
     }
     let end = SystemTime::now().duration_since(start);
+    for handle in handles {
+        handle.join().unwrap();
+    }
     println!("search_disk over:{:?}", end.ok());
     Ok(file_count)
 }
