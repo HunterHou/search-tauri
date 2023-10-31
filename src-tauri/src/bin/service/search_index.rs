@@ -1,5 +1,5 @@
-use rusqlite::{Connection, Error, NO_PARAMS};
 use super::super::utils::do_file_name::int_to_size_str;
+use rusqlite::{Connection, Error, NO_PARAMS};
 use std::{thread, time::SystemTime};
 
 use super::super::model::params::{RequestFileParam, ResultData};
@@ -67,8 +67,6 @@ pub fn add_to_db(files: &Vec<FileModel>, dir_path: &str, mut connect: Option<Con
         start.ok()
     );
 }
-
-
 
 pub fn search_index(request: RequestFileParam) -> ResultData {
     let conn = db::query_connection();

@@ -1,14 +1,6 @@
-use super::super::model::params::ResultData;
-
-use super::super::model::params::RequestFileParam;
-
-use super::super::database::db;
 use super::super::model::file_model::FileModel;
 use super::super::static_param::STATIC_DATA;
-use super::super::utils::do_file_name::int_to_size_str;
 
-use rusqlite::Connection;
-use rusqlite::NO_PARAMS;
 use std::io::Result;
 use std::path::Path;
 
@@ -101,5 +93,3 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     }
     Ok(filelist)
 }
-
-
