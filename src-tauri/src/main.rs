@@ -7,7 +7,7 @@ mod bin;
 use bin::{database::db, model, service /*, static_param */};
 use model::file_model::FileModel;
 use model::params::RequestFileParam;
-use service::search_disk as searchDisk;
+use service::search_index as searchDisk;
 // use static_param::STATIC_LIST;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command

@@ -1,1 +1,2 @@
-pub mod search_disk;
+pub mod file_service;
+pub mod search_index;
