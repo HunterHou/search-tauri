@@ -27,7 +27,9 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 Ok(meta) => {
                     size = meta.len() as i64;
                     match meta.created() {
-                        Ok(value) => created = value,
+                        Ok(value) => {
+                            created = value;
+                        }
                         _ => {}
                     };
                 }
@@ -40,33 +42,44 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
             // println!("{:?}", filepath.file_name());
             let mut dirpath = "".to_string();
             match filepath.parent() {
-                Some(value) => dirpath = format!("{}", value.display()),
+                Some(value) => {
+                    dirpath = format!("{}", value.display());
+                }
                 _ => {}
             }
 
             let mut path = "".to_string();
             match filepath.file_name() {
-                Some(value) => match value.to_str() {
-                    Some(val) => path = format!("{}", String::from(val)),
-                    _ => {}
-                },
+                Some(value) =>
+                    match value.to_str() {
+                        Some(val) => {
+                            path = format!("{}", String::from(val));
+                        }
+                        _ => {}
+                    }
                 _ => {}
             }
             let mut filename = "".to_string();
             match filepath.file_stem() {
-                Some(value) => match value.to_str() {
-                    Some(val) => filename = format!("{}", String::from(val)),
-                    _ => {}
-                },
+                Some(value) =>
+                    match value.to_str() {
+                        Some(val) => {
+                            filename = format!("{}", String::from(val));
+                        }
+                        _ => {}
+                    }
                 _ => {}
             }
 
             let mut extname = "".to_string();
             match filepath.extension() {
-                Some(value) => match value.to_str() {
-                    Some(val) => extname = format!("{}", String::from(val)),
-                    _ => {}
-                },
+                Some(value) =>
+                    match value.to_str() {
+                        Some(val) => {
+                            extname = format!("{}", String::from(val));
+                        }
+                        _ => {}
+                    }
                 _ => {}
             }
 
@@ -77,17 +90,13 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 filename.replace("'", "''"),
                 extname,
                 size,
-                created,
+                created
             );
             if file.is_empty() {
                 continue;
             }
             let val = file.clone();
-            STATIC_DATA
-                .lock()
-                .unwrap()
-                .insert(String::from(&val.Id), val);
-            // println!("{:?}", file);
+            STATIC_DATA.lock().unwrap().insert(String::from(&val.Id), val);
             filelist.push(file);
         }
     }

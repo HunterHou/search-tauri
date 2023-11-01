@@ -1,17 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-// =======================================================================================
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod bin;
 
 use bin::model::params::ResultData;
-use bin::{database::db, model, service /*, static_param */};
+use bin::{ database::db, model, service /*, static_param */ };
 use model::file_model::FileModel;
 use model::params::RequestFileParam;
 use service::search;
-// use static_param::STATIC_LIST;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -29,7 +27,7 @@ fn refresh_disk(name: &str) -> String {
         "i:\\emby",
         "J:\\emby",
         "k:\\emby",
-        "/Users/harmay/Documents",
+        "/Users/harmay/Documents"
     ];
     let _filelist: Vec<FileModel> = Vec::new();
     db::init_db();
@@ -55,12 +53,12 @@ fn search_index(params: &str) -> RequestFileParam {
     };
     // println!("search_index request{:?}", request);
     let res: model::params::ResultData = search::search_index(request.clone());
-    return search::wrapper_request(&request,&res);
+    return search::wrapper_request(&request, &res);
 }
 
-
 fn main() {
-    tauri::Builder::default()
+    tauri::Builder
+        ::default()
         .invoke_handler(tauri::generate_handler![greet, refresh_disk, search_index])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
