@@ -5,7 +5,7 @@ use std::{thread, time::SystemTime};
 use super::super::model::params::{RequestFileParam, ResultData};
 
 use super::super::{database::db, model::file_model::FileModel};
-use super::file_service::visit_dirs;
+use super::disk_service::visit_dirs;
 
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     let mut file_count: i32 = 0;

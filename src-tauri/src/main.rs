@@ -8,7 +8,7 @@ use bin::model::params::ResultData;
 use bin::{database::db, model, service /*, static_param */};
 use model::file_model::FileModel;
 use model::params::RequestFileParam;
-use service::search_index as searchDisk;
+use service::search;
 // use static_param::STATIC_LIST;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -33,7 +33,7 @@ fn refresh_disk(name: &str) -> String {
     ];
     let _filelist: Vec<FileModel> = Vec::new();
     db::init_db();
-    let res = searchDisk::search_disk(base_dir.to_vec());
+    let res = search::search_disk(base_dir.to_vec());
     if res.is_err() {
         let msg = &res.err().unwrap().to_string();
         println!("refresh_disk error:{}", &msg);
@@ -54,7 +54,7 @@ fn search_index(params: &str) -> RequestFileParam {
         }
     };
     // println!("search_index request{:?}", request);
-    let res: model::params::ResultData = searchDisk::search_index(request.clone());
+    let res: model::params::ResultData = search::search_index(request.clone());
     wrapper_request(&request,&res);
     return request;
 }
