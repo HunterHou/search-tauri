@@ -55,24 +55,9 @@ fn search_index(params: &str) -> RequestFileParam {
     };
     // println!("search_index request{:?}", request);
     let res: model::params::ResultData = search::search_index(request.clone());
-    wrapper_request(&request,&res);
-    return request;
+    return search::wrapper_request(&request,&res);
 }
 
-fn wrapper_request( req: &RequestFileParam,res:&ResultData)->RequestFileParam {
-    let mut request = req.clone();
-    request.Data.extend(res.Data.to_vec());
-    request.TotalCnt = res.Count;
-    request.TotalSize = String::from(&res.SizeStr);
-    request.ResultCnt = res.Count;
-    request.ResultSize = String::from(&res.SizeStr);
-    request.TotalPage = if request.PageSize > 0 {
-        res.Count / request.PageSize
-    } else {
-        1
-    };
-    return request; 
-}
 
 fn main() {
     tauri::Builder::default()

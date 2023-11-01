@@ -7,6 +7,22 @@ use super::super::model::params::{RequestFileParam, ResultData};
 use super::super::{database::db, model::file_model::FileModel};
 use super::disk_service::visit_dirs;
 
+
+
+pub fn wrapper_request( req: &RequestFileParam,res:&ResultData)->RequestFileParam {
+    let mut request = req.clone();
+    request.Data.extend(res.Data.to_vec());
+    request.TotalCnt = res.Count;
+    request.TotalSize = String::from(&res.SizeStr);
+    request.ResultCnt = res.Count;
+    request.ResultSize = String::from(&res.SizeStr);
+    request.TotalPage = if request.PageSize > 0 {
+        res.Count / request.PageSize
+    } else {
+        1
+    };
+    return request;
+}
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     let mut file_count: i32 = 0;
     let start = SystemTime::now();
