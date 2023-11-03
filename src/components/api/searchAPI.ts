@@ -10,16 +10,17 @@ export const SearchAPI = async (params: any) => {
     params: { ...params },
     Keyword: params.Keyword || "",
   };
-  console.log(params);
+  console.log("params", params);
   const data = await invoke("search_index", {
     params: JSON.stringify(params1),
   });
+  console.log("data", data);
   return data;
 };
 
 export const RefreshAPI = async () => {
   // const res = await axios.get("/api/refreshIndex", params);
-  console.log('RefreshAPI')
+  console.log("RefreshAPI");
   const res = await invoke("refresh_disk", {
     name: "refresh_disk",
   });

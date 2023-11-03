@@ -1,12 +1,12 @@
+use core::fmt::Error;
+use std::ops::Add;
+use std::{thread, time::SystemTime};
+
+use super::super::model::file_model::FileModel;
+use super::super::model::params::{RequestFileParam, ResultData};
+use super::super::static_param::STATIC_LIST;
 use super::super::utils::do_file_name::int_to_size_str;
-use rusqlite::{ Connection, Error, NO_PARAMS };
-use std::{ thread, time::SystemTime };
-
-use super::super::model::params::{ RequestFileParam, ResultData };
-
-use super::super::{ database::db, model::file_model::FileModel };
 use super::disk_service::visit_dirs;
-use static_param::STATIC_LIST;
 
 /*
  * 封装请求参数
@@ -25,7 +25,11 @@ pub fn wrapper_request(req: &RequestFileParam, res: &ResultData) -> RequestFileP
     // 设置请求的大小
     request.ResultSize = String::from(&res.SizeStr);
     // 计算总页数（若每页大小非零，则用总记录数除以每页大小；否则默认为1）
-    request.TotalPage = if request.PageSize > 0 { res.Count / request.PageSize } else { 1 };
+    request.TotalPage = if request.PageSize > 0 {
+        res.Count / request.PageSize
+    } else {
+        1
+    };
     // 返回处理后的请求参数
     return request;
 }
@@ -36,14 +40,12 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
-        let handle = thread::spawn(move || {
-            match visit_dirs(&dir) {
-                Ok(value) => {
-                    let count = &value.len();
-                    file_count = file_count + (*count as i32);
-                }
-                Err(err) => println!("{}", err),
+        let handle = thread::spawn(move || match visit_dirs(&dir) {
+            Ok(value) => {
+                let count = &value.len();
+                file_count = file_count + (*count as i32);
             }
+            Err(err) => println!("{}", err),
         });
         handles.push(handle);
     }
@@ -58,32 +60,50 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
  * 索引搜索
  * @param request 请求参数
  * @return
- * 
- * 
+ *
+ *
  */
 pub fn search_index(request: RequestFileParam) -> ResultData {
     // 创建一个空的结果列表
+    let mut rd: ResultData = ResultData::new();
+    let mut total_size: i64 = 0;
+    let mut total_count: i64 = 0;
     let mut result_list: Vec<FileModel> = Vec::new();
+    // println!("STATIC_LIST:{:?}", STATIC_LIST.lock().unwrap().iter());
     // 通过锁定STATIC_LIST获取对静态列表的写入权限
-    STATIC_LIST.lock()
-        .unwrap()
-        .iter()
-        .for_each(|item| {
-            // 如果请求中的关键词长度大于0
-            if request.Keyword.len() > 0 {
-                // 如果列表项的名字包含关键词
-                if item.Name.contains(&request.Keyword) {
-                    // 将列表项复制到结果列表中
-                    result_list.push(item.clone());
-                }
-            } else {
+    STATIC_LIST.lock().unwrap().iter().for_each(|item| {
+        // 如果请求中的关键词长度大于0
+        if request.Keyword.len() > 0 {
+            // 如果列表项的名字包含关键词
+            if item.Name.contains(&request.Keyword) {
                 // 将列表项复制到结果列表中
+                total_size = total_size + item.Size;
+                total_count = total_count + 1;
                 result_list.push(item.clone());
             }
-        });
+        } else {
+            // 将列表项复制到结果列表中
+            total_size = total_size + item.Size;
+            total_count = total_count + 1;
+            result_list.push(item.clone());
+        }
+    });
 
     // 将结果列表赋值给返回值中的data字段
-    rd.Data = result_list;
+    let start_index = (request.Page - 1) * request.PageSize;
+    let end_index = (start_index + request.PageSize) as usize;
+    for idx in (start_index as usize)..end_index {
+        let item: FileModel = match result_list.get(idx) {
+            Some(val) => val.clone(),
+            None => FileModel::new(),
+        };
+        if item.is_empty() {
+            continue;
+        }
+        rd.Data.push(item);
+    }
+    rd.Count = total_count;
+    rd.SizeStr = int_to_size_str(total_size);
 
     // 打印结果数据以供调试
     // println!("ResultData:{:?}", rd);

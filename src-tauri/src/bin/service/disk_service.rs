@@ -1,5 +1,5 @@
 use super::super::model::file_model::FileModel;
-use super::super::static_param::STATIC_DATA;
+use super::super::static_param::{STATIC_DATA,STATIC_LIST};
 
 use std::io::Result;
 use std::path::Path;
@@ -96,7 +96,9 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 continue;
             }
             let val = file.clone();
+            let val2 = file.clone();
             STATIC_DATA.lock().unwrap().insert(String::from(&val.Id), val);
+            STATIC_LIST.lock().unwrap().push(val2);
             filelist.push(file);
         }
     }
