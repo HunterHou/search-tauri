@@ -167,16 +167,16 @@ watch(drawerRight, (v) => {
 
 
 const open = (v) => {
+  console.log('open', v)
   view.playing = v
-  // optionsPC.src = getFileStream(v.Id);
-  optionsPC.src = convertFileSrc(v.Path);
+  optionsPC.src = convertFileSrc(v.Id);
   optionsPC.webFullScreen = true;
   const top = document.querySelector('.topRef')
   if (top) {
     top.scrollTo(0, 0)
   }
   if (props.mode == 'page') {
-    replace(`/playing/${v.Id}`)
+    replace(`/playing?id=${v.Id}`)
   }
   setTimeout(() => {
     vue3VideoPlayRef.value && vue3VideoPlayRef.value.play();

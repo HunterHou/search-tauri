@@ -25,7 +25,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/playing/:id',
+    path: '/playing',
     component: () => import('@/pages/playing/PlayingFile.vue'),
   },
   // Always leave this as last one,

@@ -119,15 +119,25 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     }
 
     // 将结果列表赋值给返回值中的data字段
+    let map = STATIC_DATA.lock().unwrap();
     let start_index = (request.Page - 1) * request.PageSize;
     let end_index = (start_index + request.PageSize) as usize;
     for idx in (start_index as usize)..end_index {
-        let item: FileModel = match result_list.get(idx) {
+        let mut item: FileModel = match result_list.get(idx) {
             Some(val) => val.clone(),
             None => FileModel::new(),
         };
         if item.is_empty() {
             continue;
+        }
+        if !map.contains_key(&item.Jpg) {
+            item.Jpg=String::new();
+        }
+        if !map.contains_key(&item.Gif) {
+            item.Gif=String::new();
+        }
+        if !map.contains_key(&item.Png) {
+            item.Png=String::new();
         }
         rd.Data.push(item);
     }

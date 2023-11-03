@@ -280,13 +280,7 @@ const showButton = (name) => {
 
 
 const openPlay = (item) => {
-  const url = `#/playing/${item.Id}`
-  // if ($q.platform.is.electron) {
-  //   // window.electron.createWindow({ router: url })
-
-  // } else {
-  //   window.open(url)
-  // }
+  const url = `#/playing?id=${item.Id}`
   const wid = `player`
   NewWindow({ wid, title: item.Name, url })
 
@@ -409,7 +403,7 @@ import { appWindow } from '@tauri-apps/api/window';
 const fetchSearch = async () => {
   saveParam()
   const { Keyword } = view.queryParam
-  const data = await SearchAPI({...view.queryParam, FileType: view.settingInfo.VideoTypes||['mp4','mkv']});
+  const data = await SearchAPI({ ...view.queryParam, FileType: view.settingInfo.VideoTypes || ['mp4', 'mkv'] });
   // console.log(data);
   view.resultData = { ...data };
   const { ResultSize, ResultCnt } = data

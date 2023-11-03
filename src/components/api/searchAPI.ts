@@ -19,8 +19,6 @@ export const SearchAPI = async (params: any) => {
 };
 
 export const RefreshAPI = async () => {
-  // const res = await axios.get("/api/refreshIndex", params);
-  console.log("RefreshAPI");
   const res = await invoke("refresh_disk", {
     name: "refresh_disk",
   });
@@ -28,8 +26,10 @@ export const RefreshAPI = async () => {
 };
 
 export const FindFileInfo = async (data: string) => {
-  const res = await axios.get(`/api/info/${data}`);
-  return res && res.data;
+  const res = await invoke("find_file_info", {
+    id: data,
+  });
+  return res;
 };
 
 export const QueryDirImageBase64 = async (data: string) => {

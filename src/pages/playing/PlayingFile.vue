@@ -8,16 +8,18 @@ import {
 
 
 const vue3VideoPlayRef = ref(null)
-const { params } = useRoute();
+const { query } = useRoute();
 
 const fetchSearch = async (id) => {
   const data = await FindFileInfo(id);
+  console.log("playing",data)
   const { Name } = data
   document.title = Name
   vue3VideoPlayRef.value && vue3VideoPlayRef.value.open(data)
 };
 onMounted(() => {
-  const { id } = params
+  const { id } = query
+  console.log(id)
   fetchSearch(id)
 })
 </script>
