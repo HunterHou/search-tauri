@@ -4,7 +4,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod bin;
 
-use bin::model::params::ResultData;
 use bin::{ database::db, model, service /*, static_param */ };
 use model::file_model::FileModel;
 use model::params::RequestFileParam;

@@ -1,5 +1,4 @@
 use core::fmt::Error;
-use std::ops::Add;
 use std::{thread, time::SystemTime};
 
 use super::super::model::file_model::FileModel;
@@ -72,20 +71,22 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     // println!("STATIC_LIST:{:?}", STATIC_LIST.lock().unwrap().iter());
     // 通过锁定STATIC_LIST获取对静态列表的写入权限
     STATIC_LIST.lock().unwrap().iter().for_each(|item| {
-        // 如果请求中的关键词长度大于0
-        if request.Keyword.len() > 0 {
-            // 如果列表项的名字包含关键词
-            if item.Name.contains(&request.Keyword) {
+        if request.FileType.contains(&item.FileType) {
+            // 如果请求中的关键词长度大于0
+            if request.Keyword.len() > 0 {
+                // 如果列表项的名字包含关键词
+                if item.Name.contains(&request.Keyword) {
+                    // 将列表项复制到结果列表中
+                    total_size = total_size + item.Size;
+                    total_count = total_count + 1;
+                    result_list.push(item.clone());
+                }
+            } else {
                 // 将列表项复制到结果列表中
                 total_size = total_size + item.Size;
                 total_count = total_count + 1;
                 result_list.push(item.clone());
             }
-        } else {
-            // 将列表项复制到结果列表中
-            total_size = total_size + item.Size;
-            total_count = total_count + 1;
-            result_list.push(item.clone());
         }
     });
 
