@@ -214,6 +214,7 @@ const fetchSearch = async () => {
   const data = await SearchAPI({
     ...systemProperty.FileSearchParam,
     ...view.queryParam,
+    FileType: view.settingInfo.VideoTypes || ['mp4', 'mkv'],
     Page: 1,
     PageSize: 500,
   });

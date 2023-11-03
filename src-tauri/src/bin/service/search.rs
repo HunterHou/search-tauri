@@ -71,7 +71,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     let mut total_size: i64 = 0;
     let mut total_count: i64 = 0;
     let mut result_list: Vec<FileModel> = Vec::new();
-    // println!("STATIC_LIST:{:?}", STATIC_LIST.lock().unwrap().iter());
+    // println!("STATIC_LIST:{:?}", request);
     // 通过锁定STATIC_LIST获取对静态列表的写入权限
     STATIC_LIST.lock().unwrap().iter().for_each(|item| {
         if !request.FileType.contains(&item.FileType) {
