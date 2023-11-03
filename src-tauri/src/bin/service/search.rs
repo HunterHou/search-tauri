@@ -1,6 +1,8 @@
 use core::fmt::Error;
 use std::{thread, time::SystemTime};
 
+use super::super::static_param::STATIC_DATA;
+
 use super::super::model::file_model::FileModel;
 use super::super::model::params::{RequestFileParam, ResultData};
 use super::super::static_param::STATIC_LIST;
@@ -35,7 +37,8 @@ pub fn wrapper_request(req: &RequestFileParam, res: &ResultData) -> RequestFileP
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     let mut file_count: i32 = 0;
     let start = SystemTime::now();
-    // let mut file_list:Vec<FileModel>=Vec::new();
+    STATIC_LIST.lock().unwrap().clear();
+    STATIC_DATA.lock().unwrap().clear();
     let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
@@ -74,7 +77,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         if !request.FileType.contains(&item.FileType) {
             return;
         }
-        if !request.MovieType.contains(&item.MovieType) {
+        if request.MovieType.len() > 0 && !request.MovieType.contains(&item.MovieType) {
             return;
         }
         // 如果请求中的关键词长度大于0
