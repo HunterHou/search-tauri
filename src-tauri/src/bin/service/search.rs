@@ -89,6 +89,27 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
             }
         }
     });
+    if request.SortField == "MTime" {
+        if request.SortType == "asc" {
+            result_list.sort_by(|c1, c2| c1.MTime.cmp(&c2.MTime));
+        } else {
+            result_list.sort_by(|c1, c2| c2.MTime.cmp(&c1.MTime));
+        }
+    }
+    if request.SortField == "Size" {
+        if request.SortType == "asc" {
+            result_list.sort_by(|c1, c2| c1.Size.cmp(&c2.Size));
+        } else {
+            result_list.sort_by(|c1, c2| c2.Size.cmp(&c1.Size));
+        }
+    }
+    if request.SortField == "Code" {
+        if request.SortType == "asc" {
+            result_list.sort_by(|c1, c2| c1.Code.cmp(&c2.Code));
+        } else {
+            result_list.sort_by(|c1, c2| c2.Code.cmp(&c1.Code));
+        }
+    }
 
     // 将结果列表赋值给返回值中的data字段
     let start_index = (request.Page - 1) * request.PageSize;
