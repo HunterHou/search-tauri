@@ -42,6 +42,8 @@ pub struct RequestFileParam {
     #[serde(default)]
     pub SortType: String,
     #[serde(default)]
+    pub MovieType: String,
+    #[serde(default)]
     pub FileType: Vec<String>,
     #[serde(flatten)]
     pub params: FileModel,
@@ -59,6 +61,7 @@ impl RequestFileParam {
             Data: Vec::new(),
             TotalCnt: 0,
             TotalSize: "".to_string(),
+            MovieType: "".to_string(),
             ResultCnt: 0,
             ResultSize: "".to_string(),
             Keyword: "".to_string(),
@@ -78,6 +81,7 @@ impl Default for RequestFileParam {
             OnlyRepeat: Default::default(),
             params: FileModel::new(),
             Data: Default::default(),
+            MovieType: Default::default(),
             TotalCnt: Default::default(),
             TotalSize: Default::default(),
             ResultCnt: Default::default(),

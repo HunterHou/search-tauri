@@ -71,22 +71,26 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     // println!("STATIC_LIST:{:?}", STATIC_LIST.lock().unwrap().iter());
     // 通过锁定STATIC_LIST获取对静态列表的写入权限
     STATIC_LIST.lock().unwrap().iter().for_each(|item| {
-        if request.FileType.contains(&item.FileType) {
-            // 如果请求中的关键词长度大于0
-            if request.Keyword.len() > 0 {
-                // 如果列表项的名字包含关键词
-                if item.Name.contains(&request.Keyword) {
-                    // 将列表项复制到结果列表中
-                    total_size = total_size + item.Size;
-                    total_count = total_count + 1;
-                    result_list.push(item.clone());
-                }
-            } else {
+        if !request.FileType.contains(&item.FileType) {
+            return;
+        }
+        if !request.MovieType.contains(&item.MovieType) {
+            return;
+        }
+        // 如果请求中的关键词长度大于0
+        if request.Keyword.len() > 0 {
+            // 如果列表项的名字包含关键词
+            if item.Name.contains(&request.Keyword) {
                 // 将列表项复制到结果列表中
                 total_size = total_size + item.Size;
                 total_count = total_count + 1;
                 result_list.push(item.clone());
             }
+        } else {
+            // 将列表项复制到结果列表中
+            total_size = total_size + item.Size;
+            total_count = total_count + 1;
+            result_list.push(item.clone());
         }
     });
     if request.SortField == "MTime" {
@@ -105,9 +109,9 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     }
     if request.SortField == "Code" {
         if request.SortType == "asc" {
-            result_list.sort_by(|c1, c2| c1.Code.cmp(&c2.Code));
+            result_list.sort_by(|c1, c2| c1.Code.cmp(&c2.MTime));
         } else {
-            result_list.sort_by(|c1, c2| c2.Code.cmp(&c1.Code));
+            result_list.sort_by(|c1, c2| c2.Code.cmp(&c1.MTime));
         }
     }
 
