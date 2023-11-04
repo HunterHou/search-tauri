@@ -31,7 +31,7 @@ pub fn refresh_setting(setting: &Setting) {
 /**
  * 加载配置文件
  */
-pub fn loading_file() {
+pub fn loading_file() ->Setting{
     let binding = STATIC_SETTING_PATH;
     let path = Path::new(&binding);
     // 以只读方式打开路径，返回 `io::Result<File>`
@@ -44,7 +44,7 @@ pub fn loading_file() {
     // 读取文件内容到字符串，如果读取失败则打印错误信息并终止程序
     match setting_file.read_to_string(&mut setting_json) {
         Err(why) => panic!("无法读取文件 {}: {:?}", &path.display(), why),
-        Ok(_) => print!("{} 文件内容如下:\n{}", &path.display(), setting_json),
+        Ok(_) => print!("{} 文件内容", &path.display()),
     }
     // 将字符串转换为 Setting 对象，如果转换失败则打印错误信息并使用默认的空对象
     let setting: Setting = match serde_json::from_str(&setting_json) {
@@ -55,6 +55,6 @@ pub fn loading_file() {
         }
     };
     // 将请求的对象复制到静态设置的对象中
-    let new_mutx = Mutex::new(setting.clone());
-    STATIC_SETTING.deref().clone_from(&&new_mutx);
+    STATIC_SETTING.lock().unwrap().from(&setting);
+    return setting;
 }

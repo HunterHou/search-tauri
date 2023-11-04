@@ -4,6 +4,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 export const GetSettingInfo = async () => {
   const res = await invoke("read_settings", {});
+  console.log("GetSettingInfo", res);
   return res;
 };
 

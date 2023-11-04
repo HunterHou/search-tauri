@@ -71,4 +71,25 @@ impl Setting {
             MovieTypes: vec![],
         }
     }
+    pub fn from(&mut self, req: &Setting) {
+        self.ControllerHost = req.ControllerHost.clone();
+        self.ImageHost = req.ImageHost.clone();
+        self.StreamHost = req.StreamHost.clone();
+        self.SystemHtml = req.SystemHtml.clone();
+        self.Remark = req.Remark.clone();
+        self.BaseUrl = req.BaseUrl.clone();
+        self.OMUrl = req.OMUrl.clone();
+        self.SelfPath = req.SelfPath.clone();
+        self.IsJavBus = req.IsJavBus.clone();
+        self.IsDb = req.IsDb.clone();
+        self.Tags = req.Tags.clone();
+        self.TagsLib = req.TagsLib.clone();
+        self.Dirs = req.Dirs.clone();
+        self.DirsLib = req.DirsLib.clone();
+        self.DocsTypes = req.DocsTypes.clone();
+        self.VideoTypes = req.VideoTypes.clone();
+        self.Types = req.Types.clone();
+        self.Buttons = req.Buttons.clone();
+        self.MovieTypes = req.MovieTypes.clone();
+    }
 }
