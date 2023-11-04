@@ -87,6 +87,8 @@ fn submit_settings(params: &str) -> ResultParam {
 
 #[tauri::command]
 fn read_settings() -> Setting {
+    let setting =service_setting::loading_file();
+    println!("setting {:?}", setting);
     let res = STATIC_SETTING.lock().unwrap().clone();
     println!("STATIC_SETTING {:?}", res);
     return res;
