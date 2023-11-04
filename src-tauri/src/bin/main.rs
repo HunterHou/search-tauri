@@ -4,7 +4,11 @@ mod service;
 use service::setting_service;
 
 
-fn main() {
-    // init_db();
+pub fn main() {
+    init();
+    
+}
+
+pub fn init() {
     setting_service::loading_file();
 }

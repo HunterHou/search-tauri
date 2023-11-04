@@ -1,4 +1,4 @@
-use crate::bin::model::file_model::FileModel;
+use super::super::model::file_model::FileModel;
 use super::super::static_param::{STATIC_DATA,STATIC_LIST};
 
 use std::io::Result;
@@ -7,6 +7,7 @@ use std::path::Path;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
+
 
 pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let mut filelist: Vec<FileModel> = Vec::new();

@@ -18,10 +18,12 @@ pub struct Setting {
     OMUrl: String,
     #[serde(default)]
     SelfPath: String,
+
     #[serde(default)]
-    IsJavBus: String,
+    IsJavBus: bool,
     #[serde(default)]
-    IsDb: String,
+    IsDb: bool,
+
     #[serde(default)]
     Tags: Vec<String>,
     #[serde(default)]
@@ -55,8 +57,8 @@ impl Setting {
             BaseUrl: "".to_string(),
             OMUrl: "".to_string(),
             SelfPath: "".to_string(),
-            IsJavBus: "".to_string(),
-            IsDb: "".to_string(),
+            IsJavBus: false,
+            IsDb: false,
             Tags: vec![],
             TagsLib: vec![],
             Dirs: vec![],

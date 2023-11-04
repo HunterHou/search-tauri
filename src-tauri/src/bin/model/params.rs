@@ -15,15 +15,6 @@ pub struct ResultParam {
 
 // ResultParam 类的实现
 impl ResultParam {
-    // 构造函数，创建一个 ResultParam 对象
-    pub fn new() -> ResultParam {
-        ResultParam {
-            Code: 0,
-            Message: "".to_string(),
-            Data: ResultData::new(),
-        }
-    }
-
     // 创建一个成功的 ResultParam 对象
     pub fn success() -> ResultParam {
         ResultParam {

@@ -92,6 +92,7 @@ fn read_settings() -> Setting {
 
 
 fn main() {
+    bin::service::setting_service::loading_file();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
