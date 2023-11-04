@@ -9,7 +9,7 @@ export const GetSettingInfo = async () => {
 
 export const PostSettingInfo = async (data: SettingInfo) => {
   const res = await invoke("submit_settings", {
-    name: JSON.stringify(data),
+    params: JSON.stringify(data),
   });
   return res;
 };
