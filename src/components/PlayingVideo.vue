@@ -189,7 +189,7 @@ const open = (v) => {
 
 const fetchGetSettingInfo = async () => {
   const data = await GetSettingInfo();
-  view.settingInfo = data.data;
+  view.settingInfo = data;
 };
 
 const stop = () => {

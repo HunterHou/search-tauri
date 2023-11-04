@@ -3,47 +3,47 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Setting {
     #[serde(default)]
-    ControllerHost: String,
+    pub ControllerHost: String,
     #[serde(default)]
-    ImageHost: String,
+    pub ImageHost: String,
     #[serde(default)]
-    StreamHost: String,
+    pub StreamHost: String,
     #[serde(default)]
-    SystemHtml: String,
+    pub SystemHtml: String,
     #[serde(default)]
-    Remark: String,
+    pub Remark: String,
     #[serde(default)]
-    BaseUrl: String,
+    pub BaseUrl: String,
     #[serde(default)]
-    OMUrl: String,
+    pub OMUrl: String,
     #[serde(default)]
-    SelfPath: String,
+    pub SelfPath: String,
 
     #[serde(default)]
-    IsJavBus: bool,
+    pub IsJavBus: bool,
     #[serde(default)]
-    IsDb: bool,
+    pub IsDb: bool,
 
     #[serde(default)]
-    Tags: Vec<String>,
+    pub Tags: Vec<String>,
     #[serde(default)]
-    TagsLib: Vec<String>,
+    pub TagsLib: Vec<String>,
     #[serde(default)]
-    Dirs: Vec<String>,
+    pub Dirs: Vec<String>,
     #[serde(default)]
-    DirsLib: Vec<String>,
+    pub DirsLib: Vec<String>,
     #[serde(default)]
-    ImageTypes: Vec<String>,
+    pub ImageTypes: Vec<String>,
     #[serde(default)]
-    DocsTypes: Vec<String>,
+    pub DocsTypes: Vec<String>,
     #[serde(default)]
-    VideoTypes: Vec<String>,
+    pub VideoTypes: Vec<String>,
     #[serde(default)]
-    Types: Vec<String>,
+    pub Types: Vec<String>,
     #[serde(default)]
-    Buttons: Vec<String>,
+    pub Buttons: Vec<String>,
     #[serde(default)]
-    MovieTypes: Vec<String>,
+    pub MovieTypes: Vec<String>,
 }
 
 impl Setting {

@@ -229,8 +229,7 @@ const submitForm = async () => {
 };
 
 const fetchSearch = async () => {
-  const { data } = await GetSettingInfo();
-  console.log(data);
+  const data = await GetSettingInfo();
   view.settingInfo = data;
 };
 

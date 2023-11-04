@@ -219,7 +219,7 @@ const open = (data) => {
 
 const fetchSetting = async () => {
   const res = await GetSettingInfo();
-  view.settingInfo = res.data;
+  view.settingInfo = res;
 };
 
 const searchCode = (item) => {

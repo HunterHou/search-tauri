@@ -7,15 +7,15 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue';
-import {GetSettingInfo} from '../../components/api/settingAPI';
+import { onMounted, reactive } from 'vue';
+import { GetSettingInfo } from '../../components/api/settingAPI';
 
 const view = reactive({
   settingInfo: {},
 });
 
 const fetchSearch = async () => {
-  const {data} = await GetSettingInfo();
+  const data = await GetSettingInfo();
   console.log(data);
   view.settingInfo = data;
 };

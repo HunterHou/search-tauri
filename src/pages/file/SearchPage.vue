@@ -349,8 +349,8 @@ const confirmDelete = (item) => {
 
 const fetchGetSettingInfo = async () => {
   const data = await GetSettingInfo();
-  view.settingInfo = data.data;
-  systemProperty.SettingInfo = data.data;
+  view.settingInfo = data;
+  systemProperty.SettingInfo = data;
 };
 
 const commonExec = async (exec, refresh) => {

@@ -79,7 +79,7 @@ const view = reactive({
     MovieType: '',
     OnlyRepeat: false,
     Page: 1,
-    PageSize: 50,
+    PageSize: 30,
     SortField: 'MTime',
     SortType: 'desc',
   },

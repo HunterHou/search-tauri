@@ -47,13 +47,15 @@ fn refresh_disk(name: &str) -> String {
 #[tauri::command]
 fn search_index(params: &str) -> RequestFileParam {
     // println!("search_index params{:?}", params);
-    let request: RequestFileParam = match serde_json::from_str(params) {
+    let mut request: RequestFileParam = match serde_json::from_str(params) {
         Ok(v) => v,
         Err(err) => {
             println!("serde_json::from_str {:?}", err);
             RequestFileParam::new()
         }
     };
+    let res = STATIC_SETTING.lock().unwrap().clone();
+    request.FileType = res.VideoTypes;
     // println!("search_index request{:?}", request);
     let res: ResultData = service_search::search_index(request.clone());
     return service_search::wrapper_request(&request, &res);
@@ -85,9 +87,7 @@ fn submit_settings(params: &str) -> ResultParam {
 
 #[tauri::command]
 fn read_settings() -> Setting {
-    let setting=service_setting::loading_file();
     let res = STATIC_SETTING.lock().unwrap().clone();
-    println!("loading setting {:?}", setting);
     println!("STATIC_SETTING {:?}", res);
     return res;
 }
