@@ -52,7 +52,7 @@
         "removeFile": true,
         "renameFile": true,
         "exists": true,
-        "scope": ["*","d://","e://","f://","g://","/"]
+        "scope": ["*","d://","e://","f://","g://","h://","j://","i://","/"]
       },
       "os": {
         "all": true 

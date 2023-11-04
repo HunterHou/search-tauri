@@ -3,4 +3,5 @@
 /target/
 search.db
 search.db-journal
+settings.json
 
