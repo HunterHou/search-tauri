@@ -1,4 +1,4 @@
-use super::super::model::file_model::FileModel;
+use crate::bin::model::file_model::FileModel;
 use super::super::static_param::{STATIC_DATA,STATIC_LIST};
 
 use std::io::Result;

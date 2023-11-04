@@ -1,5 +1,10 @@
-mod database;
-use crate::database::db::init_db;
+// mod database;
+mod service;
+// use crate::database::db::init_db;
+use service::setting_service;
+
+
 fn main() {
-    init_db();
+    // init_db();
+    setting_service::loading_file();
 }

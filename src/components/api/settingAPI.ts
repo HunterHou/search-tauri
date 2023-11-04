@@ -1,22 +1,25 @@
-import { axios } from '../../boot/axios';
-import { SettingInfo } from '../model/SettingModel';
+import { axios } from "../../boot/axios";
+import { SettingInfo } from "../model/SettingModel";
+import { invoke } from "@tauri-apps/api/tauri";
 
 export const GetSettingInfo = async () => {
-  const res = await axios.get('/api/buttoms');
+  const res = await invoke("read_settings", {});
   return res;
 };
 
 export const PostSettingInfo = async (data: SettingInfo) => {
-  const res = await axios.post('/api/setting', data);
-  return res && res.data;
+  const res = await invoke("submit_settings", {
+    name: JSON.stringify(data),
+  });
+  return res;
 };
 
 export const GetIpAddr = async () => {
-  const res = await axios.get('/api/GetIpAddr');
+  const res = await axios.get("/api/GetIpAddr");
   return res && res.data;
 };
 
 export const GetShutDown = async () => {
-  const res = await axios.get('/api/shutDown');
+  const res = await axios.get("/api/shutDown");
   return res as unknown;
 };

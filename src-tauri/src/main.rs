@@ -4,11 +4,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod bin;
 
-use bin::static_param::STATIC_DATA;
+use bin::static_param::{STATIC_DATA, STATIC_SETTING};
 use bin::{database::db, model, service /*, static_param */};
 use model::file_model::FileModel;
 use model::params::RequestFileParam;
 use service::search;
+use service::setting_service;
+use crate::bin::model::params::ResultParam;
+use crate::bin::model::setting::Setting;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -67,10 +70,33 @@ fn find_file_info(id: &str) -> FileModel {
     return FileModel::new();
 }
 
+#[tauri::command]
+fn submit_settings(params: &str) -> ResultParam {
+    let request: Setting = match serde_json::from_str(params) {
+        Ok(v) => v,
+        Err(err) => {
+            println!("serde_json::from_str {:?}", err);
+            Setting::new()
+        }
+    };
+    setting_service::refresh_setting(&request);
+    ResultParam::success()
+}
+
+
+#[tauri::command]
+fn read_settings() -> Setting {
+    let res = STATIC_SETTING.lock().unwrap().clone();
+    return res;
+}
+
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
+            submit_settings,
+            read_settings,
             refresh_disk,
             search_index,
             find_file_info
