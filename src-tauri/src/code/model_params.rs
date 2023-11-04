@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-use super::file_model::FileModel;
+use super::model_file::FileModel;
+
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ResultParam {
@@ -25,7 +26,7 @@ impl ResultParam {
     }
 
     // 创建一个失败的 ResultParam 对象
-    pub fn error() -> ResultParam {
+    pub fn fail() -> ResultParam {
         ResultParam {
             Code: 400,
             Message: "执行失败".to_string(),

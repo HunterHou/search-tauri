@@ -2,16 +2,17 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-mod bin;
+mod code;
 
-use bin::static_param::{STATIC_DATA, STATIC_SETTING};
-use bin::{database::db, model, service /*, static_param */};
-use model::file_model::FileModel;
-use model::params::RequestFileParam;
-use service::search;
-use service::setting_service;
-use crate::bin::model::params::ResultParam;
-use crate::bin::model::setting::Setting;
+use code::model_file::FileModel;
+use code::model_params::RequestFileParam;
+use code::model_params::ResultData;
+use code::model_params::ResultParam;
+use code::model_setting::Setting;
+use code::service_search;
+use code::service_setting;
+
+use code::const_param::{STATIC_DATA, STATIC_SETTING};
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -33,8 +34,7 @@ fn refresh_disk(name: &str) -> String {
         "/Users/harmay/Documents",
     ];
     let _filelist: Vec<FileModel> = Vec::new();
-    db::init_db();
-    let res = search::search_disk(base_dir.to_vec());
+    let res = service_search::search_disk(base_dir.to_vec());
     if res.is_err() {
         let msg = &res.err().unwrap().to_string();
         println!("refresh_disk error:{}", &msg);
@@ -55,8 +55,8 @@ fn search_index(params: &str) -> RequestFileParam {
         }
     };
     // println!("search_index request{:?}", request);
-    let res: model::params::ResultData = search::search_index(request.clone());
-    return search::wrapper_request(&request, &res);
+    let res: ResultData = service_search::search_index(request.clone());
+    return service_search::wrapper_request(&request, &res);
 }
 #[tauri::command]
 fn find_file_info(id: &str) -> FileModel {
@@ -79,10 +79,9 @@ fn submit_settings(params: &str) -> ResultParam {
             Setting::new()
         }
     };
-    setting_service::refresh_setting(&request);
+    service_setting::refresh_setting(&request);
     ResultParam::success()
 }
-
 
 #[tauri::command]
 fn read_settings() -> Setting {
@@ -90,9 +89,8 @@ fn read_settings() -> Setting {
     return res;
 }
 
-
 fn main() {
-    bin::service::setting_service::loading_file();
+    service_setting::loading_file();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,

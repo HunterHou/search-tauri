@@ -1,5 +1,7 @@
+
+use super::utils_do_file_name;
 // 数据模型 文件
-use super::super::utils::do_file_name::{
+use utils_do_file_name::{
     actress_from_name, code_from_name, int_to_size_str, movie_type_from_name,
     system_time_to_string, tags_from_name, title_from_name, vm_git_from_name, vm_jpg_from_name,
     vm_png_from_name,

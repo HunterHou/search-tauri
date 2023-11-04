@@ -1,5 +1,3 @@
-use super::super::model::file_model::FileModel;
-use super::super::static_param::{STATIC_DATA,STATIC_LIST};
 
 use std::io::Result;
 use std::path::Path;
@@ -7,6 +5,11 @@ use std::path::Path;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
+
+use super::const_param::STATIC_DATA;
+use super::const_param::STATIC_LIST;
+use super::model_file::FileModel;
+
 
 
 pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {

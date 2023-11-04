@@ -1,10 +1,11 @@
-use super::super::model::setting::Setting;
-use super::super::static_param::{STATIC_SETTING, STATIC_SETTING_PATH};
 use std::fs::File;
 use std::io::prelude::*;
 use std::ops::Deref;
 use std::path::Path;
 use std::sync::Mutex;
+
+use super::const_param::{STATIC_SETTING, STATIC_SETTING_PATH};
+use super::model_setting::Setting;
 
 pub fn refresh_setting(setting: &Setting) {
     // 将请求的对象复制到静态设置的对象中
