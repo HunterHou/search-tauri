@@ -22,11 +22,12 @@ impl ActressModel {
             Videos: Vec::new(),
         }
     }
-    pub fn add_video(&mut self, size: i64, video: String) {
+    pub fn add_video(&mut self, size: i64, video: String, image: String) {
         self.Cnt += 1;
         self.Size += size;
         self.SizeStr = int_to_size_str(self.Size);
         self.Videos.push(video);
+        self.Images.push(image);
     }
 }
 

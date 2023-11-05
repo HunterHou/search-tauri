@@ -127,7 +127,7 @@ pub fn cache_analyzer() {
         let cl = value.into_values().into_iter();
         println!("cache_analyzer start");
         let start = SystemTime::now();
-        
+
         let video = match STATIC_SETTING.lock() {
             Ok(val) => {
                 let mut ve = Vec::new();
@@ -148,6 +148,7 @@ pub fn cache_analyzer() {
                 let file_type = String::from(&ele.FileType);
                 if video.contains(&file_type) {
                     let size = &ele.Size;
+                    let image = String::from(&ele.Jpg);
                     let path = String::from(&ele.Path);
                     let base_dir = String::from(&ele.BaseDir);
                     let movie_type = String::from(&ele.MovieType);
@@ -158,10 +159,10 @@ pub fn cache_analyzer() {
                             Some(val) => val,
                             None => todo!(),
                         };
-                        actre.add_video(*size, path);
+                        actre.add_video(*size, path, image);
                     } else {
                         let mut actre = ActressModel::new(&actress);
-                        actre.add_video(*size, path);
+                        actre.add_video(*size, path, image);
                         act_map.insert(String::from(&actress), actre);
                     }
 
