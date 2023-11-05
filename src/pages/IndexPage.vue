@@ -162,10 +162,11 @@ const loadScanTime = async () => {
 onMounted(() => {
   if (tableData.value.length == 0) {
     refreshIndex().then(()=>{
-                              setTimeout(() => {
-                              loadTypeSize()
-                            }, 4000);
-  }) 
+        setInterval(() => {
+      loadTypeSize()
+    }, 1000);
+    }
+  ) 
   }else {
     loadTypeSize()
   }
