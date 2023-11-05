@@ -100,9 +100,18 @@ fn actress_map(params: &str) -> RequestActressParam {
         Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
-    println!("actress_map {:?}-{:?}", request.start_index(),request.end_index());
     request.TotalCnt = actress_lib.len() as i64;
-    request.Data = actress_lib[request.start_index()..request.end_index()].to_vec();
+    let mut start = request.start_index();
+    if start as i64 > request.TotalCnt {
+        start = request.TotalCnt as usize;
+    }
+    let mut end = request.end_index();
+    if end as i64 > request.TotalCnt {
+        end = request.TotalCnt as usize;
+    }
+    println!("actress_map {:?}-{:?}", start, end);
+
+    request.Data = actress_lib[start..end].to_vec();
     // println!("actress_map {:?}", request);
     return request;
 }
