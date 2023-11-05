@@ -3,11 +3,17 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct ActressModel {
+    #[serde(default)]
     Name: String,
+    #[serde(default)]
     Size: i64,
+    #[serde(default)]
     Cnt: i64,
+    #[serde(default)]
     SizeStr: String,
+    #[serde(default)]
     Images: Vec<String>,
+    #[serde(default)]
     Videos: Vec<String>,
 }
 

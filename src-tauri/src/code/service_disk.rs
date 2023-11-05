@@ -145,7 +145,7 @@ pub fn cache_analyzer() {
         let tag_map = &mut STATIC_TAG_SIZE.lock().unwrap();
         for ele in cl.into_iter() {
             if !ele.is_empty() {
-                println!("cache_analyzer {}", &ele.Id);
+                // println!("cache_analyzer {}", &ele.Id);
                 let file_type = String::from(&ele.FileType);
                 if video.contains(&file_type) {
                     let size = &ele.Size;

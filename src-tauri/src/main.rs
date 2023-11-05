@@ -96,14 +96,14 @@ fn actress_map(params: &str) -> RequestActressParam {
             RequestActressParam::new()
         }
     };
-    let actress_lib: Vec<ActressModel> = match STATIC_ACTRESS_LIST.lock() {
+    let actress_lib: Vec<ActressModel> = match STATIC_ACTRESS_LIST.try_lock() {
         Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
-
+    println!("actress_map {:?}-{:?}", request.start_index(),request.end_index());
     request.TotalCnt = actress_lib.len() as i64;
     request.Data = actress_lib[request.start_index()..request.end_index()].to_vec();
-    println!("actress_map {:?}", request);
+    // println!("actress_map {:?}", request);
     return request;
 }
 
