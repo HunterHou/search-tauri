@@ -7,6 +7,7 @@ use walkdir::DirEntry;
 use walkdir::WalkDir;
 
 use super::const_param::STATIC_ACTRESS;
+use super::const_param::STATIC_ACTRESS_LIST;
 use super::const_param::STATIC_DATA;
 use super::const_param::STATIC_DIR_SIZE;
 use super::const_param::STATIC_LIST;
@@ -207,6 +208,9 @@ pub fn cache_analyzer() {
                 }
             }
         }
+        STATIC_ACTRESS_LIST.lock().unwrap().clear();
+        let actress = act_map.clone().into_values().collect::<Vec<ActressModel>>();
+        STATIC_ACTRESS_LIST.lock().unwrap().extend(actress);
         let end = SystemTime::now().duration_since(start);
         println!("cache_analyzer over:{:?}", end.ok());
     }

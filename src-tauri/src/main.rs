@@ -16,7 +16,7 @@ use code::model_setting::Setting;
 use code::service_search;
 use code::service_setting;
 
-use code::const_param::STATIC_ACTRESS;
+use code::const_param::STATIC_ACTRESS_LIST;
 use code::const_param::STATIC_DIR_SIZE;
 use code::const_param::STATIC_TAG_SIZE;
 use code::const_param::STATIC_TYPE_SIZE;
@@ -68,6 +68,7 @@ fn search_index(params: &str) -> RequestFileParam {
     let res: ResultData = service_search::search_index(request.clone());
     return service_search::wrapper_request(&request, &res);
 }
+
 #[tauri::command]
 fn find_file_info(id: &str) -> FileModel {
     let map = STATIC_DATA.lock().unwrap();
@@ -80,39 +81,19 @@ fn find_file_info(id: &str) -> FileModel {
     return FileModel::new();
 }
 
+
 #[tauri::command]
-fn submit_settings(params: &str) -> ResultParam {
-    let request: Setting = match serde_json::from_str(params) {
+fn actress_map(params:&str) -> ResultActress {
+     // println!("search_index params{:?}", params);
+     let mut request: RequestFileParam = match serde_json::from_str(params) {
         Ok(v) => v,
         Err(err) => {
             println!("serde_json::from_str {:?}", err);
-            Setting::new()
+            RequestFileParam::new()
         }
     };
-    service_setting::refresh_setting(&request);
-    ResultParam::success()
-}
-
-#[tauri::command]
-fn read_settings() -> Setting {
-    let setting = service_setting::loading_file();
-    // println!("setting {:?}", setting);
-    return setting;
-    // let res = STATIC_SETTING.lock().unwrap().clone();
-    // println!("STATIC_SETTING {:?}", res);
-    // return res;
-}
-
-#[tauri::command]
-fn actress_map() -> ResultActress {
-    let res: Vec<ActressModel> = match STATIC_ACTRESS.try_lock() {
-        Ok(val) => {
-            let value = val.clone();
-            value
-                .into_values()
-                .map(|v| v.clone())
-                .collect::<Vec<ActressModel>>()
-        }
+    let res: Vec<ActressModel> = match STATIC_ACTRESS_LIST.lock() {
+        Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
     let mut res_data = ResultActress::new();
@@ -141,6 +122,26 @@ fn dir_size_map() -> Vec<TypeAnalyzer> {
     let res = STATIC_DIR_SIZE.try_lock().unwrap().clone();
     println!("dir_size_map {:?}", res);
     return res.into_values().collect::<Vec<TypeAnalyzer>>();
+}
+
+
+#[tauri::command]
+fn submit_settings(params: &str) -> ResultParam {
+    let request: Setting = match serde_json::from_str(params) {
+        Ok(v) => v,
+        Err(err) => {
+            println!("serde_json::from_str {:?}", err);
+            Setting::new()
+        }
+    };
+    service_setting::refresh_setting(&request);
+    ResultParam::success()
+}
+
+#[tauri::command]
+fn read_settings() -> Setting {
+    let setting = service_setting::loading_file();
+    return setting;
 }
 
 fn main() {

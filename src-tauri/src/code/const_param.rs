@@ -39,6 +39,11 @@ lazy_static! {
         Mutex::new(list)
     };
 
+    pub static ref STATIC_ACTRESS_LIST: Mutex<Vec<ActressModel>> = {
+        let list: Vec<ActressModel> = Vec::<ActressModel>::new();
+        Mutex::new(list)
+    };
+
     pub static ref STATIC_SETTING: Mutex<Setting> = {
         let setting: Setting = Setting::new();
         Mutex::new(setting)

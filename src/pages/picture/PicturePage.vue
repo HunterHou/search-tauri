@@ -25,7 +25,7 @@
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Url)" class="item-img" @click="searchFiles(item.Name)">
+        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Images[0])" class="item-img" @click="searchFiles(item.Name)">
           <div style="
               padding: 0;
               margin: 0;
@@ -109,7 +109,6 @@ const nextPage = (n) => {
 
 const fetchSearch = async () => {
   const  data  = await QueryActressList(view.queryParam);
-  console.log(data);
   view.resultData = data;
 };
 import { appWindow } from '@tauri-apps/api/window';
