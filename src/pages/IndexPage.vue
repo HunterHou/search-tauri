@@ -194,8 +194,7 @@ const deleteThis = async (data) => {
   }
 };
 const refreshIndex = async () => {
-  const { data } = await RefreshAPI();
-  console.log(data);
+  const  data  = await RefreshAPI();
   if (data.Code == 200) {
     f5();
   } else {
