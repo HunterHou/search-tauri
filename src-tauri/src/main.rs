@@ -4,6 +4,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod code;
 
+use code::const_param::QUERY_DB;
 use code::init_service;
 use code::model_actress::ActressModel;
 use code::model_actress::TypeAnalyzer;
@@ -65,8 +66,12 @@ fn search_index(params: &str) -> RequestFileParam {
     let res = STATIC_SETTING.lock().unwrap().clone();
     request.FileType = res.VideoTypes;
     // println!("search_index request{:?}", request);
-    let res: ResultData = service_search::search_index(request.clone());
-    return service_search::wrapper_request(&request, &res);
+    if *QUERY_DB {
+        return request;
+    }else {
+        let res: ResultData = service_search::search_index(request.clone());
+        return service_search::wrapper_request(&request, &res);
+    }
 }
 
 #[tauri::command]
