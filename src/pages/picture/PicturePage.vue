@@ -21,7 +21,7 @@
       ]" />
       <q-input v-model="view.queryParam.Keyword" :dense="true" filled clearable @update:model-value="fetchSearch" />
       <q-pagination v-model="view.queryParam.Page" @update:model-value="currentPageChange" color="purple"
-        :ellipses="false" :max="view.resultData.TotalCnt || 0" :max-pages="6" boundary-numbers />
+        :ellipses="false" :max="view.resultData.TotalPage || 0" :max-pages="6" boundary-numbers />
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
