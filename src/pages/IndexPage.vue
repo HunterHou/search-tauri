@@ -163,8 +163,10 @@ onMounted(() => {
   if (tableData.value.length == 0) {
     refreshIndex().then(()=>{
         setInterval(() => {
-      loadTypeSize()
-    }, 1000);
+          if (tableData.value.length == 0) {
+        loadTypeSize()
+      }
+    }, 3000);
     }
   ) 
   }else {
