@@ -12,7 +12,8 @@ use code::model_params::ResultData;
 use code::model_params::ResultParam;
 use code::model_setting::Setting;
 use code::service_search;
-use code::init_setting;
+use code::init_service;
+use code::service_setting;
 
 use code::const_param::STATIC_ACTRESS;
 use code::const_param::STATIC_DIR_SIZE;
@@ -68,7 +69,7 @@ fn search_index(params: &str) -> RequestFileParam {
 }
 #[tauri::command]
 fn find_file_info(id: &str) -> FileModel {
-    let map = STATIC_DATA.try_lock().unwrap();
+    let map = STATIC_DATA.lock().unwrap();
     println!("find_file_info id:{} ", id);
     if map.contains_key(id) {
         let res: FileModel = map.get(id).unwrap().clone();
@@ -138,7 +139,7 @@ fn dir_size_map() -> Vec<TypeAnalyzer> {
 }
 
 fn main() {
-    init_setting::init_sys();
+    init_service::init_sys();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,

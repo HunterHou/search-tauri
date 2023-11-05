@@ -1,10 +1,10 @@
-use super::super::utils::do_file_name::int_to_size_str;
+use super::utils_do_file_name::int_to_size_str;
 use rusqlite::{Connection, Error, NO_PARAMS};
 use std::{thread, time::SystemTime};
 
 use super::super::model::params::{RequestFileParam, ResultData};
 
-use super::super::{database::db, model::file_model::FileModel};
+use super::db;
 use super::file_service::visit_dirs;
 
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
