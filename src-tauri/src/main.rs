@@ -14,7 +14,7 @@ use code::model_params::ResultData;
 use code::model_params::ResultParam;
 use code::model_setting::Setting;
 use code::service_search;
-use code::service_setting;
+use code::init_setting;
 
 use code::const_param::STATIC_ACTRESS;
 use code::const_param::STATIC_DIR_SIZE;
@@ -141,7 +141,7 @@ fn dir_size_map() -> Vec<TypeAnalyzer> {
 }
 
 fn main() {
-    service_setting::loading_file();
+    init_setting::init_sys();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,

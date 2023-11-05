@@ -8,3 +8,5 @@ pub mod service_disk;
 pub mod service_search;
 pub mod service_setting;
 pub mod utils_do_file_name;
+
+pub mod init_service;
