@@ -177,6 +177,7 @@
               fileEditRef.open(item, refreshIndex);
             }
               " v-if="showButton('编辑')" title="编辑" />
+
             <q-btn round class="q-mr-sm" size="sm" color="primary" icon="open_in_new" @click="openFolder(item)"
               v-if="showButton('文件夹')" title="文件夹" />
             <q-btn round class="q-mr-sm" size="sm" color="brown-5" icon="ti-search" title="网搜"
@@ -226,7 +227,7 @@ import {
 } from '@/components/api/searchAPI';
 import { GetSettingInfo } from '@/components/api/settingAPI';
 import { formatCode, formatTitle, MovieTypeOptions, MovieTypeSelects } from '../../components/utils';
-import { NewWindow } from '@/components/utils/system';
+import { NewWindow, CmdBySystem } from '@/components/utils/system';
 import { useSystemProperty } from '@/stores/System';
 import FileEdit from './components/FileEdit.vue';
 import FileInfo from './components/FileInfo.vue';
@@ -258,7 +259,8 @@ const playBySystem = (item) => {
   if ($q.platform.is.electron) {
     window.electron.openBySystem({ Path })
   } else {
-    commonExec(PlayMovie(item.Id))
+    CmdBySystem({ Path });
+    // commonExec(PlayMovie(item.Id))
   }
 
 }
@@ -319,11 +321,12 @@ const focusEvent = (e) => {
 };
 
 const openFolder = (item) => {
-  const { Path } = item
+  const { DirPath } = item
   if ($q.platform.is.electron) {
     window.electron.showInFolder(item.Path)
   } else {
-    commonExec(OpenFileFolder(item.Id))
+    CmdBySystem({ Path: DirPath })
+    // commonExec(OpenFileFolder(item.Id))
   }
 
 }

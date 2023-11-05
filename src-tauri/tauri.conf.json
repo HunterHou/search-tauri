@@ -22,7 +22,7 @@
         "all": true,
         "open": true,
         "execute": true,
-        "scope": [{"name":"startCMD","cmd": "start","args": true}]
+        "scope": [{"name":"startCMD","cmd": "explorer","args": true},{"name":"shutdown","cmd": "shutdown","args": true}]
       },
       "clipboard": {
         "all": true, 

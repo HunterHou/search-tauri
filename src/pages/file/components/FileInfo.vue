@@ -25,9 +25,9 @@
           <q-btn class="q-mr-sm" size="sm" ripple color="green-7" icon="ti-blackboard"
             @click="openDialog(view.item)">侧屏</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="primary" icon="ti-control-eject"
-            @click="commonExec(PlayMovie(view.item.Id))">播放</q-btn>
+            @click="CmdBySystem({ Path: view.item.Path })">播放</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="primary" icon="open_in_new"
-            @click="commonExec(OpenFileFolder(view.item.Id))">文件夹</q-btn>
+            @click="CmdBySystem({ Path: view.item.DirPath })">文件夹</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="secondary" icon="ti-import"
             @click="commonExec(DownImageList(view.item.Id))">挂图</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="amber" glossy text-color="black" icon="ti-trash"
@@ -110,6 +110,7 @@ import {
 import { useSystemProperty } from '@/stores/System';
 import Playing from '@/components/PlayingVideo.vue';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { CmdBySystem } from '@/components/utils/system';
 
 const $q = useQuasar()
 const systemProperty = useSystemProperty();

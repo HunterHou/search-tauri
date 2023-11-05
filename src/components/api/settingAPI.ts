@@ -1,6 +1,7 @@
 import { axios } from "../../boot/axios";
 import { SettingInfo } from "../model/SettingModel";
 import { invoke } from "@tauri-apps/api/tauri";
+import { shutdownBySystem } from "@/components/utils/system";
 
 export const GetSettingInfo = async () => {
   const res = await invoke("read_settings", {});
@@ -21,6 +22,5 @@ export const GetIpAddr = async () => {
 };
 
 export const GetShutDown = async () => {
-  const res = await axios.get("/api/shutDown");
-  return res as unknown;
+  shutdownBySystem();
 };
