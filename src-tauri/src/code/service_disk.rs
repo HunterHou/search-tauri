@@ -127,100 +127,86 @@ pub fn cache_analyzer() {
         let cl = value.into_values().into_iter();
         println!("cache_analyzer start");
         let start = SystemTime::now();
+        
+        let video = match STATIC_SETTING.lock() {
+            Ok(val) => {
+                let mut ve = Vec::new();
+                for v in val.VideoTypes.iter() {
+                    ve.push(String::from(v))
+                }
+                ve
+            }
+            Err(_) => Vec::new(),
+        };
+        let act_map = &mut STATIC_ACTRESS.lock().unwrap();
+        let type_map = &mut STATIC_TYPE_SIZE.lock().unwrap();
+        let dir_map = &mut STATIC_DIR_SIZE.lock().unwrap();
+        let tag_map = &mut STATIC_TAG_SIZE.lock().unwrap();
         for ele in cl.into_iter() {
             if !ele.is_empty() {
                 println!("cache_analyzer {}", &ele.Id);
-                cache_static_analyzer(ele.clone());
+                let file_type = String::from(&ele.FileType);
+                if video.contains(&file_type) {
+                    let size = &ele.Size;
+                    let path = String::from(&ele.Path);
+                    let base_dir = String::from(&ele.BaseDir);
+                    let movie_type = String::from(&ele.MovieType);
+                    let actress = String::from(&ele.Actress);
+
+                    if act_map.contains_key(&actress) {
+                        let actre = match act_map.get_mut(&actress) {
+                            Some(val) => val,
+                            None => todo!(),
+                        };
+                        actre.add_video(*size, path);
+                    } else {
+                        let mut actre = ActressModel::new(&actress);
+                        actre.add_video(*size, path);
+                        act_map.insert(String::from(&actress), actre);
+                    }
+
+                    if type_map.contains_key(&movie_type) {
+                        let valt = match type_map.get_mut(&movie_type) {
+                            Some(val) => val,
+                            None => todo!(),
+                        };
+                        valt.size_plus(*size);
+                    } else {
+                        let mut actre = TypeAnalyzer::new(&movie_type, false);
+                        actre.size_plus(*size);
+                        type_map.insert(String::from(&movie_type), actre);
+                    }
+
+                    if dir_map.contains_key(&base_dir) {
+                        let valt = match dir_map.get_mut(&base_dir) {
+                            Some(val) => val,
+                            None => todo!(),
+                        };
+                        valt.size_plus(*size);
+                    } else {
+                        let mut actre = TypeAnalyzer::new(&base_dir, true);
+                        actre.size_plus(*size);
+                        dir_map.insert(String::from(&base_dir), actre);
+                    }
+                    if &ele.Tags.len() > &0 {
+                        for ele in &ele.Tags {
+                            if tag_map.contains_key(ele) {
+                                let valt = match tag_map.get_mut(ele) {
+                                    Some(val) => val,
+                                    None => todo!(),
+                                };
+                                valt.size_plus(*size);
+                            } else {
+                                let mut actre = TypeAnalyzer::new(ele, true);
+                                actre.size_plus(*size);
+                                tag_map.insert(String::from(ele), actre);
+                            }
+                        }
+                    }
+                }
             }
         }
         let end = SystemTime::now().duration_since(start);
         println!("cache_analyzer over:{:?}", end.ok());
-    }
-}
-
-pub fn cache_static_analyzer(file: FileModel) {
-    let file_type = String::from(&file.FileType);
-    let video = match STATIC_SETTING.lock() {
-        Ok(val) => {
-            let mut ve = Vec::new();
-            for v in val.VideoTypes.iter() {
-                ve.push(String::from(v))
-            }
-            ve
-        }
-        Err(_) => Vec::new(),
-    };
-    if video.contains(&file_type) {
-        let size = &file.Size;
-        let path = String::from(&file.Path);
-        let base_dir = String::from(&file.BaseDir);
-        let movie_type = String::from(&file.MovieType);
-        let actress = String::from(&file.Actress);
-
-        let act_map = &mut STATIC_ACTRESS.lock().unwrap();
-        if act_map.contains_key(&actress) {
-            let actre = match act_map.get_mut(&actress) {
-                Some(val) => val,
-                None => todo!(),
-            };
-            actre.add_video(*size, path);
-        } else {
-            let mut actre = ActressModel::new(&actress);
-            actre.add_video(*size, path);
-            STATIC_ACTRESS
-                .lock()
-                .unwrap()
-                .insert(String::from(&actress), actre);
-        }
-        let type_map = &mut STATIC_TYPE_SIZE.lock().unwrap();
-        if type_map.contains_key(&movie_type) {
-            let valt = match type_map.get_mut(&movie_type) {
-                Some(val) => val,
-                None => todo!(),
-            };
-            valt.size_plus(*size);
-        } else {
-            let mut actre = TypeAnalyzer::new(&movie_type, false);
-            actre.size_plus(*size);
-            STATIC_TYPE_SIZE
-                .lock()
-                .unwrap()
-                .insert(String::from(&movie_type), actre);
-        }
-
-        let dir_map = &mut STATIC_DIR_SIZE.lock().unwrap();
-        if dir_map.contains_key(&base_dir) {
-            let valt = match dir_map.get_mut(&base_dir) {
-                Some(val) => val,
-                None => todo!(),
-            };
-            valt.size_plus(*size);
-        } else {
-            let mut actre = TypeAnalyzer::new(&base_dir, true);
-            actre.size_plus(*size);
-            STATIC_DIR_SIZE
-                .lock()
-                .unwrap()
-                .insert(String::from(&base_dir), actre);
-        }
-        if &file.Tags.len() > &0 {
-            let tag_map = &mut STATIC_TAG_SIZE.lock().unwrap();
-            for ele in &file.Tags {
-                if tag_map.contains_key(ele) {
-                    let valt = match tag_map.get_mut(ele) {
-                        Some(val) => val,
-                        None => todo!(),
-                    };
-                    valt.size_plus(*size);
-                } else {
-                    let mut actre = TypeAnalyzer::new(ele, true);
-                    actre.size_plus(*size);
-                    STATIC_TAG_SIZE
-                        .lock()
-                        .unwrap()
-                        .insert(String::from(ele), actre);
-                }
-            }
-        }
     }
 }

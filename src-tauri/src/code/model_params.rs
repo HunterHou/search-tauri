@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::model_file::FileModel;
+use super::{model_file::FileModel, model_actress::ActressModel};
 
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -53,6 +53,30 @@ impl ResultData {
             Data: Vec::new(),
             // 总数，初始为0
             Count: 0,
+            // 大小字符串，初始为空字符串
+            SizeStr: "".to_string(),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ResultActress {
+    // 数据字段，保存文件模型的集合
+    pub Data: Vec<ActressModel>,
+    // 总数
+    pub TotalCnt: i64,
+    // 大小字符串
+    pub SizeStr: String,
+}
+impl ResultActress {
+    // 构造函数
+    pub fn new() -> ResultActress {
+        // 创建 ResultData 实例，并初始化字段
+        ResultActress {
+            // 文件模型的集合，初始为空
+            Data: Vec::new(),
+            // 总数，初始为0
+            TotalCnt: 0,
             // 大小字符串，初始为空字符串
             SizeStr: "".to_string(),
         }

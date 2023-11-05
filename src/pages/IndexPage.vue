@@ -160,9 +160,12 @@ const loadScanTime = async () => {
   scanTime.value = res3;
 };
 onMounted(() => {
-  setTimeout(() => {
+  refreshIndex().then(()=>{
+    setTimeout(() => {
     loadTypeSize()
   }, 3000);
+  })
+ 
 });
 
 const openThis = async (data) => {
@@ -195,6 +198,7 @@ const refreshIndex = async () => {
 };
 
 const f5 = () => {
-  window.location.reload();
+  loadTypeSize()
+  // window.location.reload();
 };
 </script>

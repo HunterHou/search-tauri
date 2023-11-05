@@ -4,15 +4,16 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod code;
 
+use code::init_service;
 use code::model_actress::ActressModel;
 use code::model_actress::TypeAnalyzer;
 use code::model_file::FileModel;
 use code::model_params::RequestFileParam;
+use code::model_params::ResultActress;
 use code::model_params::ResultData;
 use code::model_params::ResultParam;
 use code::model_setting::Setting;
 use code::service_search;
-use code::init_service;
 use code::service_setting;
 
 use code::const_param::STATIC_ACTRESS;
@@ -103,18 +104,22 @@ fn read_settings() -> Setting {
 }
 
 #[tauri::command]
-fn actress_map() -> Vec<ActressModel> {
-    let res = Vec::new();
-    match STATIC_ACTRESS.try_lock() {
+fn actress_map() -> ResultActress {
+    let res: Vec<ActressModel> = match STATIC_ACTRESS.try_lock() {
         Ok(val) => {
             let value = val.clone();
-            return value
+            value
                 .into_values()
                 .map(|v| v.clone())
-                .collect::<Vec<ActressModel>>();
+                .collect::<Vec<ActressModel>>()
         }
-        Err(_) => return res,
-    }
+        Err(_) => Vec::new(),
+    };
+    let mut res_data = ResultActress::new();
+    res_data.TotalCnt = res.len() as i64;
+    res_data.Data = res;
+    println!("actress_map {:?}", res_data);
+    return res_data;
 }
 
 #[tauri::command]

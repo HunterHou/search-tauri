@@ -108,7 +108,7 @@ const nextPage = (n) => {
 }
 
 const fetchSearch = async () => {
-  const { data } = await QueryActressList(view.queryParam);
+  const  data  = await QueryActressList(view.queryParam);
   console.log(data);
   view.resultData = data;
 };
