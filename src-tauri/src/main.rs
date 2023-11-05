@@ -4,8 +4,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod code;
 
-use std::collections::HashMap;
-
 use code::model_actress::ActressModel;
 use code::model_actress::TypeAnalyzer;
 use code::model_file::FileModel;
@@ -18,7 +16,6 @@ use code::init_setting;
 
 use code::const_param::STATIC_ACTRESS;
 use code::const_param::STATIC_DIR_SIZE;
-use code::const_param::STATIC_LIST;
 use code::const_param::STATIC_TAG_SIZE;
 use code::const_param::STATIC_TYPE_SIZE;
 use code::const_param::{STATIC_DATA, STATIC_SETTING};
