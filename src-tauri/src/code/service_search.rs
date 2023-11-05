@@ -61,10 +61,10 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     for handle in handles {
         handle.join().unwrap();
     }
-    // thread::spawn(move || {
-    //     cache_analyzer()
-    // });
-    cache_analyzer();
+    thread::spawn(move || {
+        cache_analyzer()
+    });
+    // cache_analyzer();
     println!("search_disk over:{:?}", end.ok());
     Ok(0)
 }

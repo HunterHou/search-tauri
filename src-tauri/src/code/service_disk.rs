@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::io::Result;
 use std::path::Path;
 
@@ -117,21 +118,23 @@ fn cache_static_file(file: &FileModel) {
 }
 
 pub fn cache_analyzer() {
+    let mut value: HashMap<String, FileModel> = HashMap::new();
     match STATIC_DATA.lock() {
-        Ok(val) => {
-            let cl = val.clone().into_values().into_iter();
-            println!("cache_analyzer start");
-            let start = SystemTime::now();
-            for ele in cl.into_iter() {
-                if !ele.is_empty() {
-                    println!("cache_analyzer {}",&ele.Id);
-                    cache_static_analyzer(ele.clone());
-                }
-            }
-            let end = SystemTime::now().duration_since(start);
-            println!("cache_analyzer over:{:?}", end.ok());
-        }
+        Ok(val) => value = val.clone(),
         Err(_) => cache_analyzer(),
+    };
+    if value.len() > 0 {
+        let cl = value.into_values().into_iter();
+        println!("cache_analyzer start");
+        let start = SystemTime::now();
+        for ele in cl.into_iter() {
+            if !ele.is_empty() {
+                println!("cache_analyzer {}", &ele.Id);
+                cache_static_analyzer(ele.clone());
+            }
+        }
+        let end = SystemTime::now().duration_since(start);
+        println!("cache_analyzer over:{:?}", end.ok());
     }
 }
 
