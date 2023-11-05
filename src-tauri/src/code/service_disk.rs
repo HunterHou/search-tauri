@@ -1,4 +1,3 @@
-
 use std::io::Result;
 use std::path::Path;
 
@@ -6,11 +5,16 @@ use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
 
+use super::const_param::STATIC_ACTRESS;
 use super::const_param::STATIC_DATA;
+use super::const_param::STATIC_DIR_SIZE;
 use super::const_param::STATIC_LIST;
+use super::const_param::STATIC_SETTING;
+use super::const_param::STATIC_TAG_SIZE;
+use super::const_param::STATIC_TYPE_SIZE;
+use super::model_actress::ActressModel;
+use super::model_actress::TypeAnalyzer;
 use super::model_file::FileModel;
-
-
 
 pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let mut filelist: Vec<FileModel> = Vec::new();
@@ -54,36 +58,33 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
             let mut path = "".to_string();
             match filepath.file_name() {
-                Some(value) =>
-                    match value.to_str() {
-                        Some(val) => {
-                            path = format!("{}", String::from(val));
-                        }
-                        _ => {}
+                Some(value) => match value.to_str() {
+                    Some(val) => {
+                        path = format!("{}", String::from(val));
                     }
+                    _ => {}
+                },
                 _ => {}
             }
             let mut filename = "".to_string();
             match filepath.file_stem() {
-                Some(value) =>
-                    match value.to_str() {
-                        Some(val) => {
-                            filename = format!("{}", String::from(val));
-                        }
-                        _ => {}
+                Some(value) => match value.to_str() {
+                    Some(val) => {
+                        filename = format!("{}", String::from(val));
                     }
+                    _ => {}
+                },
                 _ => {}
             }
 
             let mut extname = "".to_string();
             match filepath.extension() {
-                Some(value) =>
-                    match value.to_str() {
-                        Some(val) => {
-                            extname = format!("{}", String::from(val));
-                        }
-                        _ => {}
+                Some(value) => match value.to_str() {
+                    Some(val) => {
+                        extname = format!("{}", String::from(val));
                     }
+                    _ => {}
+                },
                 _ => {}
             }
 
@@ -94,17 +95,107 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 filename.replace("'", "''"),
                 extname,
                 size,
-                created
+                created,
             );
             if file.is_empty() {
                 continue;
             }
-            let val = file.clone();
-            let val2 = file.clone();
-            STATIC_DATA.lock().unwrap().insert(String::from(&val.Id), val);
-            STATIC_LIST.lock().unwrap().push(val2);
+            cache_static(&file);
             filelist.push(file);
         }
     }
     Ok(filelist)
+}
+
+fn cache_static(file: &FileModel) {
+    let file_type = String::from(&file.FileType);
+    let id = String::from(&file.Id);
+    STATIC_DATA
+        .lock()
+        .unwrap()
+        .insert(String::from(&id), file.clone());
+    STATIC_LIST.lock().unwrap().push(file.clone());
+    let video = match STATIC_SETTING.lock() {
+        Ok(val) => {
+            let mut ve = Vec::new();
+            for v in val.VideoTypes.iter() {
+                ve.push(String::from(v))
+            }
+            ve
+        }
+        Err(_) => Vec::new(),
+    };
+    if video.contains(&file_type) {
+        let size = &file.Size;
+        let path = String::from(&file.Path);
+        let base_dir = String::from(&file.BaseDir);
+        let movie_type = String::from(&file.MovieType);
+        let actress = String::from(&file.Actress);
+
+        let act_map = &mut STATIC_ACTRESS.lock().unwrap();
+        if act_map.contains_key(&actress) {
+            let actre = match act_map.get_mut(&actress) {
+                Some(val) => val,
+                None => todo!(),
+            };
+            actre.add_video(*size, path);
+        } else {
+            let mut actre = ActressModel::new(&actress);
+            actre.add_video(*size, path);
+            STATIC_ACTRESS
+                .lock()
+                .unwrap()
+                .insert(String::from(&actress), actre);
+        }
+        let type_map = &mut STATIC_TYPE_SIZE.lock().unwrap();
+        if type_map.contains_key(&movie_type) {
+            let valt = match type_map.get_mut(&movie_type) {
+                Some(val) => val,
+                None => todo!(),
+            };
+            valt.size_plus(*size);
+        } else {
+            let mut actre = TypeAnalyzer::new(&movie_type, false);
+            actre.size_plus(*size);
+            STATIC_TYPE_SIZE
+                .lock()
+                .unwrap()
+                .insert(String::from(&movie_type), actre);
+        }
+
+        let dir_map = &mut STATIC_DIR_SIZE.lock().unwrap();
+        if dir_map.contains_key(&base_dir) {
+            let valt = match dir_map.get_mut(&base_dir) {
+                Some(val) => val,
+                None => todo!(),
+            };
+            valt.size_plus(*size);
+        } else {
+            let mut actre = TypeAnalyzer::new(&base_dir, true);
+            actre.size_plus(*size);
+            STATIC_DIR_SIZE
+                .lock()
+                .unwrap()
+                .insert(String::from(&base_dir), actre);
+        }
+        if &file.Tags.len() > &0 {
+            let tag_map = &mut STATIC_TAG_SIZE.lock().unwrap();
+            for ele in &file.Tags {
+                if tag_map.contains_key(ele) {
+                    let valt = match tag_map.get_mut(ele) {
+                        Some(val) => val,
+                        None => todo!(),
+                    };
+                    valt.size_plus(*size);
+                } else {
+                    let mut actre = TypeAnalyzer::new(ele, true);
+                    actre.size_plus(*size);
+                    STATIC_TAG_SIZE
+                        .lock()
+                        .unwrap()
+                        .insert(String::from(ele), actre);
+                }
+            }
+        }
+    }
 }

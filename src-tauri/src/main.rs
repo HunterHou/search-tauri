@@ -4,6 +4,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod code;
 
+use code::model_actress::ActressModel;
+use code::model_actress::TypeAnalyzer;
 use code::model_file::FileModel;
 use code::model_params::RequestFileParam;
 use code::model_params::ResultData;
@@ -13,6 +15,11 @@ use code::service_search;
 use code::service_setting;
 
 use code::const_param::{STATIC_DATA, STATIC_SETTING};
+use code::const_param::STATIC_ACTRESS;
+use code::const_param::STATIC_DIR_SIZE;
+use code::const_param::STATIC_LIST;
+use code::const_param::STATIC_TAG_SIZE;
+use code::const_param::STATIC_TYPE_SIZE;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -94,11 +101,43 @@ fn read_settings() -> Setting {
     return res;
 }
 
+#[tauri::command]
+fn actress_map() -> Vec<ActressModel> {
+    let res = STATIC_ACTRESS.lock().unwrap().clone();
+    println!("actress_map {:?}", res);
+    return res.into_values().map(|v|v.clone()).collect::<Vec<ActressModel>>();
+}
+
+#[tauri::command]
+fn type_size_map() -> Vec<TypeAnalyzer> {
+    let res = STATIC_TYPE_SIZE.lock().unwrap().clone();
+    println!("STATIC_SETTING {:?}", res);
+    return res.into_values().collect::<Vec<TypeAnalyzer>>();
+}
+
+#[tauri::command]
+fn tag_size_map() -> Vec<TypeAnalyzer> {
+    let res = STATIC_TAG_SIZE.lock().unwrap().clone();
+    println!("STATIC_SETTING {:?}", res);
+    return res.into_values().collect::<Vec<TypeAnalyzer>>();
+}
+
+#[tauri::command]
+fn dir_size_map() -> Vec<TypeAnalyzer> {
+    let res = STATIC_DIR_SIZE.lock().unwrap().clone();
+    println!("STATIC_SETTING {:?}", res);
+    return res.into_values().collect::<Vec<TypeAnalyzer>>();
+}
+
 fn main() {
     service_setting::loading_file();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
+            actress_map,
+            type_size_map,
+            tag_size_map,
+            dir_size_map,
             submit_settings,
             read_settings,
             refresh_disk,

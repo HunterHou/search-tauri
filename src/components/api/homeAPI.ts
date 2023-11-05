@@ -1,4 +1,4 @@
-import { axios } from "../../boot/axios";
+// import { axios } from "../../boot/axios";
 import { invoke } from "@tauri-apps/api/tauri";
 
 export const TypeSizeMap = async () => {
@@ -8,11 +8,13 @@ export const TypeSizeMap = async () => {
 };
 
 export const TagSizeMap = async () => {
-  const res = await axios.get("/api/tagSizeMap");
-  return res && res.data;
+  const res = await invoke("tag_size_map", {});
+  console.log("TypeSizeMap", res);
+  return res;
 };
 
 export const ScanTime = async () => {
-  const res = await axios.get("/api/scanTime");
-  return res && res.data;
+  const res = await invoke("dir_size_map", {});
+  console.log("TypeSizeMap", res);
+  return res;
 };

@@ -3,7 +3,7 @@
 use lazy_static::lazy_static;
 use std::{collections::HashMap, sync::Mutex};
 
-use crate::code::{model_file::FileModel, model_setting::Setting, model_actress::ActressModel};
+use crate::code::{model_file::FileModel, model_setting::Setting, model_actress::{ActressModel, TypeAnalyzer}};
 
 
 
@@ -19,8 +19,20 @@ lazy_static! {
         let list: Vec<FileModel> = Vec::<FileModel>::new();
         Mutex::new(list)
     };
-    pub static ref STATIC_ACTRESS: Mutex<Vec<ActressModel>> = {
-        let list: Vec<ActressModel> = Vec::<ActressModel>::new();
+    pub static ref STATIC_ACTRESS: Mutex<HashMap<String, ActressModel>> = {
+        let list= HashMap::new();
+        Mutex::new(list)
+    };
+    pub static ref STATIC_TYPE_SIZE: Mutex<HashMap<String, TypeAnalyzer>> = {
+        let list= HashMap::new();
+        Mutex::new(list)
+    };
+    pub static ref STATIC_TAG_SIZE: Mutex<HashMap<String, TypeAnalyzer>> = {
+        let list= HashMap::new();
+        Mutex::new(list)
+    };
+    pub static ref STATIC_DIR_SIZE: Mutex<HashMap<String, TypeAnalyzer>> = {
+        let list= HashMap::new();
         Mutex::new(list)
     };
     pub static ref STATIC_SETTING: Mutex<Setting> = {
