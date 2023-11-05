@@ -9,6 +9,7 @@ use crate::code::{
 
 // 全局常量
 pub const STATIC_SETTING_PATH: &str = "./setting.json";
+pub static QUERY_DB: bool = false;
 // 全局变量
 lazy_static! {
     pub static ref STATIC_DATA: Mutex<HashMap<String, FileModel>> = {
