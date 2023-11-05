@@ -46,7 +46,8 @@
           <Playing ref="vue3VideoPlayRef" mode="drawer" />
         </div>
         <div v-if="showDetail == 'detail'">
-          <q-img fit="fit" loading="lazy" draggable :src="convertFileSrc(view?.item?.Jpg)"
+          <q-img fit="fit" loading="lazy" draggable
+            :src="convertFileSrc(view?.item?.Jpg || view?.item?.Png || view?.item?.Gif)"
             style="min-width:600px ;max-height: 50vh">
           </q-img>
           <q-field label="Code" stack-label>
@@ -211,8 +212,9 @@ const open = (data) => {
     showMovie()
   }
   setTimeout(() => {
-    QueryDirImageBase64(item.Id).then((res) => {
-      view.prewiewImages = res.data
+    QueryDirImageBase64(item.DirPath).then((res) => {
+      console.log(res)
+      view.prewiewImages = res
     })
   }, 500);
 };

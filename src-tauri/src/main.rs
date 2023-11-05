@@ -13,6 +13,7 @@ use code::model_params::RequestFileParam;
 use code::model_params::ResultData;
 use code::model_params::ResultParam;
 use code::model_setting::Setting;
+use code::service_disk;
 use code::service_search;
 use code::service_setting;
 
@@ -43,7 +44,7 @@ fn refresh_disk(name: &str) -> String {
     //     "k:\\emby",
     //     "/Users/harmay/Documents",
     // ];
-    let base_dir =STATIC_SETTING.lock().unwrap().Dirs.to_vec();
+    let base_dir = STATIC_SETTING.lock().unwrap().Dirs.to_vec();
     let _filelist: Vec<FileModel> = Vec::new();
     let res = service_search::search_disk(base_dir);
     if res.is_err() {
@@ -101,7 +102,7 @@ fn actress_map(params: &str) -> RequestActressParam {
         Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
-    actress_lib.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    actress_lib.sort_by(|v1, v2| v2.Cnt.cmp(&v1.Cnt));
     let total = actress_lib.len() as i64;
     request.TotalCnt = total;
     request.TotalPage = total / request.PageSize + 1;
@@ -123,24 +124,24 @@ fn actress_map(params: &str) -> RequestActressParam {
 fn type_size_map() -> Vec<TypeAnalyzer> {
     let type_map = STATIC_TYPE_SIZE.try_lock().unwrap().clone();
     // println!("type_size_map {:?}", res);
-    let mut res =type_map.into_values().collect::<Vec<TypeAnalyzer>>();
-    res.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    let mut res = type_map.into_values().collect::<Vec<TypeAnalyzer>>();
+    res.sort_by(|v1, v2| v2.Cnt.cmp(&v1.Cnt));
     return res;
 }
 
 #[tauri::command]
 fn tag_size_map() -> Vec<TypeAnalyzer> {
     let map = STATIC_TAG_SIZE.try_lock().unwrap().clone();
-    let mut res =map.into_values().collect::<Vec<TypeAnalyzer>>();
-    res.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    let mut res = map.into_values().collect::<Vec<TypeAnalyzer>>();
+    res.sort_by(|v1, v2| v2.Cnt.cmp(&v1.Cnt));
     return res;
 }
 
 #[tauri::command]
 fn dir_size_map() -> Vec<TypeAnalyzer> {
     let map = STATIC_DIR_SIZE.try_lock().unwrap().clone();
-    let mut res =map.into_values().collect::<Vec<TypeAnalyzer>>();
-    res.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    let mut res = map.into_values().collect::<Vec<TypeAnalyzer>>();
+    res.sort_by(|v1, v2| v2.Cnt.cmp(&v1.Cnt));
     return res;
 }
 
@@ -163,11 +164,23 @@ fn read_settings() -> Setting {
     return setting;
 }
 
+#[tauri::command]
+fn files_by_dir(path: &str) -> Vec<FileModel> {
+    let mut files: Vec<FileModel> = match service_disk::visit_dirs(path) {
+        Ok(val) => val,
+        Err(_) => Vec::new(),
+    };
+    let image =vec![String::from("jpg"),String::from("png"),String::from("gif")];
+    files =files.into_iter().filter(|e|image.contains(&&e.FileType)).collect::<Vec<FileModel>>();
+    return files;
+}
+
 fn main() {
     init_service::init_sys();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
+            files_by_dir,
             actress_map,
             type_size_map,
             tag_size_map,

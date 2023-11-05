@@ -41,8 +41,8 @@
                   <q-card class="my-card" v-for="sc in scanTime" :key="sc">
                     <q-card-section>
                       <div class="text-h6">{{ sc.Name }}</div>
-                      <div class="text-subtitle2">时间：{{ sc.Cnt }}</div>
-                      <div class="text-subtitle2">文件数：{{ sc.Size }}</div>
+                      <div class="text-subtitle2">文件数：{{ sc.Cnt }}</div>
+                      <div class="text-subtitle2">大小：{{ sc.SizeStr }}</div>
                     </q-card-section>
                     <q-separator />
                     <q-card-actions vertical>
@@ -166,7 +166,7 @@ onMounted(() => {
           if (tableData.value.length == 0) {
         loadTypeSize()
       }
-    }, 3000);
+    }, 1000);
     }
   ) 
   }else {

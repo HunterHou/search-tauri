@@ -81,17 +81,13 @@
                 justify-content: flex-start;
                 width: fit-content;
               ">
-              <q-btn square color="red" size="sm" text-color="white" style="margin-left: 0px; padding: 0 4px">
-                <span @click="deleteThis(item.Id)">删除</span>
-              </q-btn>
-              <q-chip square color="red" text-color="white" v-for="tag in item.Tags" :key="tag"
+
+              <q-chip square color="red" size="sm" text-color="white" v-for="tag in item.Tags" :key="tag"
                 style="margin-left: 0px; padding: 0 4px">
-                <span @click="view.queryParam.Keyword = tag; fetchSearch()">{{ tag }}</span>
+                <span @click="view.queryParam.Keyword = tag; fetchSearch()">{{ tag?.substring(0, 5) }}</span>
               </q-chip>
-
-
             </div>
-            <q-chip @click.stop="() => { }" square color="green" text-color="white"
+            <q-chip @click.stop="() => { }" square size="sm" color="green" text-color="white"
               style="width: fit-content; margin-right: 0px; padding: 0 6px">
               <span> {{ item.MovieType }}</span>
             </q-chip>
@@ -99,10 +95,13 @@
         </q-img>
         <q-card-section style="overflow: auto; padding: 4px">
           <div class="text-subtitle2" style="overflow: auto; padding: 0">
-            <q-chip @click.stop="() => { }" square color="green" text-color="orange" style="padding: 0px 4px">
+            <q-btn square color="red" size="sm" text-color="white" style="margin-left: 0px; padding: 0 4px">
+              <span @click="deleteThis(item.Id)">删除</span>
+            </q-btn>
+            <q-chip @click.stop="() => { }" square size="sm" color="green" text-color="black" style="padding: 0px 4px">
               {{ item.SizeStr }}
             </q-chip>
-            <span style="color: #0e4a2e;">
+            <span style="color: #031a0f;">
               {{ item.Title?.substring(0, 20) }}
             </span>
           </div>
@@ -277,15 +276,15 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .example-item {
-  width: 160px;
+  width: 200px;
   height: auto;
-  max-height: 320px;
+  max-height: 440px;
   overflow: hidden;
 }
 
 .item-img {
-  width: 160px;
+  width: 200px;
   height: auto;
-  max-height: 220px;
+  max-height: 240px;
 }
 </style>

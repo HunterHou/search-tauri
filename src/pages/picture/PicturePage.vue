@@ -24,36 +24,35 @@
         :ellipses="false" :max="view.resultData.TotalPage || 0" :max-pages="6" boundary-numbers />
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-      <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
-        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Images[0])" class="item-img" @click="searchFiles(item.Name)">
-          <div style="
+      <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id" >
+        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Images[0])" class="item-img"
+          @click="searchFiles(item.Name)">
+        </q-img>
+        <div style="
               padding: 0;
-              margin: 0;
+              margin-bottom: -30px,
               background-color: rgba(0, 0, 0, 0);
               display: flex;
               flex-direction: row;
               justify-content: space-between;
               width: 100%;
             ">
-            <div @click.stop="() => { }" style="
+          <div @click.stop="() => { }" style="
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
                 width: fit-content;
               ">
-              <q-chip square color="red" text-color="white" style="margin-left: 0px; padding: 0 4px">
-                <span>{{ item.SizeStr }}</span>
-              </q-chip>
-            </div>
-            <q-chip @click.stop="() => { }" square color="green" text-color="white"
-              style="width: fit-content; margin-right: 0px; padding: 0 6px">
-              <span> {{ item.Cnt }}</span>
+            <q-chip square color="red" text-color="white" style="margin-left: 0px; padding: 0 4px">
+              <span>{{ item.SizeStr }}</span>
             </q-chip>
           </div>
-          <div class="absolute-bottom text-body1 text-center" style="padding: 4px" @click.stop="() => { }">
-            <q-btn flat style="color: #59d89d" :label="item.Name?.substring(0, 10)" @click="viewImages(item)" />
-          </div>
-        </q-img>
+          <q-btn color="orange" v-if="item.Name" :label="item.Name?.substring(0, 10)" @click="viewImages(item)" />
+          <q-chip @click.stop="() => { }" square color="green" text-color="white"
+            style="width: fit-content; margin-right: 0px; padding: 0 6px">
+            <span> {{ item.Cnt }}</span>
+          </q-chip>
+        </div>
       </q-card>
     </div>
     <ViewActress ref="viewAct" />
@@ -79,7 +78,7 @@ const view = reactive({
     MovieType: '',
     OnlyRepeat: false,
     Page: 1,
-    PageSize: 30,
+    PageSize: 20,
     SortField: 'MTime',
     SortType: 'desc',
   },
@@ -108,7 +107,7 @@ const nextPage = (n) => {
 }
 
 const fetchSearch = async () => {
-  const  data  = await QueryActressList(view.queryParam);
+  const data = await QueryActressList(view.queryParam);
   view.resultData = data;
 };
 import { appWindow } from '@tauri-apps/api/window';

@@ -2,19 +2,13 @@ import { axios } from "../../boot/axios";
 import { invoke } from "@tauri-apps/api/tauri";
 
 export const SearchAPI = async (params: any) => {
-  // const { data } = await axios.post('/api/movieList', params);
-  // return data;
-
-  const params1 = {
-    ...params,
-    params: { ...params },
-    Keyword: params.Keyword || "",
-  };
-  console.log("params", params);
   const data = await invoke("search_index", {
-    params: JSON.stringify(params1),
+    params: JSON.stringify({
+      ...params,
+      params: { ...params },
+      Keyword: params.Keyword || "",
+    }),
   });
-  console.log("data", data);
   return data;
 };
 
@@ -33,7 +27,9 @@ export const FindFileInfo = async (data: string) => {
 };
 
 export const QueryDirImageBase64 = async (data: string) => {
-  const res = await axios.get(`/api/dir/${data}`);
+  const res = await invoke("files_by_dir", {
+    path: data,
+  });
   return res;
 };
 
