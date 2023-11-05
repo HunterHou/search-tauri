@@ -60,6 +60,6 @@ impl TypeAnalyzer {
     pub fn size_plus(&mut self, size: i64) {
         self.Size += size;
         self.Cnt += 1;
-        self.SizeStr = format!("{:.2}", self.Size as f64 / 1024.0 / 1024.0);
+        self.SizeStr = int_to_size_str(self.Size);
     }
 }

@@ -160,11 +160,16 @@ const loadScanTime = async () => {
   scanTime.value = res3;
 };
 onMounted(() => {
-  refreshIndex().then(()=>{
-    setTimeout(() => {
+  if (tableData.value.length == 0) {
+    refreshIndex().then(()=>{
+                              setTimeout(() => {
+                              loadTypeSize()
+                            }, 3000);
+  }) 
+  }else {
     loadTypeSize()
-  }, 3000);
-  })
+  }
+  
  
 });
 
