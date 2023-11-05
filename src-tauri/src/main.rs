@@ -10,7 +10,6 @@ use code::model_actress::ActressModel;
 use code::model_actress::TypeAnalyzer;
 use code::model_file::FileModel;
 use code::model_params::RequestFileParam;
-use code::model_params::ResultActress;
 use code::model_params::ResultData;
 use code::model_params::ResultParam;
 use code::model_setting::Setting;
@@ -70,7 +69,7 @@ fn search_index(params: &str) -> RequestFileParam {
     // println!("search_index request{:?}", request);
     if *QUERY_DB {
         return request;
-    }else {
+    } else {
         let res: ResultData = service_search::search_index(request.clone());
         return service_search::wrapper_request(&request, &res);
     }
@@ -88,9 +87,8 @@ fn find_file_info(id: &str) -> FileModel {
     return FileModel::new();
 }
 
-
 #[tauri::command]
-fn actress_map(params:&str) -> RequestActressParam {
+fn actress_map(params: &str) -> RequestActressParam {
     let mut request: RequestFileParam = match serde_json::from_str(params) {
         Ok(v) => v,
         Err(err) => {
@@ -129,7 +127,6 @@ fn dir_size_map() -> Vec<TypeAnalyzer> {
     println!("dir_size_map {:?}", res);
     return res.into_values().collect::<Vec<TypeAnalyzer>>();
 }
-
 
 #[tauri::command]
 fn submit_settings(params: &str) -> ResultParam {
