@@ -93,13 +93,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { invoke } from '@tauri-apps/api/tauri'
 
-setTimeout(() => {
-  invoke("refresh_disk", { name: 'zhangsan' }).then(res => {
-    console.log("refresh_disk", JSON.parse(res))
-  }).catch(err => {
-    console.log(err)
-  })
-}, 1);
+
 
 const splitterModel = ref(50);
 const insideModel = ref(50);
@@ -166,7 +160,15 @@ const loadScanTime = async () => {
   scanTime.value = res3;
 };
 onMounted(() => {
-  loadTypeSize();
+  setTimeout(() => {
+    invoke("refresh_disk", { name: 'zhangsan' }).then(res => {
+      setTimeout(() => {
+        loadTypeSize()
+      }, 3000);
+    }).catch(err => {
+      console.log(err)
+    })
+  }, 1000);
 });
 
 const openThis = async (data) => {

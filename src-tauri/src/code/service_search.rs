@@ -1,11 +1,17 @@
 use core::fmt::Error;
 use std::{thread, time::SystemTime};
 
-use crate::code::{const_param::STATIC_LIST, service_disk::visit_dirs};
+use crate::code::{
+    const_param::STATIC_LIST,
+    service_disk::{cache_analyzer, visit_dirs},
+};
 
-use super::{model_params::{RequestFileParam, ResultData}, model_file::FileModel, const_param::STATIC_DATA, utils_do_file_name::int_to_size_str};
-
-
+use super::{
+    const_param::STATIC_DATA,
+    model_file::FileModel,
+    model_params::{RequestFileParam, ResultData},
+    utils_do_file_name::int_to_size_str,
+};
 
 /*
  * 封装请求参数
@@ -33,17 +39,19 @@ pub fn wrapper_request(req: &RequestFileParam, res: &ResultData) -> RequestFileP
     return request;
 }
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
-    let mut file_count: i32 = 0;
     let start = SystemTime::now();
-    STATIC_LIST.lock().unwrap().clear();
-    STATIC_DATA.lock().unwrap().clear();
+    STATIC_LIST.try_lock().unwrap().clear();
+    STATIC_DATA.try_lock().unwrap().clear();
     let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
         let handle = thread::spawn(move || match visit_dirs(&dir) {
             Ok(value) => {
-                let count = &value.len();
-                file_count = file_count + (*count as i32);
+                // thread::spawn(move || {
+                //     for ele in value {
+                //         cache_static_analyzer(&ele);
+                //     }
+                // });
             }
             Err(err) => println!("{}", err),
         });
@@ -53,8 +61,11 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     for handle in handles {
         handle.join().unwrap();
     }
+    thread::spawn(move || {
+        cache_analyzer()
+    });
     println!("search_disk over:{:?}", end.ok());
-    Ok(file_count)
+    Ok(0)
 }
 /**
  * 索引搜索
@@ -71,7 +82,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     let mut result_list: Vec<FileModel> = Vec::new();
     // println!("STATIC_LIST:{:?}", request);
     // 通过锁定STATIC_LIST获取对静态列表的写入权限
-    STATIC_LIST.lock().unwrap().iter().for_each(|item| {
+    STATIC_LIST.try_lock().unwrap().iter().for_each(|item| {
         if !request.FileType.contains(&item.FileType) {
             return;
         }
@@ -117,7 +128,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     }
 
     // 将结果列表赋值给返回值中的data字段
-    let map = STATIC_DATA.lock().unwrap();
+    let map = STATIC_DATA.try_lock().unwrap();
     let start_index = (request.Page - 1) * request.PageSize;
     let end_index = (start_index + request.PageSize) as usize;
     for idx in (start_index as usize)..end_index {
@@ -129,13 +140,13 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
             continue;
         }
         if !map.contains_key(&item.Jpg) {
-            item.Jpg=String::new();
+            item.Jpg = String::new();
         }
         if !map.contains_key(&item.Gif) {
-            item.Gif=String::new();
+            item.Gif = String::new();
         }
         if !map.contains_key(&item.Png) {
-            item.Png=String::new();
+            item.Png = String::new();
         }
         rd.Data.push(item);
     }
