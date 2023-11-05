@@ -164,7 +164,7 @@ onMounted(() => {
     refreshIndex().then(()=>{
                               setTimeout(() => {
                               loadTypeSize()
-                            }, 3000);
+                            }, 4000);
   }) 
   }else {
     loadTypeSize()
