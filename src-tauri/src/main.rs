@@ -32,19 +32,20 @@ fn greet(name: &str) -> String {
 #[tauri::command]
 fn refresh_disk(name: &str) -> String {
     println!("refresh_disk {:?}", name);
-    let base_dir = vec![
-        "d:\\emby",
-        "e:\\emby",
-        "f:\\emby",
-        "g:\\emby",
-        "h:\\emby",
-        "i:\\emby",
-        "J:\\emby",
-        "k:\\emby",
-        "/Users/harmay/Documents",
-    ];
+    // let base_dir = vec![
+    //     "d:\\emby",
+    //     "e:\\emby",
+    //     "f:\\emby",
+    //     "g:\\emby",
+    //     "h:\\emby",
+    //     "i:\\emby",
+    //     "J:\\emby",
+    //     "k:\\emby",
+    //     "/Users/harmay/Documents",
+    // ];
+    let base_dir =STATIC_SETTING.lock().unwrap().Dirs.to_vec();
     let _filelist: Vec<FileModel> = Vec::new();
-    let res = service_search::search_disk(base_dir.to_vec());
+    let res = service_search::search_disk(base_dir);
     if res.is_err() {
         let msg = &res.err().unwrap().to_string();
         println!("refresh_disk error:{}", &msg);
@@ -78,10 +79,10 @@ fn search_index(params: &str) -> RequestFileParam {
 #[tauri::command]
 fn find_file_info(id: &str) -> FileModel {
     let map = STATIC_DATA.lock().unwrap();
-    println!("find_file_info id:{} ", id);
+    // println!("find_file_info id:{} ", id);
     if map.contains_key(id) {
         let res: FileModel = map.get(id).unwrap().clone();
-        println!("find_file_info id:{} {:?}", id, res);
+        // println!("find_file_info id:{} {:?}", id, res);
         return res.clone();
     }
     return FileModel::new();
@@ -96,10 +97,11 @@ fn actress_map(params: &str) -> RequestActressParam {
             RequestActressParam::new()
         }
     };
-    let actress_lib: Vec<ActressModel> = match STATIC_ACTRESS_LIST.try_lock() {
+    let mut actress_lib: Vec<ActressModel> = match STATIC_ACTRESS_LIST.try_lock() {
         Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
+    actress_lib.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
     let total = actress_lib.len() as i64;
     request.TotalCnt = total;
     request.TotalPage = total / request.PageSize + 1;
@@ -111,7 +113,7 @@ fn actress_map(params: &str) -> RequestActressParam {
     if end as i64 > request.TotalCnt {
         end = request.TotalCnt as usize;
     }
-    println!("actress_map {:?}-{:?}", start, end);
+    // println!("actress_map {:?}-{:?}", start, end);
     request.Data = actress_lib[start..end].to_vec();
     // println!("actress_map {:?}", request);
     return request;
@@ -119,23 +121,27 @@ fn actress_map(params: &str) -> RequestActressParam {
 
 #[tauri::command]
 fn type_size_map() -> Vec<TypeAnalyzer> {
-    let res = STATIC_TYPE_SIZE.try_lock().unwrap().clone();
-    println!("type_size_map {:?}", res);
-    return res.into_values().collect::<Vec<TypeAnalyzer>>();
+    let type_map = STATIC_TYPE_SIZE.try_lock().unwrap().clone();
+    // println!("type_size_map {:?}", res);
+    let mut res =type_map.into_values().collect::<Vec<TypeAnalyzer>>();
+    res.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    return res;
 }
 
 #[tauri::command]
 fn tag_size_map() -> Vec<TypeAnalyzer> {
-    let res = STATIC_TAG_SIZE.try_lock().unwrap().clone();
-    println!("tag_size_map {:?}", res);
-    return res.into_values().collect::<Vec<TypeAnalyzer>>();
+    let map = STATIC_TAG_SIZE.try_lock().unwrap().clone();
+    let mut res =map.into_values().collect::<Vec<TypeAnalyzer>>();
+    res.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    return res;
 }
 
 #[tauri::command]
 fn dir_size_map() -> Vec<TypeAnalyzer> {
-    let res = STATIC_DIR_SIZE.try_lock().unwrap().clone();
-    println!("dir_size_map {:?}", res);
-    return res.into_values().collect::<Vec<TypeAnalyzer>>();
+    let map = STATIC_DIR_SIZE.try_lock().unwrap().clone();
+    let mut res =map.into_values().collect::<Vec<TypeAnalyzer>>();
+    res.sort_by(|v1,v2| v2.Cnt.cmp(&v1.Cnt));
+    return res;
 }
 
 #[tauri::command]

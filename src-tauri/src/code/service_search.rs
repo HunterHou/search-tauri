@@ -38,7 +38,7 @@ pub fn wrapper_request(req: &RequestFileParam, res: &ResultData) -> RequestFileP
     // 返回处理后的请求参数
     return request;
 }
-pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
+pub fn search_disk(dir_paths: Vec<String>) -> Result<i32, Error> {
     let start = SystemTime::now();
     STATIC_LIST.lock().unwrap().clear();
     STATIC_DATA.lock().unwrap().clear();
