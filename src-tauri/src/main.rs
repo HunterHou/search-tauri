@@ -23,6 +23,8 @@ use code::const_param::STATIC_TAG_SIZE;
 use code::const_param::STATIC_TYPE_SIZE;
 use code::const_param::{STATIC_DATA, STATIC_SETTING};
 
+use crate::code::model_params::RequestActressParam;
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -88,22 +90,21 @@ fn find_file_info(id: &str) -> FileModel {
 
 
 #[tauri::command]
-fn actress_map(params:&str) -> ResultActress {
-     // println!("search_index params{:?}", params);
-     let mut request: RequestFileParam = match serde_json::from_str(params) {
+fn actress_map(params:&str) -> RequestActressParam {
+    let mut request: RequestFileParam = match serde_json::from_str(params) {
         Ok(v) => v,
         Err(err) => {
             println!("serde_json::from_str {:?}", err);
             RequestFileParam::new()
         }
     };
-    let res: Vec<ActressModel> = match STATIC_ACTRESS_LIST.lock() {
+    let actress_lib: Vec<ActressModel> = match STATIC_ACTRESS_LIST.lock() {
         Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
-    let mut res_data = ResultActress::new();
-    res_data.TotalCnt = res.len() as i64;
-    res_data.Data = res;
+    let mut res_data = RequestActressParam::new();
+    res_data.TotalCnt = actress_lib.len() as i64;
+    res_data.Data = actress_lib;
     println!("actress_map {:?}", res_data);
     return res_data;
 }

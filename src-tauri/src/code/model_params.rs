@@ -60,30 +60,6 @@ impl ResultData {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct ResultActress {
-    // 数据字段，保存文件模型的集合
-    pub Data: Vec<ActressModel>,
-    // 总数
-    pub TotalCnt: i64,
-    // 大小字符串
-    pub SizeStr: String,
-}
-impl ResultActress {
-    // 构造函数
-    pub fn new() -> ResultActress {
-        // 创建 ResultData 实例，并初始化字段
-        ResultActress {
-            // 文件模型的集合，初始为空
-            Data: Vec::new(),
-            // 总数，初始为0
-            TotalCnt: 0,
-            // 大小字符串，初始为空字符串
-            SizeStr: "".to_string(),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RequestFileParam {
     #[serde(default)]
     // 页码
@@ -173,6 +149,69 @@ impl Default for RequestFileParam {
             SortField: Default::default(),
             SortType: Default::default(),
             FileType: Default::default(),
+            TotalPage: 0,
+        }
+    }
+}
+
+
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct RequestActressParam {
+    #[serde(default)]
+    // 页码
+    pub Page: i64,
+    #[serde(default)]
+    // 每页数量
+    pub PageSize: i64,
+    #[serde(default)]
+    // 总数
+    pub TotalCnt: i64,
+    #[serde(default)]
+    // 总大小
+    pub TotalSize: String,
+    #[serde(default)]
+    // 总页数
+    pub TotalPage: i64,
+    #[serde(default)]
+    // 结果数量
+    pub ResultCnt: i64,
+    #[serde(default)]
+    // 结果大小
+    pub ResultSize: String,
+    #[serde(default)]
+    // 关键字
+    pub Keyword: String,
+    #[serde(default)]
+    // 排序字段
+    pub SortField: String,
+    #[serde(default)]
+    // 排序方式
+    pub SortType: String,
+  
+    #[serde(flatten)]
+    // 文件模型参数
+    pub params: ActressModel,
+    #[serde(default)]
+    // 文件模型数据
+    pub Data: Vec<ActressModel>,
+}
+
+impl RequestActressParam {
+    // 创建一个新的 RequestActressParam 实例
+    pub fn new() -> RequestActressParam {
+        RequestActressParam {
+            Page: 1,
+            PageSize: 10,
+            params: ActressModel::new(""),
+            Data: Vec::new(),
+            TotalCnt: 0,
+            TotalSize: "".to_string(),
+            ResultCnt: 0,
+            ResultSize: "".to_string(),
+            Keyword: "".to_string(),
+            SortField: "MTime".to_string(),
+            SortType: "desc".to_string(),
             TotalPage: 0,
         }
     }
