@@ -61,7 +61,7 @@ fn search_index(params: &str) -> RequestFileParam {
             RequestFileParam::new()
         }
     };
-    let res = STATIC_SETTING.try_lock().unwrap().clone();
+    let res = STATIC_SETTING.lock().unwrap().clone();
     request.FileType = res.VideoTypes;
     // println!("search_index request{:?}", request);
     let res: ResultData = service_search::search_index(request.clone());
@@ -69,7 +69,7 @@ fn search_index(params: &str) -> RequestFileParam {
 }
 #[tauri::command]
 fn find_file_info(id: &str) -> FileModel {
-    let map = STATIC_DATA.try_lock().unwrap();
+    let map = STATIC_DATA.lock().unwrap();
     println!("find_file_info id:{} ", id);
     if map.contains_key(id) {
         let res: FileModel = map.get(id).unwrap().clone();
@@ -104,28 +104,28 @@ fn read_settings() -> Setting {
 
 #[tauri::command]
 fn actress_map() -> Vec<ActressModel> {
-    let res = STATIC_ACTRESS.try_lock().unwrap().clone();
+    let res = STATIC_ACTRESS.lock().unwrap().clone();
     println!("actress_map {:?}", res);
     return res.into_values().map(|v|v.clone()).collect::<Vec<ActressModel>>();
 }
 
 #[tauri::command]
 fn type_size_map() -> Vec<TypeAnalyzer> {
-    let res = STATIC_TYPE_SIZE.try_lock().unwrap().clone();
+    let res = STATIC_TYPE_SIZE.lock().unwrap().clone();
     println!("type_size_map {:?}", res);
     return res.into_values().collect::<Vec<TypeAnalyzer>>();
 }
 
 #[tauri::command]
 fn tag_size_map() -> Vec<TypeAnalyzer> {
-    let res = STATIC_TAG_SIZE.try_lock().unwrap().clone();
+    let res = STATIC_TAG_SIZE.lock().unwrap().clone();
     println!("tag_size_map {:?}", res);
     return res.into_values().collect::<Vec<TypeAnalyzer>>();
 }
 
 #[tauri::command]
 fn dir_size_map() -> Vec<TypeAnalyzer> {
-    let res = STATIC_DIR_SIZE.try_lock().unwrap().clone();
+    let res = STATIC_DIR_SIZE.lock().unwrap().clone();
     println!("dir_size_map {:?}", res);
     return res.into_values().collect::<Vec<TypeAnalyzer>>();
 }

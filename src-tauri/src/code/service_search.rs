@@ -40,8 +40,8 @@ pub fn wrapper_request(req: &RequestFileParam, res: &ResultData) -> RequestFileP
 }
 pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     let start = SystemTime::now();
-    STATIC_LIST.try_lock().unwrap().clear();
-    STATIC_DATA.try_lock().unwrap().clear();
+    STATIC_LIST.lock().unwrap().clear();
+    STATIC_DATA.lock().unwrap().clear();
     let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
@@ -61,9 +61,10 @@ pub fn search_disk(dir_paths: Vec<&str>) -> Result<i32, Error> {
     for handle in handles {
         handle.join().unwrap();
     }
-    thread::spawn(move || {
-        cache_analyzer()
-    });
+    // thread::spawn(move || {
+    //     cache_analyzer()
+    // });
+    cache_analyzer();
     println!("search_disk over:{:?}", end.ok());
     Ok(0)
 }
@@ -82,7 +83,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     let mut result_list: Vec<FileModel> = Vec::new();
     // println!("STATIC_LIST:{:?}", request);
     // 通过锁定STATIC_LIST获取对静态列表的写入权限
-    STATIC_LIST.try_lock().unwrap().iter().for_each(|item| {
+    STATIC_LIST.lock().unwrap().iter().for_each(|item| {
         if !request.FileType.contains(&item.FileType) {
             return;
         }
@@ -128,7 +129,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
     }
 
     // 将结果列表赋值给返回值中的data字段
-    let map = STATIC_DATA.try_lock().unwrap();
+    let map = STATIC_DATA.lock().unwrap();
     let start_index = (request.Page - 1) * request.PageSize;
     let end_index = (start_index + request.PageSize) as usize;
     for idx in (start_index as usize)..end_index {

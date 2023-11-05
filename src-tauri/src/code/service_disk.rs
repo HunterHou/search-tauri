@@ -110,27 +110,34 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 fn cache_static_file(file: &FileModel) {
     let id = String::from(&file.Id);
     STATIC_DATA
-        .try_lock()
+        .lock()
         .unwrap()
         .insert(String::from(&id), file.clone());
-    STATIC_LIST.try_lock().unwrap().push(file.clone());
+    STATIC_LIST.lock().unwrap().push(file.clone());
 }
 
 pub fn cache_analyzer() {
-    println!("cache_analyzer start");
-    let start = SystemTime::now();
-    for ele in STATIC_LIST.try_lock().unwrap().clone().into_iter() {
-        if !ele.is_empty() {
-            cache_static_analyzer(&ele);
+    match STATIC_DATA.lock() {
+        Ok(val) => {
+            let cl = val.clone().into_values().into_iter();
+            println!("cache_analyzer start");
+            let start = SystemTime::now();
+            for ele in cl.into_iter() {
+                if !ele.is_empty() {
+                    println!("cache_analyzer {}",&ele.Id);
+                    cache_static_analyzer(ele.clone());
+                }
+            }
+            let end = SystemTime::now().duration_since(start);
+            println!("cache_analyzer over:{:?}", end.ok());
         }
+        Err(_) => cache_analyzer(),
     }
-    let end = SystemTime::now().duration_since(start);
-    println!("cache_analyzer:{:?}", end.ok());
 }
 
-pub fn cache_static_analyzer(file: &FileModel) {
+pub fn cache_static_analyzer(file: FileModel) {
     let file_type = String::from(&file.FileType);
-    let video = match STATIC_SETTING.try_lock() {
+    let video = match STATIC_SETTING.lock() {
         Ok(val) => {
             let mut ve = Vec::new();
             for v in val.VideoTypes.iter() {
@@ -147,7 +154,7 @@ pub fn cache_static_analyzer(file: &FileModel) {
         let movie_type = String::from(&file.MovieType);
         let actress = String::from(&file.Actress);
 
-        let act_map = &mut STATIC_ACTRESS.try_lock().unwrap();
+        let act_map = &mut STATIC_ACTRESS.lock().unwrap();
         if act_map.contains_key(&actress) {
             let actre = match act_map.get_mut(&actress) {
                 Some(val) => val,
@@ -158,11 +165,11 @@ pub fn cache_static_analyzer(file: &FileModel) {
             let mut actre = ActressModel::new(&actress);
             actre.add_video(*size, path);
             STATIC_ACTRESS
-                .try_lock()
+                .lock()
                 .unwrap()
                 .insert(String::from(&actress), actre);
         }
-        let type_map = &mut STATIC_TYPE_SIZE.try_lock().unwrap();
+        let type_map = &mut STATIC_TYPE_SIZE.lock().unwrap();
         if type_map.contains_key(&movie_type) {
             let valt = match type_map.get_mut(&movie_type) {
                 Some(val) => val,
@@ -173,12 +180,12 @@ pub fn cache_static_analyzer(file: &FileModel) {
             let mut actre = TypeAnalyzer::new(&movie_type, false);
             actre.size_plus(*size);
             STATIC_TYPE_SIZE
-                .try_lock()
+                .lock()
                 .unwrap()
                 .insert(String::from(&movie_type), actre);
         }
 
-        let dir_map = &mut STATIC_DIR_SIZE.try_lock().unwrap();
+        let dir_map = &mut STATIC_DIR_SIZE.lock().unwrap();
         if dir_map.contains_key(&base_dir) {
             let valt = match dir_map.get_mut(&base_dir) {
                 Some(val) => val,
@@ -189,12 +196,12 @@ pub fn cache_static_analyzer(file: &FileModel) {
             let mut actre = TypeAnalyzer::new(&base_dir, true);
             actre.size_plus(*size);
             STATIC_DIR_SIZE
-                .try_lock()
+                .lock()
                 .unwrap()
                 .insert(String::from(&base_dir), actre);
         }
         if &file.Tags.len() > &0 {
-            let tag_map = &mut STATIC_TAG_SIZE.try_lock().unwrap();
+            let tag_map = &mut STATIC_TAG_SIZE.lock().unwrap();
             for ele in &file.Tags {
                 if tag_map.contains_key(ele) {
                     let valt = match tag_map.get_mut(ele) {
@@ -206,7 +213,7 @@ pub fn cache_static_analyzer(file: &FileModel) {
                     let mut actre = TypeAnalyzer::new(ele, true);
                     actre.size_plus(*size);
                     STATIC_TAG_SIZE
-                        .try_lock()
+                        .lock()
                         .unwrap()
                         .insert(String::from(ele), actre);
                 }
