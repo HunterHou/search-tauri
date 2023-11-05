@@ -161,14 +161,8 @@ const loadScanTime = async () => {
 };
 onMounted(() => {
   setTimeout(() => {
-    invoke("refresh_disk", { name: 'zhangsan' }).then(res => {
-      setTimeout(() => {
-        loadTypeSize()
-      }, 3000);
-    }).catch(err => {
-      console.log(err)
-    })
-  }, 1000);
+    loadTypeSize()
+  }, 3000);
 });
 
 const openThis = async (data) => {

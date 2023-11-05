@@ -4,6 +4,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod code;
 
+use std::collections::HashMap;
+
 use code::model_actress::ActressModel;
 use code::model_actress::TypeAnalyzer;
 use code::model_file::FileModel;
@@ -14,12 +16,12 @@ use code::model_setting::Setting;
 use code::service_search;
 use code::service_setting;
 
-use code::const_param::{STATIC_DATA, STATIC_SETTING};
 use code::const_param::STATIC_ACTRESS;
 use code::const_param::STATIC_DIR_SIZE;
 use code::const_param::STATIC_LIST;
 use code::const_param::STATIC_TAG_SIZE;
 use code::const_param::STATIC_TYPE_SIZE;
+use code::const_param::{STATIC_DATA, STATIC_SETTING};
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -94,7 +96,7 @@ fn submit_settings(params: &str) -> ResultParam {
 
 #[tauri::command]
 fn read_settings() -> Setting {
-    let setting =service_setting::loading_file();
+    let setting = service_setting::loading_file();
     // println!("setting {:?}", setting);
     return setting;
     // let res = STATIC_SETTING.lock().unwrap().clone();
@@ -104,9 +106,17 @@ fn read_settings() -> Setting {
 
 #[tauri::command]
 fn actress_map() -> Vec<ActressModel> {
-    let res = STATIC_ACTRESS.try_lock().unwrap().clone();
-    println!("actress_map {:?}", res);
-    return res.into_values().map(|v|v.clone()).collect::<Vec<ActressModel>>();
+    let res = Vec::new();
+    match STATIC_ACTRESS.try_lock() {
+        Ok(val) => {
+            let value = val.clone();
+            return value
+                .into_values()
+                .map(|v| v.clone())
+                .collect::<Vec<ActressModel>>();
+        }
+        Err(_) => return res,
+    }
 }
 
 #[tauri::command]
