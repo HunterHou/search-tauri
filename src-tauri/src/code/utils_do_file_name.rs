@@ -6,7 +6,7 @@ pub fn int_to_size_str(size: i64) -> String {
     if size < 1024 {
         return format!("{}", size);
     } else if size < 1024 * 1024 {
-        return format!("{}k", (size as f64) / 1024.00);
+        return format!("{:.2}k", (size as f64) / 1024.00);
     } else if size < 1024 * 1024 * 1024 {
         return format!("{:.2}m", (size as f64) / (1024.00 * 1024.00));
     } else if size < 1024 * 1024 * 1024 * 1024 {
