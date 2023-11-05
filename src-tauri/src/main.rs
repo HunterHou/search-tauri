@@ -89,22 +89,22 @@ fn find_file_info(id: &str) -> FileModel {
 
 #[tauri::command]
 fn actress_map(params: &str) -> RequestActressParam {
-    let mut request: RequestFileParam = match serde_json::from_str(params) {
+    let mut request: RequestActressParam = match serde_json::from_str(params) {
         Ok(v) => v,
         Err(err) => {
             println!("serde_json::from_str {:?}", err);
-            RequestFileParam::new()
+            RequestActressParam::new()
         }
     };
     let actress_lib: Vec<ActressModel> = match STATIC_ACTRESS_LIST.lock() {
         Ok(val) => val.to_vec(),
         Err(_) => Vec::new(),
     };
-    let mut res_data = RequestActressParam::new();
-    res_data.TotalCnt = actress_lib.len() as i64;
-    res_data.Data = actress_lib;
-    println!("actress_map {:?}", res_data);
-    return res_data;
+
+    request.TotalCnt = actress_lib.len() as i64;
+    request.Data = actress_lib[request.start_index()..request.end_index()].to_vec();
+    println!("actress_map {:?}", request);
+    return request;
 }
 
 #[tauri::command]

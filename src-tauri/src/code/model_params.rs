@@ -215,4 +215,14 @@ impl RequestActressParam {
             TotalPage: 0,
         }
     }
+
+    pub fn start_index(&self) -> usize {
+        let start_index = (self.Page - 1) * self.PageSize;
+        return start_index as usize;
+    }
+
+    pub fn end_index(&self) -> usize {
+        let end_index = ((self.Page - 1) * self.PageSize + self.PageSize) as usize;
+        return end_index;
+    }
 }
