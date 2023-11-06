@@ -93,7 +93,7 @@ pub fn search_index(request: RequestFileParam) -> ResultData {
         // 如果请求中的关键词长度大于0
         if request.Keyword.len() > 0 {
             // 如果列表项的名字包含关键词
-            if item.Name.contains(&request.Keyword) {
+            if item.Path.contains(&request.Keyword) {
                 // 将列表项复制到结果列表中
                 total_size = total_size + item.Size;
                 total_count = total_count + 1;

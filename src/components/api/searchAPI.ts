@@ -2,6 +2,7 @@ import { axios } from "../../boot/axios";
 import { invoke } from "@tauri-apps/api/tauri";
 
 export const SearchAPI = async (params: any) => {
+  console.log('SearchAPI params',params);
   const data = await invoke("search_index", {
     params: JSON.stringify({
       ...params,
@@ -9,6 +10,7 @@ export const SearchAPI = async (params: any) => {
       Keyword: params.Keyword || "",
     }),
   });
+  console.log('SearchAPI data',data);
   return data;
 };
 
