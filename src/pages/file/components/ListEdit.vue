@@ -73,12 +73,10 @@
                     @click="confirmDelete(item)" />
                   <q-btn size="sm" class="q-mr-sm" color="black-1" @click="moveThis(item)" icon="near_me" />
                   <q-btn class="q-mr-sm" size="sm" color="secondary" icon="open_in_new"
-                    @click="commonExec(OpenFileFolder(item.Id))" />
+                    @click="explorerBySystem({ Path: item.DirPath })" />
                   <q-btn size="sm" class="q-mr-sm" color="black" icon="ti-pencil-alt2"
                     @click="item.showCut = true"></q-btn>
                   <q-btn size="sm" class="q-mr-sm" color="green" @click="toMp4(item)">toMp4</q-btn>
-                  <q-btn class="q-mr-sm" size="sm" color="brown-5" icon="wifi_protected_setup"
-                    v-if="!item.MovieType || item.MovieType == '无'" @click="commonExec(SyncFileInfo(item.Id))" />
                   <q-btn color="red" v-for="ta in item.Tags" :key="ta" @click="commonExec(CloseTag(item.Id, ta), true)">{{
                     `- ${ta}` }}</q-btn>
                 </div>
@@ -177,7 +175,6 @@ import {
   RefreshAPI,
   FileRename,
   DeleteFile,
-  SyncFileInfo,
   CutFile,
   TransferTasksInfo,
   TansferFile,
@@ -185,6 +182,7 @@ import {
   AddTag
 } from '@/components/api/searchAPI';
 import { PostSettingInfo } from '@/components/api/settingAPI';
+import { explorerBySystem } from '@/components/utils/system';
 
 const $q = useQuasar();
 

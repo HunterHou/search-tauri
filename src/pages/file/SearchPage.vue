@@ -219,15 +219,13 @@ import {
   DeleteFile,
   DownImageList,
   FileRename,
-  OpenFileFolder,
-  PlayMovie,
   RefreshAPI,
   ResetMovieType,
   SearchAPI
 } from '@/components/api/searchAPI';
 import { GetSettingInfo } from '@/components/api/settingAPI';
 import { formatCode, formatTitle, MovieTypeOptions, MovieTypeSelects } from '../../components/utils';
-import { NewWindow, CmdBySystem } from '@/components/utils/system';
+import { NewWindow, explorerBySystem } from '@/components/utils/system';
 import { useSystemProperty } from '@/stores/System';
 import FileEdit from './components/FileEdit.vue';
 import FileInfo from './components/FileInfo.vue';
@@ -259,8 +257,7 @@ const playBySystem = (item) => {
   if ($q.platform.is.electron) {
     window.electron.openBySystem({ Path })
   } else {
-    CmdBySystem({ Path });
-    // commonExec(PlayMovie(item.Id))
+    explorerBySystem({ Path });
   }
 
 }
@@ -325,8 +322,7 @@ const openFolder = (item) => {
   if ($q.platform.is.electron) {
     window.electron.showInFolder(item.Path)
   } else {
-    CmdBySystem({ Path: DirPath })
-    // commonExec(OpenFileFolder(item.Id))
+    explorerBySystem({ Path: DirPath })
   }
 
 }

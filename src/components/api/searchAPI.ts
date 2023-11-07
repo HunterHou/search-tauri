@@ -2,7 +2,7 @@ import { axios } from "../../boot/axios";
 import { invoke } from "@tauri-apps/api/tauri";
 
 export const SearchAPI = async (params: any) => {
-  console.log('SearchAPI params',params);
+  // console.log('SearchAPI params',params);
   const data = await invoke("search_index", {
     params: JSON.stringify({
       ...params,
@@ -10,7 +10,7 @@ export const SearchAPI = async (params: any) => {
       Keyword: params.Keyword || "",
     }),
   });
-  console.log('SearchAPI data',data);
+  // console.log('SearchAPI data',data);
   return data;
 };
 
@@ -35,23 +35,9 @@ export const QueryDirImageBase64 = async (data: string) => {
   return res;
 };
 
-export const PlayMovie = async (data: string) => {
-  const res = await axios.get(`/api/play/${data}`);
-  return res && res.data;
-};
-
-export const OpenFileFolder = async (data: string) => {
-  const res = await axios.get(`/api/openFolder/${data}`);
-  return res && res.data;
-};
 
 export const DeleteFile = async (data: string) => {
   const res = await axios.get(`/api/delete/${data}`);
-  return res && res.data;
-};
-
-export const SyncFileInfo = async (data: object) => {
-  const res = await axios.post("/api/sync", data);
   return res && res.data;
 };
 
@@ -80,11 +66,6 @@ export const DownImageList = async (data: string): Promise<unknown> => {
   return res && res.data;
 };
 
-export const HeartBeatQuery = async () => {
-  const res = await axios.get("/api/heartBeat");
-  return res && res.data;
-};
-
 export const AddTag = async (clickId: string, title: string) => {
   const res = await axios.get(`/api/file/addTag/${clickId}/${title}`);
   return res && res.data;
@@ -100,10 +81,6 @@ export const FileRename = async (data: unknown) => {
   return res && res.data;
 };
 
-export const OpenFolerByPath = async (data: unknown) => {
-  const res = await axios.post("/api/OpenFolerByPath", data);
-  return res && res.data;
-};
 export const DeleteFolerByPath = async (data: unknown) => {
   const res = await axios.post("/api/DeleteFolerByPath", data);
   return res && res.data;

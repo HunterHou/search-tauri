@@ -1,5 +1,7 @@
 import { WebviewWindow, getAll } from "@tauri-apps/api/window";
-import { Command, open } from "@tauri-apps/api/shell";
+import { Command } from "@tauri-apps/api/shell";
+import fs from '@tauri-apps/api/fs';
+
 
 export const NewWindow = async ({ title, url, wid }) => {
   const wins = getAll();
@@ -20,9 +22,9 @@ export const NewWindow = async ({ title, url, wid }) => {
   });
 };
 
-export const CmdBySystem = async ({ Path }) => {
-  console.log("OpenBySystem", Path);
-  const command = new Command("startCMD", [Path]);
+export const explorerBySystem = async ({ Path }) => {
+  console.log("explorerBySystem", Path);
+  const command = new Command("explorer", [Path]);
   command.on("close", (data) => {
     console.log(
       `command finished with code ${data.code} and signal ${data.signal}`
@@ -48,13 +50,27 @@ export const shutdownBySystem = async () => {
   command.spawn();
 };
 
-export const OpenBySystem = async ({ Path }) => {
-  const openPath = Path;
-  open(openPath)
-    .then((res) => {
-      console.log("res", res);
-    })
-    .catch((err) => {
-      console.log("err", openPath, err);
-    });
+export const DeleteDir = async ({ Path }) => {
+  const entries = await fs.readDir('users', { dir: Path, recursive: true });
+  if (entries.length > 0) {
+    for (let i = 0; i < entries.length; i++) {
+      const entry = entries[i];
+      if (entry.children?.length > 0) {
+        await DeleteDir({ Path: entry.path });
+      } else {
+        await DeleteFile({ Path: entry.path });
+      }
+    }
+  }
+  await fs.removeDir(Path);
+};
+
+export const DeleteFile = async ({ Path }) => {
+  if(await fs.exists(Path)){
+    await fs.removeFile(Path);
+  }
+};
+
+export const renameFile = async ({ oldPath, newPath }) => {
+  await fs.renameFile(oldPath, newPath);
 };

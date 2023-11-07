@@ -100,13 +100,13 @@ const insideModel = ref(50);
 
 import {
   RefreshAPI,
-  OpenFolerByPath,
   DeleteFolerByPath,
 } from '../components/api/searchAPI';
 import { TypeSizeMap, TagSizeMap, ScanTime } from '../components/api/homeAPI';
 import { onKeyStroke } from '@vueuse/core';
 import { useSystemProperty } from '../stores/System';
 import { appWindow } from '@tauri-apps/api/window';
+import { explorerBySystem } from '@/components/utils/system';
 
 const { push } = useRouter();
 const systemProperty = useSystemProperty();
@@ -161,29 +161,24 @@ const loadScanTime = async () => {
 };
 onMounted(() => {
   if (tableData.value.length == 0) {
-    refreshIndex().then(()=>{
-        setInterval(() => {
-          if (tableData.value.length == 0) {
-        loadTypeSize()
-      }
-    }, 1000);
+    refreshIndex().then(() => {
+      setInterval(() => {
+        if (tableData.value.length == 0) {
+          loadTypeSize()
+        }
+      }, 1000);
     }
-  ) 
-  }else {
+    )
+  } else {
     loadTypeSize()
   }
-  
- 
+
+
 });
 
 const openThis = async (data) => {
   const { Name } = data;
-  const res = await OpenFolerByPath({ dirpath: Name });
-  if (res.Code == 200) {
-    $q.notify({ type: 'positive', message: '执行成功', multiLine: true, position: 'bottom-right' });
-  } else {
-    $q.notify({ type: 'warning', message: '执行失败', multiLine: true, position: 'bottom-right' });
-  }
+  explorerBySystem({ Path: Name })
 };
 const deleteThis = async (data) => {
   const { Name } = data;
@@ -196,7 +191,7 @@ const deleteThis = async (data) => {
   }
 };
 const refreshIndex = async () => {
-  const  data  = await RefreshAPI();
+  const data = await RefreshAPI();
   if (data.Code == 200) {
     f5();
   } else {
