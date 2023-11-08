@@ -17,8 +17,8 @@
       <q-card-actions align="right">
         <q-btn color="primary" label="移动" @click="editMoveout" />
         <q-btn color="primary" label="命名" @click="() => {
-            editItemSubmit(false);
-          }
+          editItemSubmit(false);
+        }
           " />
         <q-btn color="primary" label="关闭" @click="onDialogCancel" />
       </q-card-actions>
@@ -70,7 +70,7 @@ const editMoveout = async () => {
 };
 
 const editItemSubmit = async (MoveOut) => {
-  const { Id, Title, Code, Actress, FileType, MovieType,Jpg } = view.item;
+  const { Id, Title, Code, Actress, FileType, MovieType, Path, DirPath, Jpg, Png, Gif } = view.item;
   let code = Code.trim();
   if (code && code.indexOf('-') < 0) {
     code = '-' + code;
@@ -108,6 +108,7 @@ const editItemSubmit = async (MoveOut) => {
     MoveOut,
     Jpg,
     NoRefresh: true,
+    Path, DirPath, Jpg, Png, Gif
   };
   const res = await FileRename(param);
   if (res.Code == 200) {
@@ -116,7 +117,7 @@ const editItemSubmit = async (MoveOut) => {
       view.callback();
     }
   } else {
-    $q.notify({ type: 'negative', message: res.Message , multiLine: true, position: 'bottom-right' });
+    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
   }
 };
 

@@ -55,7 +55,7 @@ export const shutdownBySystem = async () => {
   command.spawn();
 };
 
-export const DeleteDir = async ({ Path }) => {
+export const DeleteDir = async (Path) => {
   const entries = await readDir("users", { dir: Path, recursive: true });
   if (entries.length > 0) {
     for (let i = 0; i < entries.length; i++) {
@@ -70,13 +70,19 @@ export const DeleteDir = async ({ Path }) => {
   await removeDir(Path);
 };
 
-export const DeleteFile = async ({ Path }) => {
+export const ExistsFile = async (Path) => {
+  const res = await exists(Path);
+  console.log("ExistsFile", res);
+  return res
+};
+
+export const DeleteFile = async (Path) => {
   if (await exists(Path)) {
     await removeFile(Path);
   }
 };
 
-export const renameFileToDisk = async ({ oldPath, newPath }) => {
+export const renameFileToDisk = async (oldPath, newPath) => {
   await renameFile(oldPath, newPath);
 };
 
@@ -86,5 +92,6 @@ export default {
   shutdownBySystem,
   DeleteDir,
   DeleteFile,
+  ExistsFile,
   renameFileToDisk,
 };
