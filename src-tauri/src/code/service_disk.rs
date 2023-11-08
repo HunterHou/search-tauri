@@ -17,7 +17,15 @@ use super::const_param::STATIC_TYPE_SIZE;
 use super::model_actress::ActressModel;
 use super::model_actress::TypeAnalyzer;
 use super::model_file::FileModel;
-
+use super::model_params::ResultParam;
+/**
+ * 这个函数用于遍历指定目录下的文件，并将文件信息封装成FileModel对象的集合返回。
+ * 首先判断目录是否存在，若不存在则返回空的文件列表。
+ * 然后使用WalkDir遍历目录下的每个项，判断是否是文件，
+ * 如果是文件则获取文件的大小和创建时间，并将文件的各种信息提取出来。
+ * 最后将提取的信息封装成FileModel对象并加入到文件列表中。
+ *
+ */
 pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
     let mut filelist: Vec<FileModel> = Vec::new();
     if !Path::new(dir).exists() {
@@ -60,33 +68,36 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
             let mut path = "".to_string();
             match filepath.file_name() {
-                Some(value) => match value.to_str() {
-                    Some(val) => {
-                        path = format!("{}", String::from(val));
+                Some(value) =>
+                    match value.to_str() {
+                        Some(val) => {
+                            path = format!("{}", String::from(val));
+                        }
+                        _ => {}
                     }
-                    _ => {}
-                },
                 _ => {}
             }
             let mut filename = "".to_string();
             match filepath.file_stem() {
-                Some(value) => match value.to_str() {
-                    Some(val) => {
-                        filename = format!("{}", String::from(val));
+                Some(value) =>
+                    match value.to_str() {
+                        Some(val) => {
+                            filename = format!("{}", String::from(val));
+                        }
+                        _ => {}
                     }
-                    _ => {}
-                },
                 _ => {}
             }
 
             let mut extname = "".to_string();
             match filepath.extension() {
-                Some(value) => match value.to_str() {
-                    Some(val) => {
-                        extname = format!("{}", String::from(val));
+                Some(value) =>
+                    match value.to_str() {
+                        Some(val) => {
+                            extname = format!("{}", String::from(val));
+                        }
+                        _ => {}
                     }
-                    _ => {}
-                },
                 _ => {}
             }
 
@@ -97,7 +108,7 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 filename.replace("'", "''"),
                 extname,
                 size,
-                created,
+                created
             );
             if file.is_empty() {
                 continue;
@@ -111,19 +122,25 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
 fn cache_static_file(file: &FileModel) {
     let id = String::from(&file.Id);
-    STATIC_DATA
-        .lock()
-        .unwrap()
-        .insert(String::from(&id), file.clone());
+    STATIC_DATA.lock().unwrap().insert(String::from(&id), file.clone());
     STATIC_LIST.lock().unwrap().push(file.clone());
 }
-
+/**
+ * 这段 Rust 代码实现了一个缓存分析函数 cache_analyzer。
+ * 首先，它创建了一个空的哈希映射 value，然后尝试获取静态数据并将其复制到 value 中。
+ * 接下来，它检查 value 的长度，如果大于 0，则进行进一步的分析操作。
+ * 它从静态设置中获取视频类型，并使用哈希映射分别将女演员、电影类型、目录和标签与对应的缓存数据进行关联，
+ * 并更新相应的统计信息。最后，它清空静态女演员列表，并将女演员映射添加到列表中。
+ * 该函数结束时，它打印出分析所需的时间。
+ */
 pub fn cache_analyzer() {
     let mut value: HashMap<String, FileModel> = HashMap::new();
     match STATIC_DATA.lock() {
-        Ok(val) => value = val.clone(),
+        Ok(val) => {
+            value = val.clone();
+        }
         Err(_) => cache_analyzer(),
-    };
+    }
     if value.len() > 0 {
         let cl = value.into_values().into_iter();
         println!("cache_analyzer start");
@@ -133,7 +150,7 @@ pub fn cache_analyzer() {
             Ok(val) => {
                 let mut ve = Vec::new();
                 for v in val.VideoTypes.iter() {
-                    ve.push(String::from(v))
+                    ve.push(String::from(v));
                 }
                 ve
             }
@@ -214,4 +231,17 @@ pub fn cache_analyzer() {
         let end = SystemTime::now().duration_since(start);
         println!("cache_analyzer over:{:?}", end.ok());
     }
+}
+
+pub fn rename_file(id: &str, new_name: &str) -> ResultParam {
+    
+    let map = STATIC_DATA.lock().unwrap();
+    let value: FileModel =match map.get(id) {
+        Some(val) => val.clone(),
+        None => FileModel::new(),
+    };
+    if value.is_empty() {
+        return ResultParam::fail("文件不存在");
+    }
+    return ResultParam::success();
 }

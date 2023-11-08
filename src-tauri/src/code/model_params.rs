@@ -26,10 +26,10 @@ impl ResultParam {
     }
 
     // 创建一个失败的 ResultParam 对象
-    pub fn fail() -> ResultParam {
+    pub fn fail(msg:&str) -> ResultParam {
         ResultParam {
             Code: 400,
-            Message: "执行失败".to_string(),
+            Message: String::from(msg),
             Data: ResultData::new(),
         }
     }
