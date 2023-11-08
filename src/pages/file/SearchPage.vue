@@ -336,7 +336,7 @@ const confirmDelete = (item) => {
   })
     .onOk(() => {
       console.log('>>>> onOk');
-      commonExec(DeleteFile(item.Id), true);
+      commonExec(DeleteFile(item), true);
     })
     .onCancel(() => {
       console.log('>>>> Cancel');

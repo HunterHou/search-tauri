@@ -1,13 +1,15 @@
-import { axios } from "../../boot/axios";
-import { invoke } from "@tauri-apps/api/tauri";
+import { axios } from '../../boot/axios';
+import { invoke } from '@tauri-apps/api/tauri';
+import sys from '../utils/system';
+import { FileModel } from '../model/FileModel';
 
 export const SearchAPI = async (params: any) => {
   // console.log('SearchAPI params',params);
-  const data = await invoke("search_index", {
+  const data = await invoke('search_index', {
     params: JSON.stringify({
       ...params,
       params: { ...params },
-      Keyword: params.Keyword || "",
+      Keyword: params.Keyword || '',
     }),
   });
   // console.log('SearchAPI data',data);
@@ -15,34 +17,42 @@ export const SearchAPI = async (params: any) => {
 };
 
 export const RefreshAPI = async () => {
-  const res = await invoke("refresh_disk", {
-    name: "refresh_disk",
+  const res = await invoke('refresh_disk', {
+    name: 'refresh_disk',
   });
   return res;
 };
 
 export const FindFileInfo = async (data: string) => {
-  const res = await invoke("find_file_info", {
+  const res = await invoke('find_file_info', {
     id: data,
   });
   return res;
 };
 
 export const QueryDirImageBase64 = async (data: string) => {
-  const res = await invoke("files_by_dir", {
+  const res = await invoke('files_by_dir', {
     path: data,
   });
   return res;
 };
 
+export const DeleteFolerByPath = async (data: unknown) => {
+  sys.DeleteDir({ Path: data });
+  return { code: 200 };
+};
 
-export const DeleteFile = async (data: string) => {
-  const res = await axios.get(`/api/delete/${data}`);
-  return res && res.data;
+export const DeleteFile = async (data: FileModel) => {
+  const { Path, Jpg, Png, Gif } = data;
+  sys.DeleteFile({ Path: Path });
+  sys.DeleteFile({ Path: Jpg });
+  sys.DeleteFile({ Path: Png });
+  sys.DeleteFile({ Path: Gif });
+  return { code: 200 };
 };
 
 export const TransferTasksInfo = async () => {
-  const res = await axios.get("/api/transferTasks");
+  const res = await axios.get('/api/transferTasks');
   return res && res.data;
 };
 
@@ -77,11 +87,6 @@ export const CloseTag = async (id: string, title: string) => {
 };
 
 export const FileRename = async (data: unknown) => {
-  const res = await axios.post("/api/file/rename", data);
-  return res && res.data;
-};
-
-export const DeleteFolerByPath = async (data: unknown) => {
-  const res = await axios.post("/api/DeleteFolerByPath", data);
+  const res = await axios.post('/api/file/rename', data);
   return res && res.data;
 };

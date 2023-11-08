@@ -74,3 +74,12 @@ export const DeleteFile = async ({ Path }) => {
 export const renameFile = async ({ oldPath, newPath }) => {
   await fs.renameFile(oldPath, newPath);
 };
+
+export default {
+  NewWindow,
+  explorerBySystem,
+  shutdownBySystem,
+  DeleteDir,
+  DeleteFile,
+  renameFile,
+};

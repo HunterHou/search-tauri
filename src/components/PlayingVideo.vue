@@ -96,7 +96,7 @@
         <q-card-section style="overflow: auto; padding: 4px">
           <div class="text-subtitle2" style="overflow: auto; padding: 0">
             <q-btn square color="red" size="sm" text-color="white" style="margin-left: 0px; padding: 0 4px">
-              <span @click="deleteThis(item.Id)">删除</span>
+              <span @click="deleteThis(item)">删除</span>
             </q-btn>
             <q-chip @click.stop="() => { }" square size="sm" color="green" text-color="black" style="padding: 0px 4px">
               {{ item.SizeStr }}
@@ -143,8 +143,8 @@ const props = defineProps({
   }
 })
 
-const deleteThis = async (Id) => {
-  await DeleteFile(Id)
+const deleteThis = async (item) => {
+  await DeleteFile(item)
   await RefreshAPI()
   await fetchSearch()
 }

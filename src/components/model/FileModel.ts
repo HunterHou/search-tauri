@@ -5,6 +5,7 @@ class FileModel {
   FileType = '';
   Jpg = '';
   Png = '';
+  Gif = '';
   Actress = '';
   Code = '';
   MTime: Date | undefined;

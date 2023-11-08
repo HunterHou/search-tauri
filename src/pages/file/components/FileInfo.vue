@@ -173,7 +173,7 @@ const confirmDelete = (item) => {
     persistent: true
   })
     .onOk(() => {
-      commonExec(DeleteFile(item.Id), true);
+      commonExec(DeleteFile(item), true);
     })
     .onCancel(() => {
       console.log('>>>> Cancel');

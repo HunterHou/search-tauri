@@ -338,7 +338,7 @@ const confirmDelete = (item) => {
   })
     .onOk(() => {
       console.log('>>>> onOk');
-      commonExec(DeleteFile(item.Id)).then(() => {
+      commonExec(DeleteFile(item)).then(() => {
         for (let i = 0; i < view.resultData.Data.length; i++) {
           if (view.resultData.Data[i].Id == item.Id) {
             view.resultData.Data.splice(i, 1);

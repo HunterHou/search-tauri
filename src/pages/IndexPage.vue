@@ -182,7 +182,7 @@ const openThis = async (data) => {
 };
 const deleteThis = async (data) => {
   const { Name } = data;
-  const res = await DeleteFolerByPath({ dirpath: Name });
+  const res = await DeleteFolerByPath(Name);
   if (res.Code == 200) {
     $q.notify({ type: 'positive', message: '执行成功', multiLine: true, position: 'bottom-right' });
     refreshIndex();
