@@ -1,6 +1,6 @@
 use super::service_setting;
-use super::db;
+// use super::db;
 pub fn init_sys() {
-    db::init_db();
+    // db::init_db();
     service_setting::loading_file();
 }

@@ -1,7 +1,12 @@
 import { WebviewWindow, getAll } from "@tauri-apps/api/window";
 import { Command } from "@tauri-apps/api/shell";
-import fs from '@tauri-apps/api/fs';
-
+import {
+  renameFile,
+  removeFile,
+  exists,
+  removeDir,
+  readDir,
+} from "@tauri-apps/api/fs";
 
 export const NewWindow = async ({ title, url, wid }) => {
   const wins = getAll();
@@ -51,7 +56,7 @@ export const shutdownBySystem = async () => {
 };
 
 export const DeleteDir = async ({ Path }) => {
-  const entries = await fs.readDir('users', { dir: Path, recursive: true });
+  const entries = await readDir("users", { dir: Path, recursive: true });
   if (entries.length > 0) {
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i];
@@ -62,17 +67,17 @@ export const DeleteDir = async ({ Path }) => {
       }
     }
   }
-  await fs.removeDir(Path);
+  await removeDir(Path);
 };
 
 export const DeleteFile = async ({ Path }) => {
-  if(await fs.exists(Path)){
-    await fs.removeFile(Path);
+  if (await exists(Path)) {
+    await removeFile(Path);
   }
 };
 
-export const renameFile = async ({ oldPath, newPath }) => {
-  await fs.renameFile(oldPath, newPath);
+export const renameFileToDisk = async ({ oldPath, newPath }) => {
+  await renameFile(oldPath, newPath);
 };
 
 export default {
@@ -81,5 +86,5 @@ export default {
   shutdownBySystem,
   DeleteDir,
   DeleteFile,
-  renameFile,
+  renameFileToDisk,
 };
