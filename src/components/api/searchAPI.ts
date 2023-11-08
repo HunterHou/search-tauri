@@ -37,7 +37,7 @@ export const QueryDirImageBase64 = async (data: string) => {
   return res;
 };
 
-export const DeleteFolerByPath = async (data: unknown) => {
+export const DeleteFolerByPath = async (data: string) => {
   sys.DeleteDir({ Path: data });
   return { code: 200 };
 };
@@ -49,31 +49,6 @@ export const DeleteFile = async (data: FileModel) => {
   sys.DeleteFile({ Path: Png });
   sys.DeleteFile({ Path: Gif });
   return { code: 200 };
-};
-
-export const TransferTasksInfo = async () => {
-  const res = await axios.get('/api/transferTasks');
-  return res && res.data;
-};
-
-export const TansferFile = async (data: string) => {
-  const res = await axios.get(`/api/tranferToMp4/${data}`);
-  return res && res.data;
-};
-
-export const CutFile = async (id: string, start: string, end: string) => {
-  const res = await axios.get(`/api/cutMovie/${id}/${start}/${end}`);
-  return res && res.data;
-};
-
-export const ResetMovieType = async (data: string, movieType: string) => {
-  const res = await axios.get(`/api/setMovieType/${data}/${movieType}`);
-  return res && res.data;
-};
-
-export const DownImageList = async (data: string): Promise<unknown> => {
-  const res = await axios.get(`/api/imageList/${data}`);
-  return res && res.data;
 };
 
 export const AddTag = async (clickId: string, title: string) => {
@@ -90,3 +65,33 @@ export const FileRename = async (data: unknown) => {
   const res = await axios.post('/api/file/rename', data);
   return res && res.data;
 };
+
+export const ResetMovieType = async (data: string, movieType: string) => {
+  const res = await axios.get(`/api/setMovieType/${data}/${movieType}`);
+  return res && res.data;
+};
+
+
+export const TransferTasksInfo = async () => {
+  const res = await axios.get('/api/transferTasks');
+  return res && res.data;
+};
+
+export const TansferFile = async (data: string) => {
+  const res = await axios.get(`/api/tranferToMp4/${data}`);
+  return res && res.data;
+};
+
+export const CutFile = async (id: string, start: string, end: string) => {
+  const res = await axios.get(`/api/cutMovie/${id}/${start}/${end}`);
+  return res && res.data;
+};
+
+
+
+export const DownImageList = async (data: string): Promise<unknown> => {
+  const res = await axios.get(`/api/imageList/${data}`);
+  return res && res.data;
+};
+
+
