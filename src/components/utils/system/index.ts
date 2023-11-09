@@ -1,12 +1,5 @@
 import { WebviewWindow, getAll } from "@tauri-apps/api/window";
 import { Command } from "@tauri-apps/api/shell";
-import {
-  renameFile,
-  removeFile,
-  exists,
-  removeDir,
-  readDir,
-} from "@tauri-apps/api/fs";
 
 export const NewWindow = async ({ title, url, wid }) => {
   const wins = getAll();
@@ -18,7 +11,7 @@ export const NewWindow = async ({ title, url, wid }) => {
     title: title,
     focus: true,
     skipTaskbar: true,
-    width: 1200,
+    width: 1280,
     height: 850,
     url,
   });
