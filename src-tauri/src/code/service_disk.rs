@@ -234,34 +234,48 @@ pub fn cache_analyzer() {
     }
 }
 
+//  这个函数接受一个文件路径，判断该文件是否存在，
+// 若存在则删除该文件，并返回删除是否成功，若不存在则返回失败。
 pub fn delete_file(path: &str) -> bool {
-    let exists = fs::try_exists(path).unwrap();
-    if exists {
-        return fs::remove_file(path).unwrap();
+    let file = Path::new(path);
+    if file.exists() {
+        let res = fs::remove_file(file);
+        if res.is_err() {
+            return false;
+        }
+        return true;
     }
     return false;
 }
-
+// 一个路径参数，判断该路径是否存在。
+// 如果存在，则递归删除该路径下的所有文件和子目录，并返回true；否则返回false。
 pub fn delete_dir(path: &str) -> bool {
-    let exists = fs::try_exists(path).unwrap();
-    if exists {
-        return fs::remove_dir_all(path).unwrap();
+    let file = Path::new(path);
+    if file.exists() {
+        fs::remove_dir_all(path).unwrap();
+        return true;
     }
     return false;
 }
-
+// 这个函数接收两个参数，分别是源文件路径和目标文件路径。
+// 函数首先根据源文件路径创建一个Path对象，然后检查该文件是否存在，如果存在则返回false。
+// 接着使用fs::rename方法将源文件移动到目标文件路径，如果移动失败则返回false。
+// 最后，如果移动成功，则返回true。
 pub fn rename_file(src: &str, desc: &str) -> bool {
-    let exists = fs::try_exists(src).unwrap();
-    if !exists {
+    let file = Path::new(src);
+    if file.exists() {
         return false;
     }
-    fs::rename(src, desc);
+    let res = fs::rename(src, desc);
+    if res.is_err() {
+        return false;
+    }
     return true;
 }
 
 pub fn delete_file_model(file: &FileModel) -> ResultParam {
     if file.is_empty() {
-        return ResultParam::fail("文件模型为空");
+        return ResultParam::error("文件模型为空");
     } else {
         if delete_file(file.Path.as_str()) {
             delete_file(file.Png.as_str());

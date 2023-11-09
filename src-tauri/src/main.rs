@@ -155,7 +155,7 @@ fn submit_settings(params: &str) -> ResultParam {
         }
     };
     service_setting::refresh_setting(&request);
-    ResultParam::success()
+    ResultParam::ok()
 }
 
 #[tauri::command]
