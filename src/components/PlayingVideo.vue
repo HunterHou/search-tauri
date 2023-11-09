@@ -8,7 +8,8 @@
           view.playing.Title }}</span>
 
     </div>
-    <vue3VideoPlay v-show="view.playing?.Id" ref="vue3VideoPlayRef" id="vue3VideoPlayRef"
+    <q-img fit="cover" v-if="isImage() && view.playing?.Id" draggable :src="convertFileSrc(view.playing?.Id)"></q-img>
+    <vue3VideoPlay v-if="isVideo()" v-show="view.playing?.Id" ref="vue3VideoPlayRef" id="vue3VideoPlayRef"
       style="object-fit: contain;width: 100%;height:auto;max-height: 99vh;" v-bind="optionsPC" @ended="playNext(1)" />
     <q-card-actions align="left">
 
@@ -143,6 +144,15 @@ const props = defineProps({
   }
 })
 
+const isVideo = (v) => {
+  console.log('isVideo', view.settingInfo?.VideoTypes?.indexOf(view.playing?.FileType) >= 0)
+  return view.settingInfo?.VideoTypes?.indexOf(view.playing?.FileType) >= 0;
+}
+const isImage = (v) => {
+  console.log('isImage', view.settingInfo?.ImageTypes)
+  console.log('isImage', view.playing?.FileType)
+  return view.settingInfo?.ImageTypes?.indexOf(view.playing?.FileType) >= 0;
+}
 const deleteThis = async (item) => {
   await DeleteFile(item)
   await RefreshAPI()
@@ -188,6 +198,7 @@ const open = (v) => {
 
 const fetchGetSettingInfo = async () => {
   const data = await GetSettingInfo();
+  console.log('fetchGetSettingInfo', data)
   view.settingInfo = data;
 };
 
@@ -246,7 +257,7 @@ const playNext = (step) => {
     }
   }
 };
-
+fetchGetSettingInfo()
 const optionsPC = reactive({
   width: '100%', //播放器高度
   height: 'auto', //播放器高度

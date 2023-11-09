@@ -87,6 +87,7 @@ pub fn loading_file() -> Setting {
         }
     };
     // 将请求的对象复制到静态设置的对象中
+    
     STATIC_SETTING.lock().unwrap().from(&setting);
     return setting;
 }

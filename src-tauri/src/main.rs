@@ -56,9 +56,18 @@ fn search_index(params: &str) -> RequestFileParam {
             RequestFileParam::new()
         }
     };
-    let res = STATIC_SETTING.lock().unwrap().clone();
-    request.FileType = res.VideoTypes;
-    // println!("search_index request{:?}", request);
+    let res = service_setting::loading_file();
+    if res.VideoTypes.len() > 0 {
+        request.FileType.extend(res.VideoTypes.clone());
+    }
+    if res.ImageTypes.len() > 0 {
+        request.FileType.extend(res.ImageTypes.clone());
+    }
+    if res.DocsTypes.len() > 0 {
+        request.FileType.extend(res.DocsTypes.clone());
+    }
+    println!("search_index request{:?}", res.ImageTypes);
+    println!("search_index request{:?}", res.DocsTypes);
     if *QUERY_DB {
         return request;
     } else {

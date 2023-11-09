@@ -51,6 +51,24 @@
               <MutiInput v-model="view.settingInfo.MovieTypes" @onchange="(arr) => (view.settingInfo.MovieTypes = arr)" />
             </template>
           </q-field>
+          <q-field color="purple-12" label="DocsTypes" stack-label>
+            <template v-slot:prepend>
+              <q-icon name="event" />
+            </template>
+            <template v-slot:control>
+              <MutiSelector v-bind:model-value="view.settingInfo.DocsTypes" :options="view.settingInfo.Types"
+                @onchange="(arr) => (view.settingInfo.DocsTypes = arr)" />
+            </template>
+          </q-field>
+          <q-field color="purple-12" label="ImageTypes" stack-label>
+            <template v-slot:prepend>
+              <q-icon name="event" />
+            </template>
+            <template v-slot:control>
+              <MutiSelector v-bind:model-value="view.settingInfo.ImageTypes" :options="view.settingInfo.Types"
+                @onchange="(arr) => (view.settingInfo.ImageTypes = arr)" />
+            </template>
+          </q-field>
           <q-field color="purple-12" label="VideoTypes" stack-label>
             <template v-slot:prepend>
               <q-icon name="event" />
