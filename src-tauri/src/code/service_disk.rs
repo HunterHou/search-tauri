@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::io::Result;
 use std::path::Path;
+use std::fs;
 
 use std::time::SystemTime;
 use walkdir::DirEntry;
@@ -233,15 +234,42 @@ pub fn cache_analyzer() {
     }
 }
 
-pub fn rename_file(id: &str, new_name: &str) -> ResultParam {
-    
-    let map = STATIC_DATA.lock().unwrap();
-    let value: FileModel =match map.get(id) {
-        Some(val) => val.clone(),
-        None => FileModel::new(),
-    };
-    if value.is_empty() {
-        return ResultParam::fail("文件不存在");
+pub fn delete_file(path: &str) -> bool {
+    let exists = fs::try_exists(path).unwrap();
+    if exists {
+        return fs::remove_file(path).unwrap();
     }
-    return ResultParam::success();
+    return false;
+}
+
+pub fn delete_dir(path: &str) -> bool {
+    let exists = fs::try_exists(path).unwrap();
+    if exists {
+        return fs::remove_dir_all(path).unwrap();
+    }
+    return false;
+}
+
+pub fn rename_file(src: &str, desc: &str) -> bool {
+    let exists = fs::try_exists(src).unwrap();
+    if !exists {
+        return false;
+    }
+    fs::rename(src, desc);
+    return true;
+}
+
+pub fn delete_file_model(file: &FileModel) -> ResultParam {
+    if file.is_empty() {
+        return ResultParam::fail("文件模型为空");
+    } else {
+        if delete_file(file.Path.as_str()) {
+            delete_file(file.Png.as_str());
+            delete_file(file.Jpg.as_str());
+            delete_file(file.Gif.as_str());
+        } else {
+            return ResultParam::error("删除失败");
+        }
+    }
+    return ResultParam::ok();
 }

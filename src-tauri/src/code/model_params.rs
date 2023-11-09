@@ -1,10 +1,10 @@
-use serde::{Deserialize, Serialize};
+use serde::{ Deserialize, Serialize };
 
-use super::{model_file::FileModel, model_actress::ActressModel};
-
+use super::{ model_file::FileModel, model_actress::ActressModel };
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ResultParam {
+    pub Success: bool,
     // 结果码，表示请求执行的结果状态
     pub Code: i64,
     // 消息，描述结果码的含义
@@ -13,22 +13,27 @@ pub struct ResultParam {
     pub Data: ResultData,
 }
 
-
 // ResultParam 类的实现
 impl ResultParam {
     // 创建一个成功的 ResultParam 对象
-    pub fn success() -> ResultParam {
+    pub fn ok() -> ResultParam {
         ResultParam {
             Code: 200,
+            Success: true,
             Message: "执行成功".to_string(),
             Data: ResultData::new(),
         }
     }
 
+    pub fn is_ok(&self) -> bool {
+        self.Success
+    }
+
     // 创建一个失败的 ResultParam 对象
-    pub fn fail(msg:&str) -> ResultParam {
+    pub fn error(msg: &str) -> ResultParam {
         ResultParam {
             Code: 400,
+            Success: false,
             Message: String::from(msg),
             Data: ResultData::new(),
         }
@@ -154,13 +159,10 @@ impl Default for RequestFileParam {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RequestActressParam {
     // 页码
     #[serde(default)]
-    
     pub Page: i64,
     #[serde(default)]
     // 每页数量
@@ -189,7 +191,7 @@ pub struct RequestActressParam {
     #[serde(default)]
     // 排序方式
     pub SortType: String,
-  
+
     #[serde(flatten)]
     // 文件模型参数
     pub params: ActressModel,
