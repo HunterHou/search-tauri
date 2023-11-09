@@ -272,7 +272,23 @@ pub fn rename_file(src: &str, desc: &str) -> bool {
     }
     return true;
 }
+// 重命名文件模型
+pub fn rename_file_model(file: &FileModel) -> ResultParam {
+    if file.is_empty() {
+        return ResultParam::error("文件模型为空");
+    } else {
+        if delete_file(file.Path.as_str()) {
+            delete_file(file.Png.as_str());
+            delete_file(file.Jpg.as_str());
+            delete_file(file.Gif.as_str());
+        } else {
+            return ResultParam::error("删除失败");
+        }
+    }
+    return ResultParam::ok();
+}
 
+// 删除文件模型
 pub fn delete_file_model(file: &FileModel) -> ResultParam {
     if file.is_empty() {
         return ResultParam::error("文件模型为空");

@@ -174,6 +174,20 @@ fn files_by_dir(path: &str) -> Vec<FileModel> {
     files =files.into_iter().filter(|e|image.contains(&&e.FileType)).collect::<Vec<FileModel>>();
     return files;
 }
+#[tauri::command]
+fn delete_dir(path: &str) {
+    service_disk::delete_dir(path);
+}
+
+#[tauri::command]
+fn delete_model(path: &str) {
+    service_disk::delete_dir(path);
+}
+
+#[tauri::command]
+fn rename_model(path: &str) {
+    service_disk::delete_dir(path);
+}
 
 fn main() {
     init_service::init_sys();
