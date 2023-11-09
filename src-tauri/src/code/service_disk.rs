@@ -1,8 +1,11 @@
 use std::collections::HashMap;
+use std::fs;
 use std::io::Result;
 use std::path::Path;
-use std::fs;
+use std::path::MAIN_SEPARATOR_STR;
+use std::str::FromStr;
 
+use serde::de;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
@@ -69,36 +72,33 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
             let mut path = "".to_string();
             match filepath.file_name() {
-                Some(value) =>
-                    match value.to_str() {
-                        Some(val) => {
-                            path = format!("{}", String::from(val));
-                        }
-                        _ => {}
+                Some(value) => match value.to_str() {
+                    Some(val) => {
+                        path = format!("{}", String::from(val));
                     }
+                    _ => {}
+                },
                 _ => {}
             }
             let mut filename = "".to_string();
             match filepath.file_stem() {
-                Some(value) =>
-                    match value.to_str() {
-                        Some(val) => {
-                            filename = format!("{}", String::from(val));
-                        }
-                        _ => {}
+                Some(value) => match value.to_str() {
+                    Some(val) => {
+                        filename = format!("{}", String::from(val));
                     }
+                    _ => {}
+                },
                 _ => {}
             }
 
             let mut extname = "".to_string();
             match filepath.extension() {
-                Some(value) =>
-                    match value.to_str() {
-                        Some(val) => {
-                            extname = format!("{}", String::from(val));
-                        }
-                        _ => {}
+                Some(value) => match value.to_str() {
+                    Some(val) => {
+                        extname = format!("{}", String::from(val));
                     }
+                    _ => {}
+                },
                 _ => {}
             }
 
@@ -109,7 +109,7 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
                 filename.replace("'", "''"),
                 extname,
                 size,
-                created
+                created,
             );
             if file.is_empty() {
                 continue;
@@ -123,7 +123,10 @@ pub fn visit_dirs(dir: &str) -> Result<Vec<FileModel>> {
 
 fn cache_static_file(file: &FileModel) {
     let id = String::from(&file.Id);
-    STATIC_DATA.lock().unwrap().insert(String::from(&id), file.clone());
+    STATIC_DATA
+        .lock()
+        .unwrap()
+        .insert(String::from(&id), file.clone());
     STATIC_LIST.lock().unwrap().push(file.clone());
 }
 /**
@@ -233,6 +236,10 @@ pub fn cache_analyzer() {
         println!("cache_analyzer over:{:?}", end.ok());
     }
 }
+pub fn file_exists(path: &str) -> bool {
+    let file = Path::new(path);
+    return file.exists();
+}
 
 //  这个函数接受一个文件路径，判断该文件是否存在，
 // 若存在则删除该文件，并返回删除是否成功，若不存在则返回失败。
@@ -263,24 +270,75 @@ pub fn delete_dir(path: &str) -> bool {
 // 最后，如果移动成功，则返回true。
 pub fn rename_file(src: &str, desc: &str) -> bool {
     let file = Path::new(src);
-    if file.exists() {
+    if !file.exists() {
         return false;
     }
     let res = fs::rename(src, desc);
     if res.is_err() {
+        println!("rename_file err:{}", res.err().unwrap());
         return false;
     }
     return true;
 }
 // 重命名文件模型
-pub fn rename_file_model(file: &FileModel) -> ResultParam {
+pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
+    // println!("{},rename_file_model:{:?}", is_move, file);
     if file.is_empty() {
-        return ResultParam::error("文件模型为空");
+        return ResultParam::error("参数为空");
     } else {
-        if delete_file(file.Path.as_str()) {
-            delete_file(file.Png.as_str());
-            delete_file(file.Jpg.as_str());
-            delete_file(file.Gif.as_str());
+        let static_map = STATIC_DATA.lock().unwrap();
+        let original_file = match static_map.get(file.Id.as_str()) {
+            Some(val) => val,
+            None => todo!(),
+        };
+        if original_file.is_empty() {
+            return ResultParam::error("原始文件为空");
+        }
+
+        let metadata = Path::new(file.Name.as_str());
+        let new_name = metadata.file_stem().unwrap().to_str().unwrap();
+        let mut original_name = original_file.DirPath.clone();
+        if *is_move {
+            if &file.Actress.len() > &0 {
+                original_name.push_str(MAIN_SEPARATOR_STR);
+                original_name.push_str(&file.Actress);
+                if !file_exists(&original_name) {
+                    let _ = fs::create_dir_all(&original_name);
+                }
+            }
+            if &file.Title.len() > &0 {
+                original_name.push_str(MAIN_SEPARATOR_STR);
+                if &file.Code.len() > &0 {
+                    original_name.push_str(&file.Code);
+                }
+                original_name.push_str(&file.Title);
+                if !file_exists(&original_name) {
+                    let _ = fs::create_dir_all(&original_name);
+                }
+            }
+        }
+        original_name.push_str(MAIN_SEPARATOR_STR);
+        original_name.push_str(new_name);
+        if !original_name.contains(&file.MovieType) {
+            original_name.push_str(&("{{".to_string() + &file.MovieType + "}}"));
+        }
+        let mut dest_name = String::from(&original_name);
+        let mut dest_jpg = String::from(&original_name);
+        let mut dest_png = String::from(&original_name);
+        let mut dest_gif = String::from(&original_name);
+
+        dest_name.push_str(&(".".to_string() + &original_file.FileType));
+        dest_jpg.push_str(".jpg");
+        dest_png.push_str(".png");
+        dest_gif.push_str(".gif");
+        println!("dest_name:{}", dest_name);
+        println!("dest_jpg:{}", dest_jpg);
+        println!("dest_png:{}", dest_png);
+        println!("dest_gif:{}", dest_gif);
+        if rename_file(original_file.Path.as_str(), &dest_name) {
+            rename_file(original_file.Png.as_str(), &dest_png);
+            rename_file(original_file.Jpg.as_str(), &dest_jpg);
+            rename_file(original_file.Gif.as_str(), &dest_gif);
         } else {
             return ResultParam::error("删除失败");
         }
@@ -289,7 +347,13 @@ pub fn rename_file_model(file: &FileModel) -> ResultParam {
 }
 
 // 删除文件模型
-pub fn delete_file_model(file: &FileModel) -> ResultParam {
+pub fn delete_file_model(file_id: &str) -> ResultParam {
+    let static_map = STATIC_DATA.lock().unwrap().clone();
+    let empty = FileModel::new();
+    let file = match static_map.get(file_id) {
+        Some(val) => val,
+        None => &empty,
+    };
     if file.is_empty() {
         return ResultParam::error("文件模型为空");
     } else {

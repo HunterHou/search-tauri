@@ -25,7 +25,7 @@
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
       <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id" >
-        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Images[0])" class="item-img"
+        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Url)" class="item-img"
           @click="searchFiles(item.Name)">
         </q-img>
         <div style="

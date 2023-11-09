@@ -31,29 +31,19 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn refresh_disk(name: &str) -> String {
+fn refresh_disk(name: &str) -> ResultParam {
     println!("refresh_disk {:?}", name);
-    // let base_dir = vec![
-    //     "d:\\emby",
-    //     "e:\\emby",
-    //     "f:\\emby",
-    //     "g:\\emby",
-    //     "h:\\emby",
-    //     "i:\\emby",
-    //     "J:\\emby",
-    //     "k:\\emby",
-    //     "/Users/harmay/Documents",
-    // ];
     let base_dir = STATIC_SETTING.lock().unwrap().Dirs.to_vec();
     let _filelist: Vec<FileModel> = Vec::new();
     let res = service_search::search_disk(base_dir);
     if res.is_err() {
         let msg = &res.err().unwrap().to_string();
         println!("refresh_disk error:{}", &msg);
-        return serde_json::to_string(msg).unwrap();
+        return ResultParam::error(msg);
     } else {
         let count = res.ok().unwrap();
-        return serde_json::to_string(&count).unwrap();
+        println!("refresh_disk ok:{}", &count);
+        return ResultParam::ok();
     }
 }
 #[tauri::command]
@@ -115,7 +105,8 @@ fn actress_map(params: &str) -> RequestActressParam {
         end = request.TotalCnt as usize;
     }
     // println!("actress_map {:?}-{:?}", start, end);
-    request.Data = actress_lib[start..end].to_vec();
+    let page_data = actress_lib[start..end].to_vec();
+    request.Data = page_data.clone();
     // println!("actress_map {:?}", request);
     return request;
 }
@@ -170,8 +161,15 @@ fn files_by_dir(path: &str) -> Vec<FileModel> {
         Ok(val) => val,
         Err(_) => Vec::new(),
     };
-    let image =vec![String::from("jpg"),String::from("png"),String::from("gif")];
-    files =files.into_iter().filter(|e|image.contains(&&e.FileType)).collect::<Vec<FileModel>>();
+    let image = vec![
+        String::from("jpg"),
+        String::from("png"),
+        String::from("gif"),
+    ];
+    files = files
+        .into_iter()
+        .filter(|e| image.contains(&&e.FileType))
+        .collect::<Vec<FileModel>>();
     return files;
 }
 #[tauri::command]
@@ -180,13 +178,26 @@ fn delete_dir(path: &str) {
 }
 
 #[tauri::command]
-fn delete_model(path: &str) {
-    service_disk::delete_dir(path);
+fn delete_model(path: &str) -> ResultParam {
+    return service_disk::delete_file_model(path);
 }
 
 #[tauri::command]
-fn rename_model(path: &str) {
-    service_disk::delete_dir(path);
+fn delete_file(path: &str) -> ResultParam {
+    return service_disk::delete_file_model(path);
+}
+
+#[tauri::command]
+fn rename_model(params: &str, is_move: bool) -> ResultParam {
+    // println!("rename_model:{:?}", params);
+    let file: FileModel = match serde_json::from_str(params) {
+        Ok(v) => v,
+        Err(err) => {
+            println!("serde_json::from_str {:?}", err);
+            FileModel::new()
+        }
+    };
+    return service_disk::rename_file_model(&file, &is_move);
 }
 
 fn main() {
@@ -194,6 +205,10 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
+            delete_file,
+            delete_dir,
+            delete_model,
+            rename_model,
             files_by_dir,
             actress_map,
             type_size_map,

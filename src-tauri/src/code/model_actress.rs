@@ -1,3 +1,5 @@
+use std::fs;
+
 use crate::code::utils_do_file_name::int_to_size_str;
 use serde::{Deserialize, Serialize};
 
@@ -15,6 +17,8 @@ pub struct ActressModel {
     pub Images: Vec<String>,
     #[serde(default)]
     pub Videos: Vec<String>,
+    #[serde(default)]
+    pub Url: String,
 }
 
 impl ActressModel {
@@ -24,17 +28,25 @@ impl ActressModel {
             Size: 0,
             Cnt: 0,
             SizeStr: "".to_string(),
+            Url: "".to_string(),
             Images: Vec::new(),
             Videos: Vec::new(),
         }
     }
     pub fn add_video(&mut self, size: i64, video: String, image: String) {
+        if self.Url.len() == 0 && exists_file(&image) {
+            self.Url = image.clone();
+        }
         self.Cnt += 1;
         self.Size += size;
         self.SizeStr = int_to_size_str(self.Size);
         self.Videos.push(video);
         self.Images.push(image);
     }
+}
+
+fn exists_file(path: &str) -> bool {
+    return std::path::Path::new(path).exists();
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

@@ -1,25 +1,58 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="q-dialog-plugin q-pa-md" :style="{
-      width: '600px',
-      backgroundImage: `linear-gradient(to left, rgba(255,255,255,0.1), rgba(255,255,255,0.1))`,
-    }">
+    <q-card
+      class="q-dialog-plugin q-pa-md"
+      :style="{
+        width: '600px',
+        backgroundImage: `linear-gradient(to left, rgba(255,255,255,0.1), rgba(255,255,255,0.1))`,
+      }"
+    >
       <q-form class="q-gutter-md">
-        <q-option-group v-model="view.item.MovieType" :options="MovieTypeOptions" color="primary" inline />
-        <q-input label="编码" autogrow v-model="view.item.Code" :dense="false" />
-        <q-input label="图鉴" autogrow v-model="view.item.Actress" :dense="false" />
-        <q-input label="名称" autogrow v-model="view.item.Title" :dense="false" />
-        <q-input label="图片地址" autogrow v-model="view.item.Jpg" :dense="false" />
+        <q-option-group
+          v-model="view.item.MovieType"
+          :options="MovieTypeOptions"
+          color="primary"
+          inline
+        />
+        <q-input
+          label="编码"
+          autogrow
+          v-model="view.item.Code"
+          :dense="false"
+        />
+        <q-input
+          label="图鉴"
+          autogrow
+          v-model="view.item.Actress"
+          :dense="false"
+        />
+        <q-input
+          label="名称"
+          autogrow
+          v-model="view.item.Title"
+          :dense="false"
+        />
+        <q-input
+          label="图片地址"
+          autogrow
+          v-model="view.item.Jpg"
+          :dense="false"
+        />
       </q-form>
 
       <!-- <q-input label="名称"  standout v-model="view.item.Name" :dense="true" /> -->
       <!-- 按钮示例 -->
       <q-card-actions align="right">
         <q-btn color="primary" label="移动" @click="editMoveout" />
-        <q-btn color="primary" label="命名" @click="() => {
-          editItemSubmit(false);
-        }
-          " />
+        <q-btn
+          color="primary"
+          label="命名"
+          @click="
+            () => {
+              editItemSubmit(false);
+            }
+          "
+        />
         <q-btn color="primary" label="关闭" @click="onDialogCancel" />
       </q-card-actions>
     </q-card>
@@ -27,17 +60,13 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar';
-import { useDialogPluginComponent } from 'quasar';
-import { reactive } from 'vue';
+import { useQuasar } from "quasar";
+import { useDialogPluginComponent } from "quasar";
+import { reactive } from "vue";
 
-import {
-  formatTitle,
-  formatCode,
-  MovieTypeOptions,
-} from '@/components/utils';
-import { FileRename } from '@/components/api/searchAPI';
-import { FileModel } from '@/components/model/FileModel';
+import { formatTitle, formatCode, MovieTypeOptions } from "@/components/utils";
+import { FileRename } from "@/components/api/searchAPI";
+import { FileModel } from "@/components/model/FileModel";
 
 // const props = defineProps({
 //     // ...自定义 props
@@ -70,25 +99,34 @@ const editMoveout = async () => {
 };
 
 const editItemSubmit = async (MoveOut) => {
-  const { Id, Title, Code, Actress, FileType, MovieType, Path, DirPath, Jpg, Png, Gif } = view.item;
+  const {
+    Id = "",
+    Title = "",
+    Code = "",
+    Actress = "",
+    FileType = "",
+    MovieType = "",
+    Path = "",
+    DirPath = "",
+  } = view.item;
   let code = Code.trim();
-  if (code && code.indexOf('-') < 0) {
-    code = '-' + code;
+  if (code && code.indexOf("-") < 0) {
+    code = "-" + code;
   }
-  let name = '';
+  let name = "";
   if (Actress.length != 0) {
-    name += '[' + Actress.trim() + ']';
+    name += "[" + Actress.trim() + "]";
   }
   if (code.length != 0) {
-    name += ' [' + code.trim() + ']';
+    name += " [" + code.trim() + "]";
   }
-  if (MovieType && MovieType != '无') {
-    if (name.indexOf('{{') < 0) {
+  if (MovieType && MovieType != "无") {
+    if (name.indexOf("{{") < 0) {
       name += `{{${MovieType}}}`;
     } else {
     }
   }
-  const arr = Title.trim().split('.');
+  const arr = Title.trim().split(".");
   const arrLength = arr.length;
   for (let idx = 0; idx < arrLength; idx++) {
     const str = arr[idx];
@@ -96,8 +134,8 @@ const editItemSubmit = async (MoveOut) => {
     name += strNew;
   }
 
-  if (name.indexOf('.' + FileType) < 0) {
-    name += '.' + FileType;
+  if (name.indexOf("." + FileType) < 0) {
+    name += "." + FileType;
   }
   const param = {
     Id,
@@ -106,9 +144,10 @@ const editItemSubmit = async (MoveOut) => {
     Title,
     Actress,
     MoveOut,
-    Jpg,
     NoRefresh: true,
-    Path, DirPath, Jpg, Png, Gif
+    Path,
+    DirPath,
+    MovieType,
   };
   const res = await FileRename(param);
   if (res.Code == 200) {
@@ -117,7 +156,12 @@ const editItemSubmit = async (MoveOut) => {
       view.callback();
     }
   } else {
-    $q.notify({ type: 'negative', message: res.Message, multiLine: true, position: 'bottom-right' });
+    $q.notify({
+      type: "negative",
+      message: res.Message,
+      multiLine: true,
+      position: "bottom-right",
+    });
   }
 };
 

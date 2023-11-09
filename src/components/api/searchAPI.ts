@@ -37,28 +37,27 @@ export const QueryDirImageBase64 = async (data: string) => {
 };
 
 export const DeleteFolerByPath = async (data: string) => {
-  // sys.DeleteDir({ Path: data });
-  // return { code: 200 };
+  const res = await invoke("delete_dir", {
+    path: data,
+  });
+  return res;
 };
 
 export const DeleteFile = async (data: FileModel) => {
-  // const { Path, Jpg, Png, Gif } = data;
-  // sys.DeleteFile({ Path: Path });
-  // sys.DeleteFile({ Path: Jpg });
-  // sys.DeleteFile({ Path: Png });
-  // sys.DeleteFile({ Path: Gif });
-  return { code: 200 };
+  const res = await invoke("delete_model", {
+    path: data,
+  });
+  return res;
 };
 
-export const FileRename = async (data: FileModel) => {
+export const FileRename = async (data: any) => {
   console.log("FileRename1", data);
-  // const e1 = await sys.ExistsFile(data.Path)
-  // console.log('e1',e1)
-  // console.log("ExistsFile(data.Path)",e1 );
-  // const e2 = await sys.ExistsFile(data.Jpg)
-  // console.log("ExistsFile(data.Jpg)", e2);
-  // console.log("ExistsFile(data.Png)", await sys.ExistsFile(data.Png));
-  // console.log("ExistsFile(data.Gif)", await sys.ExistsFile(data.Gif));
+  const res = await invoke("rename_model", {
+    isMove: data.MoveOut,
+    params: JSON.stringify(data),
+  });
+  console.log("FileRename res", res);
+  return res;
 };
 
 export const AddTag = async (clickId: string, title: string) => {
