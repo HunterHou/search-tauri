@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Setting {
     #[serde(default)]

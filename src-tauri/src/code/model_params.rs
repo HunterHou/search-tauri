@@ -3,6 +3,7 @@ use serde::{ Deserialize, Serialize };
 use super::{ model_file::FileModel, model_actress::ActressModel };
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[allow(non_snake_case)]
 pub struct ResultParam {
     pub Success: bool,
     // 结果码，表示请求执行的结果状态
@@ -24,7 +25,7 @@ impl ResultParam {
             Data: ResultData::new(),
         }
     }
-    #[warn(dead_code)]
+    #[allow(dead_code)]
     pub fn is_ok(&self) -> bool {
         self.Success
     }
@@ -40,6 +41,7 @@ impl ResultParam {
     }
 }
 
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ResultData {
     // 数据字段，保存文件模型的集合
@@ -64,6 +66,7 @@ impl ResultData {
     }
 }
 
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RequestFileParam {
     #[serde(default)]
@@ -159,6 +162,7 @@ impl Default for RequestFileParam {
     }
 }
 
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RequestActressParam {
     // 页码

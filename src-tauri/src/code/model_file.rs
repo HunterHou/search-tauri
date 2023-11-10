@@ -9,6 +9,7 @@ use utils_do_file_name::{
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
 
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct FileModel {
     #[serde(default)]

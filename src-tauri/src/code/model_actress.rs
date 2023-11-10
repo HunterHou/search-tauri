@@ -2,6 +2,7 @@ use crate::code::utils_do_file_name::int_to_size_str;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
+#[allow(non_snake_case)]
 pub struct ActressModel {
     #[serde(default)]
     pub Name: String,
@@ -48,6 +49,7 @@ fn exists_file(path: &str) -> bool {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
+#[allow(non_snake_case)]
 pub struct TypeAnalyzer {
     pub Name: String,
     pub IsDir: bool,
