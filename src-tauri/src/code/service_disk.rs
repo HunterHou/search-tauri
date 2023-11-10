@@ -3,9 +3,7 @@ use std::fs;
 use std::io::Result;
 use std::path::Path;
 use std::path::MAIN_SEPARATOR_STR;
-use std::str::FromStr;
 
-use serde::de;
 use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;

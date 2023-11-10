@@ -24,7 +24,7 @@ impl ResultParam {
             Data: ResultData::new(),
         }
     }
-
+    #[warn(dead_code)]
     pub fn is_ok(&self) -> bool {
         self.Success
     }

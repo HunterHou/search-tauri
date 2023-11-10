@@ -46,7 +46,7 @@ pub fn search_disk(dir_paths: Vec<String>) -> Result<i32, Error> {
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
         let handle = thread::spawn(move || match visit_dirs(&dir) {
-            Ok(value) => {
+            Ok(_) => {
                 // thread::spawn(move || {
                 //     for ele in value {
                 //         cache_static_analyzer(&ele);
