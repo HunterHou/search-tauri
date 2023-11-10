@@ -182,8 +182,6 @@
               v-if="showButton('文件夹')" title="文件夹" />
             <q-btn round class="q-mr-sm" size="sm" color="brown-5" icon="ti-search" title="网搜"
               @click="searchCode(item)" />
-            <q-btn round class="q-mr-sm" size="sm" color="secondary" icon="ti-import"
-              @click="commonExec(DownImageList(item.Id))" v-if="showButton('刮图')" title="刮图" />
             <q-btn round class="q-mr-sm" size="sm" color="amber" glossy text-color="black" icon="ti-trash"
               @click="confirmDelete(item)" v-if="showButton('删除')" title="删除" />
             <q-btn round class="q-mr-sm" size="sm" color="black" @click="moveThis(item)" icon="ti-location-arrow"
@@ -217,7 +215,6 @@ import {
   AddTag,
   CloseTag,
   DeleteFile,
-  DownImageList,
   FileRename,
   RefreshAPI,
   ResetMovieType,

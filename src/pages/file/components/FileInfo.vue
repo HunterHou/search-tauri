@@ -28,8 +28,6 @@
             @click="explorerBySystem({ Path: view.item.Path })">播放</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="primary" icon="open_in_new"
             @click="explorerBySystem({ Path: view.item.DirPath })">文件夹</q-btn>
-          <q-btn class="q-mr-sm" size="sm" color="secondary" icon="ti-import"
-            @click="commonExec(DownImageList(view.item.Id))">挂图</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="amber" glossy text-color="black" icon="ti-trash"
             @click="confirmDelete(view.item)">删除</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="black" @click="moveThis(view.item)" icon="ti-control-shuffle">移动</q-btn>
@@ -104,7 +102,7 @@ import { formatTitle } from '@/components/utils';
 import { GetSettingInfo } from '@/components/api/settingAPI';
 import {
   QueryDirImageBase64,
-  DownImageList, FileRename, DeleteFile
+  FileRename, DeleteFile
 } from '@/components/api/searchAPI';
 import { useSystemProperty } from '@/stores/System';
 import Playing from '@/components/PlayingVideo.vue';

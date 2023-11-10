@@ -365,3 +365,24 @@ pub fn delete_file_model(file_id: &str) -> ResultParam {
     }
     return ResultParam::ok();
 }
+#[allow(dead_code)]
+pub fn add_tag(Id: &str,tag: &str)->ResultParam {
+    if tag.len() == 0 {
+        return ResultParam::error("tag为空");
+    }
+    return ResultParam::ok();
+}
+#[allow(dead_code)]
+pub fn remove_tag(Id: &str,tag: &str)->ResultParam {
+    if tag.len() == 0 {
+        return ResultParam::error("tag为空");
+    }
+    return ResultParam::ok();
+}
+#[allow(dead_code)]
+pub fn set_movie_type(Id: &str,tag: &str)->ResultParam {
+    if tag.len() == 0 {
+        return ResultParam::error("tag为空");
+    }
+    return ResultParam::ok();
+}

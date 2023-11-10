@@ -209,11 +209,28 @@ fn rename_model(params: &str, is_move: bool) -> ResultParam {
     return service_disk::rename_file_model(&file, &is_move);
 }
 
+#[tauri::command]
+fn add_tag(id: &str, tag: &str) -> ResultParam {
+    return service_disk::add_tag(id, tag);
+}
+#[tauri::command]
+fn remove_tag(id: &str, tag: &str) -> ResultParam {
+    return service_disk::remove_tag(id, tag);
+}
+
+#[tauri::command]
+fn set_movie_type(id: &str, tag: &str) -> ResultParam {
+    return service_disk::remove_tag(id, tag);
+}
+
 fn main() {
     init_service::init_sys();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
+            set_movie_type,
+            add_tag,
+            remove_tag,
             delete_file,
             delete_dir,
             delete_model,
