@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use std::fs;
-use std::fs::File;
 use std::io::Result;
 use std::path::Path;
 use std::path::MAIN_SEPARATOR_STR;
@@ -324,7 +323,7 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
             if original_file.Tags.len() > 0 {
                 let original_tags =
                     "《".to_string() + &original_file.Tags.iter().as_slice().join(",") + "》";
-                original_name.replace(&original_tags, &new_tags);
+                let _ = original_name.replace(&original_tags, &new_tags);
             } else {
                 original_name.push_str(&new_tags);
             }
@@ -334,7 +333,7 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
             original_name.push_str(&new_type);
         } else {
             let original_type = "{{".to_string() + &file.MovieType + "}}";
-            original_name.replace(&original_type, &new_type);
+            let _ = original_name.replace(&original_type, &new_type);
         }
         let mut dest_name = String::from(&original_name);
         let mut dest_jpg = String::from(&original_name);
@@ -345,10 +344,6 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         dest_jpg.push_str(".jpg");
         dest_png.push_str(".png");
         dest_gif.push_str(".gif");
-        // println!("dest_name:{}", dest_name);
-        // println!("dest_jpg:{}", dest_jpg);
-        // println!("dest_png:{}", dest_png);
-        // println!("dest_gif:{}", dest_gif);
         if rename_file(original_file.Path.as_str(), &dest_name) {
             rename_file(original_file.Png.as_str(), &dest_png);
             rename_file(original_file.Jpg.as_str(), &dest_jpg);
