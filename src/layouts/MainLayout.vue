@@ -179,7 +179,7 @@ const essentialLinks = [
 </script>
 <style>
 .bg-black {
-  height: 2.5rem;
+  height: 3rem;
   padding: 0px;
   margin: 0px;
 }

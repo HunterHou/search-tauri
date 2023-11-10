@@ -171,20 +171,20 @@
         </q-img>
         <div class="text-subtitles">
           <div style="display: flex; flex-direction: row">
-            <q-btn round class="q-mr-sm" size="sm" color="primary" icon="ti-control-eject" @click="playBySystem(item)"
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-control-eject" @click="playBySystem(item)"
               title="播放" v-if="showButton('播放')" />
-            <q-btn round class="q-mr-sm" size="sm" color="primary" icon="ti-slice" @click="() => {
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-slice" @click="() => {
               fileEditRef.open(item, refreshIndex);
             }
               " v-if="showButton('编辑')" title="编辑" />
 
-            <q-btn round class="q-mr-sm" size="sm" color="primary" icon="open_in_new" @click="openFolder(item)"
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="open_in_new" @click="openFolder(item)"
               v-if="showButton('文件夹')" title="文件夹" />
-            <q-btn round class="q-mr-sm" size="sm" color="brown-5" icon="ti-search" title="网搜"
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="brown-5" icon="ti-search" title="网搜"
               @click="searchCode(item)" />
-            <q-btn round class="q-mr-sm" size="sm" color="amber" glossy text-color="black" icon="ti-trash"
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="amber" glossy text-color="black" icon="ti-trash"
               @click="confirmDelete(item)" v-if="showButton('删除')" title="删除" />
-            <q-btn round class="q-mr-sm" size="sm" color="black" @click="moveThis(item)" icon="ti-location-arrow"
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="black" @click="moveThis(item)" icon="ti-location-arrow"
               v-if="showButton('移动')" title="移动" />
           </div>
           <a style="color: #9e089e;background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer" @click="
@@ -544,7 +544,6 @@ onMounted(async () => {
 
 .text-subtitles {
   height: 6rem;
-  padding: 4px;
 }
 
 .q-card__section--vert {
@@ -565,6 +564,14 @@ onMounted(async () => {
   border-radius: 8px;
 }
 
+.btn-item {
+  margin: 2px 2px;
+  height: 1rem;
+  padding: 1px 2px;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+}
 
 .page-sticky {
   width: 4rem;
