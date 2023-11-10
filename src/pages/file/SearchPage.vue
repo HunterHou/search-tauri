@@ -83,8 +83,8 @@
       </div>
     </q-page-sticky>
 
-    <div class="row justify-center q-gutter-sm q-mr-sm q-mt-sm mainlist">
-      <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
+    <div class="row justify-center q-gutter-sm q-mt-sm">
+      <q-card class="example-item" v-for="item in view.resultData.Data" :key="item.Id">
         <q-img fit="fit" loading="lazy" draggable
           :src="convertFileSrc(item.Png || item.Jpg || item.Gif || 'public/icon.png')" class="item-img" @click="() => {
             fileInfoRef.open({ item, cb: refreshIndex });

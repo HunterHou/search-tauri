@@ -96,7 +96,7 @@ watch(playing, (v) => {
   if (v && v.Id) {
     vue3VideoPlayRef.value && vue3VideoPlayRef.value.open(v);
   } else {
-    vue3VideoPlayRef.value &&  vue3VideoPlayRef.value.stop();
+    vue3VideoPlayRef.value && vue3VideoPlayRef.value.stop();
   }
 });
 
@@ -177,3 +177,10 @@ const essentialLinks = [
   },
 ];
 </script>
+<style>
+.bg-black {
+  height: 2.5rem;
+  padding: 0px;
+  margin: 0px;
+}
+</style>
