@@ -2,10 +2,10 @@
 name = "tauri-app"
 version = "0.0.1"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["hunter"]
 license = ""
-repository = ""
-edition = "2021"
+repository = "git@gitee.com:houhunter/tauri-app.git"
+edition = "2023"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
