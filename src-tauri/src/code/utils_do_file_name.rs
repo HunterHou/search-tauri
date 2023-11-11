@@ -113,10 +113,10 @@ pub fn vm_jpg_from_name(name: &str) -> String {
     return res;
 }
 
-pub fn tags_from_name(name: &str) -> Vec<String> {
+pub fn tagstr_from_name(name: &str) -> String {
     let v1 = name.find("《");
     if v1.is_none() {
-        return Vec::new();
+        return String::new();
     }
     let start = v1.unwrap() + "《".len();
     let end = match name.find("》") {
@@ -124,10 +124,14 @@ pub fn tags_from_name(name: &str) -> Vec<String> {
         None => name.len(),
     };
     if start > end {
-        return Vec::new();
+        return String::new();
     }
     let tag_str = String::from(&name[start..end]);
+    return tag_str;
+}
 
+pub fn tags_from_name(name: &str) -> Vec<String> {
+    let tag_str = tagstr_from_name(name);
     let mut tags = Vec::new();
     let location: Vec<&str> = tag_str.split(",").collect();
     for str in location {

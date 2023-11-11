@@ -124,7 +124,7 @@
                     </div>
                     <div>
                       <q-btn size="sm" icon='ti-plus' square text-color="white" color="red" class="tag-item"
-                        v-for="tag in  view.settingInfo.Tags" :key="tag" :label="tag"
+                        v-for="tag in  view.settingInfo.Tags" :key="tag" :label="tag" v-if="IndexOfItem(tag, item.Tags)"
                         @click="commonExec(AddTag(item.Id, tag), true)" />
                     </div>
                   </div>
@@ -171,8 +171,8 @@
         </q-img>
         <div class="text-subtitles">
           <div style="display: flex; flex-direction: row">
-            <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-control-eject" @click="playBySystem(item)"
-              title="播放" v-if="showButton('播放')" />
+            <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-control-eject"
+              @click="playBySystem(item)" title="播放" v-if="showButton('播放')" />
             <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-slice" @click="() => {
               fileEditRef.open(item, refreshIndex);
             }
@@ -395,6 +395,10 @@ const nextPage = (n) => {
 }
 
 import { appWindow } from '@tauri-apps/api/window';
+
+const IndexOfItem = (item, list) => {
+  return list.findIndex(i => i == item) < 0
+};
 
 const fetchSearch = async () => {
   saveParam()

@@ -8,6 +8,8 @@ use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
 
+use crate::code::utils_do_file_name::tagstr_from_name;
+
 use super::const_param::STATIC_ACTRESS;
 use super::const_param::STATIC_ACTRESS_LIST;
 use super::const_param::STATIC_DATA;
@@ -296,7 +298,8 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         let metadata = Path::new(file.Name.as_str());
         let new_name = metadata.file_stem().unwrap().to_str().unwrap();
         let mut original_name = original_file.DirPath.clone();
-
+        let original_tags = "《".to_string() + &tagstr_from_name(&original_file.Name) + "》";
+        let original_type = "{{".to_string() + &original_file.MovieType + "}}";
         if *is_move {
             if &file.Actress.len() > &0 {
                 original_name.push_str(MAIN_SEPARATOR_STR);
@@ -307,10 +310,21 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
             }
             if &file.Title.len() > &0 {
                 original_name.push_str(MAIN_SEPARATOR_STR);
-                if &file.Code.len() > &0 {
-                    original_name.push_str(&file.Code);
+                let mut dir_name = String::new();
+                if &file.Actress.len() > &0 {
+                    dir_name.push_str(&file.Actress);
                 }
-                original_name.push_str(&file.Title);
+                if &file.Code.len() > &0 {
+                    dir_name.push_str(&file.Code);
+                }
+                dir_name.push_str(&file.Title);
+                if dir_name.contains(&original_tags) {
+                    dir_name = dir_name.replace(&original_tags, "");
+                }
+                if dir_name.contains(&original_type) {
+                    dir_name = dir_name.replace(&original_type, "");
+                }
+                original_name.push_str(&dir_name);
                 if !file_exists(&original_name) {
                     let _ = fs::create_dir_all(&original_name);
                 }
@@ -320,21 +334,25 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         original_name.push_str(new_name);
         if file.Tags.len() > 0 {
             let new_tags = "《".to_string() + &file.Tags.iter().as_slice().join(",") + "》";
+            println!("new_tags:{}", &new_tags);
             if original_file.Tags.len() > 0 {
-                let original_tags =
-                    "《".to_string() + &original_file.Tags.iter().as_slice().join(",") + "》";
-                let _ = original_name.replace(&original_tags, &new_tags);
+               
+                println!("original_tags:{}", &original_tags);
+                original_name = original_name.replace(&original_tags, &new_tags);
             } else {
                 original_name.push_str(&new_tags);
             }
         }
+        println!("original_name:{}", &original_name);
         let new_type = "{{".to_string() + &file.MovieType + "}}";
-        if !original_name.contains(&file.MovieType) {
+        
+
+        if !original_name.contains(&original_type) {
             original_name.push_str(&new_type);
         } else {
-            let original_type = "{{".to_string() + &file.MovieType + "}}";
-            let _ = original_name.replace(&original_type, &new_type);
+            original_name = original_name.replace(&original_type, &new_type);
         }
+        original_name = original_name.trim().to_string();
         let mut dest_name = String::from(&original_name);
         let mut dest_jpg = String::from(&original_name);
         let mut dest_png = String::from(&original_name);
@@ -344,6 +362,7 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         dest_jpg.push_str(".jpg");
         dest_png.push_str(".png");
         dest_gif.push_str(".gif");
+        // println!("dest_name:{}", dest_name);
         if rename_file(original_file.Path.as_str(), &dest_name) {
             rename_file(original_file.Png.as_str(), &dest_png);
             rename_file(original_file.Jpg.as_str(), &dest_jpg);
@@ -401,7 +420,10 @@ pub fn add_tag(id: &str, tag: &str) -> ResultParam {
     if !tags.contains(&new_tag) {
         tags.insert(0, new_tag);
     }
+    println!("add_tag-new_tags:{:?}", &tags);
     original_file.Tags = tags;
+
+    rename_file_model(&original_file, &false);
     return ResultParam::ok();
 }
 #[allow(dead_code)]
@@ -416,13 +438,16 @@ pub fn remove_tag(id: &str, tag: &str) -> ResultParam {
     }
     let mut tags = original_file.Tags.clone();
     if tags.contains(&new_tag) {
-        tags.retain(|e| e!= &new_tag)
+        tags.retain(|e| e != &new_tag)
     }
+    println!("remove_tag-new_tags:{:?}", &tags);
     original_file.Tags = tags;
+    rename_file_model(&original_file, &false);
     return ResultParam::ok();
 }
 #[allow(dead_code)]
 pub fn set_movie_type(id: &str, move_type: &str) -> ResultParam {
+    println!("set_movie_type:{}", move_type);
     let mut original_file = find_file_by_id(id);
     if original_file.is_empty() {
         return ResultParam::error("找不到源文件");
@@ -431,5 +456,6 @@ pub fn set_movie_type(id: &str, move_type: &str) -> ResultParam {
         return ResultParam::error("请选择类型");
     }
     original_file.MovieType = String::from(move_type);
+    rename_file_model(&original_file, &false);
     return ResultParam::ok();
 }

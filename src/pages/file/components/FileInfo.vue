@@ -20,17 +20,19 @@
           <q-btn class="q-mr-sm" size="sm" v-if="showDetail != 'web'" color="deep-orange" @click="showDetail = 'web'"
             icon="ti-world">JavBus</q-btn>
         </div>
-        <div><q-btn class="q-mr-sm" size="sm" ripple color="green" icon="ti-fullscreen"
+        <div>
+          <q-btn class="q-mr-sm" size="sm" ripple color="green" icon="ti-fullscreen"
             @click="openPlay(view.item)">大屏</q-btn>
-          <q-btn class="q-mr-sm" size="sm" ripple color="green-7" icon="ti-blackboard"
-            @click="openDialog(view.item)">侧屏</q-btn>
+          <!-- <q-btn class="q-mr-sm" size="sm" ripple color="green-7" icon="ti-blackboard"
+            @click="openDialog(view.item)">侧屏</q-btn> -->
+          <q-btn class="q-mr-sm" size="sm" ripple color="amber" text-color="black" icon="ti-location-arrow"
+            @click="moveThis(view.item)">移动</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="primary" icon="ti-control-eject"
             @click="explorerBySystem({ Path: view.item.Path })">播放</q-btn>
           <q-btn class="q-mr-sm" size="sm" color="primary" icon="open_in_new"
             @click="explorerBySystem({ Path: view.item.DirPath })">文件夹</q-btn>
-          <q-btn class="q-mr-sm" size="sm" color="amber" glossy text-color="black" icon="ti-trash"
+          <q-btn class="q-mr-sm" size="sm" color="amber" text-color="black" icon="ti-trash"
             @click="confirmDelete(view.item)">删除</q-btn>
-          <q-btn class="q-mr-sm" size="sm" color="black" @click="moveThis(view.item)" icon="ti-control-shuffle">移动</q-btn>
           <q-btn class="q-mr-sm" size="sm" ripple color="red" icon="ti-close" @click="onDialogClose">关闭</q-btn>
         </div>
       </div>

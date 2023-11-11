@@ -77,7 +77,7 @@ export const CloseTag = async (clickId: string, tag: string) => {
 export const ResetMovieType = async (clickId: string, movieType: string) => {
   const res = await invoke("set_movie_type", {
     id: clickId,
-    tag: movieType,
+    movieType,
   });
   return res;
 };

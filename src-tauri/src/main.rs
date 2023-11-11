@@ -134,6 +134,9 @@ fn tag_size_map() -> Vec<TypeAnalyzer> {
     let map = STATIC_TAG_SIZE.try_lock().unwrap().clone();
     let mut res = map.into_values().collect::<Vec<TypeAnalyzer>>();
     res.sort_by(|v1, v2| v2.Cnt.cmp(&v1.Cnt));
+    if res.len() > 60 {
+        res = res[0..60].to_vec();
+    }
     return res;
 }
 
@@ -219,8 +222,8 @@ fn remove_tag(id: &str, tag: &str) -> ResultParam {
 }
 
 #[tauri::command]
-fn set_movie_type(id: &str, tag: &str) -> ResultParam {
-    return service_disk::remove_tag(id, tag);
+fn set_movie_type(id: &str, movie_type: &str) -> ResultParam {
+    return service_disk::set_movie_type(id, movie_type);
 }
 
 fn main() {

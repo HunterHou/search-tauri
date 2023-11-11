@@ -10,7 +10,7 @@
     </div>
     <q-img fit="cover" v-if="isImage() && view.playing?.Id" draggable :src="convertFileSrc(view.playing?.Id)"></q-img>
     <vue3VideoPlay v-if="isVideo()" v-show="view.playing?.Id" ref="vue3VideoPlayRef" id="vue3VideoPlayRef"
-      style="object-fit: contain;width: 100%;height:auto;max-height: 99vh;" v-bind="optionsPC" @ended="playNext(1)" />
+      style="object-fit: contain;width: 100%;height:100%;" v-bind="optionsPC" @ended="playNext(1)" />
     <q-card-actions align="left">
 
       <q-btn flat style="color: #59d89d" :label="view.playing.Actress?.substring(0, 8)" @click="
