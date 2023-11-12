@@ -114,7 +114,10 @@ fn actress_map(params: &str) -> RequestActressParam {
         end = request.TotalCnt as usize;
     }
     // println!("actress_map {:?}-{:?}", start, end);
-    let page_data = actress_lib[start..end].to_vec();
+    let mut page_data = actress_lib[start..end].to_vec();
+    for e in &mut page_data {
+        e.Images.retain(|e|service_disk::file_exists(e));
+    }
     request.Data = page_data.clone();
     // println!("actress_map {:?}", request);
     return request;

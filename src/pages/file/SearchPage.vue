@@ -85,6 +85,53 @@
 
     <div class="row justify-center q-gutter-sm q-mt-sm">
       <q-card class="example-item" v-for="item in view.resultData.Data" :key="item.Id">
+        <div class="absolute-top example-top">
+          <div @click.stop="() => { }" class="example-top-left">
+            <q-chip square text-color="white" style="
+                  margin-left: 0px;
+                  padding: 0 4px;
+                  background-color: rgba(236, 15, 15, 0.872);
+                ">
+              <q-popup-proxy context-menu>
+                <div class="tag-popup">
+                  <div>
+                    <q-btn size="sm" icon='ti-minus' square text-color="white" color="green" class="tag-item"
+                      v-for="tag in item.Tags" :key="tag" :label="tag"
+                      @click="commonExec(CloseTag(item.Id, tag), true)" />
+                  </div>
+                  <div>
+                    <q-btn size="sm" icon='ti-plus' square text-color="white" color="red" class="tag-item"
+                      v-for="tag in  view.settingInfo.Tags" :key="tag" :label="tag" v-if="IndexOfItem(tag, item.Tags)"
+                      @click="commonExec(AddTag(item.Id, tag), true)" />
+                  </div>
+                </div>
+              </q-popup-proxy>
+              <span>种草</span>
+            </q-chip>
+            <q-chip square text-color="white" v-for="tag in item.Tags" :key="tag" style="
+                  margin-left: 0px;
+                  padding: 0 4px;
+                  background-color: rgba(188, 24, 24, 0.6);
+                ">
+              <span @click="
+                view.queryParam.Keyword = tag;
+              fetchSearch();
+              ">{{ tag?.substring(0, 4) }}</span>
+            </q-chip>
+          </div>
+          <div style="float: right;">
+            <q-btn-dropdown class="movie-type-select" :label="item.MovieType" @click.stop="() => { }">
+              <q-list style="background-color: rgba(0, 0, 0, 0.7)">
+                <q-item v-for="mt in MovieTypeOptions" :key="mt.value" v-close-popup class="movieTypeSelectItem">
+                  <q-item-section>
+                    <q-item-label @click="setMovieType(item.Id, mt.value)">{{ mt.label }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </div>
+        </div>
         <q-img fit="fit" loading="lazy" draggable
           :src="convertFileSrc(item.Png || item.Jpg || item.Gif || 'public/icon.png')" class="item-img" @click="() => {
             fileInfoRef.open({ item, cb: refreshIndex });
@@ -94,90 +141,25 @@
               Loading...
             </div>
           </template>
-          <div style="
-              padding: 0;
-              margin: 0;
-              background-color: rgba(0, 0, 0, 0);
-              display: flex;
-              height: 2rem;
-              flex-direction: row;
-              justify-content: space-between;
-              width: 100%;
-            ">
-            <div @click.stop="() => { }" style="
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                width: fit-content;
-              ">
-              <q-chip square text-color="white" style="
-                  margin-left: 0px;
-                  padding: 0 4px;
-                  background-color: rgba(236, 15, 15, 0.872);
-                ">
-                <q-popup-proxy context-menu>
-                  <div class="tag-popup">
-                    <div>
-                      <q-btn size="sm" icon='ti-minus' square text-color="white" color="green" class="tag-item"
-                        v-for="tag in item.Tags" :key="tag" :label="tag"
-                        @click="commonExec(CloseTag(item.Id, tag), true)" />
-                    </div>
-                    <div>
-                      <q-btn size="sm" icon='ti-plus' square text-color="white" color="red" class="tag-item"
-                        v-for="tag in  view.settingInfo.Tags" :key="tag" :label="tag" v-if="IndexOfItem(tag, item.Tags)"
-                        @click="commonExec(AddTag(item.Id, tag), true)" />
-                    </div>
-                  </div>
-                </q-popup-proxy>
-                <span>种草</span>
-              </q-chip>
-              <q-chip square text-color="white" v-for="tag in item.Tags" :key="tag" style="
-                  margin-left: 0px;
-                  padding: 0 4px;
-                  background-color: rgba(188, 24, 24, 0.6);
-                ">
-                <span @click="
-                  view.queryParam.Keyword = tag;
-                fetchSearch();
-                ">{{ tag?.substring(0, 4) }}</span>
-              </q-chip>
-            </div>
-            <div style="float: right;">
-              <q-btn-dropdown style="background-color: rgba(0, 0, 0, 0.8);width: 85px;" :label="item.MovieType"
-                @click.stop="() => { }">
-                <q-list style="background-color: rgba(0, 0, 0, 0.7)">
-                  <q-item v-for="mt in MovieTypeOptions" :key="mt.value" v-close-popup class="movieTypeSelectItem">
-                    <q-item-section>
-                      <q-item-label @click="setMovieType(item.Id, mt.value)">{{ mt.label }}
-                      </q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-btn-dropdown>
-            </div>
-          </div>
 
-          <div class="absolute-bottom" style="padding: 6px" @click.stop="() => { }">
-            <div class="text-body1" @click.stop="() => { }">
-              <q-btn round class="q-mr-sm" size="md" ripple color="red" icon="ti-fullscreen" title="单页播放"
-                @click="openPlay(item)" />
-              <q-btn round class="q-mr-sm" size="md" ripple color="orange" icon="ti-arrow-right"
-                @click="openRightDrawer(item)" title="小播放" />
-              <q-btn round class="q-mr-sm" size="md" ripple color="orange" icon="ti-blackboard" @click="() => {
-                fileInfoRef.open({ item, playing: true });
-              }" title="小播放" />
-            </div>
-          </div>
         </q-img>
-        <div class="text-subtitles">
-          <div style="display: flex; flex-direction: row">
-            <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-control-eject"
+        <div class="absolute-bottom tools">
+          <div class="tools-first">
+            <q-btn round class="q-mr-sm" size="md" ripple color="red" icon="ti-fullscreen" title="单页播放"
+              @click="openPlay(item)" />
+            <q-btn round class="q-mr-sm" size="md" ripple color="orange" icon="ti-arrow-right"
+              @click="openRightDrawer(item)" title="小播放" />
+            <q-btn round class="q-mr-sm" size="md" ripple color="orange" icon="ti-blackboard" @click="() => {
+              fileInfoRef.open({ item, playing: true });
+            }" title="小播放" />
+            <q-btn round class="q-mr-sm" size="md" color="primary" icon="ti-control-eject"
               @click="playBySystem(item)" title="播放" v-if="showButton('播放')" />
+          </div>
+          <div class="tools-second">
             <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="ti-slice" @click="() => {
               fileEditRef.open(item, refreshIndex);
             }
               " v-if="showButton('编辑')" title="编辑" />
-
             <q-btn round class="q-mr-sm btn-item" size="sm" color="primary" icon="open_in_new" @click="openFolder(item)"
               v-if="showButton('文件夹')" title="文件夹" />
             <q-btn round class="q-mr-sm btn-item" size="sm" color="brown-5" icon="ti-search" title="网搜"
@@ -187,15 +169,17 @@
             <q-btn round class="q-mr-sm btn-item" size="sm" color="black" @click="moveThis(item)" icon="ti-location-arrow"
               v-if="showButton('移动')" title="移动" />
           </div>
-          <a style="color: #9e089e;background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer" @click="
-            view.queryParam.Keyword = item.Actress;
-          fetchSearch();
-          ">{{ item.Actress?.substring(0, 6) }}</a>
-          <a style="color: rgb(239, 30, 30);background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer"
-            @click="copyText(item.Code)">{{ formatCode(item.Code) }}</a>
-          <a style="color: rgb(22, 26, 227);background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer"
-            @click="copyText(item.Title)">{{ item.SizeStr }}</a>
-          <span>{{ formatTitle(item.Title) }}</span>
+          <div class="tools-third">
+            <a style="color: #9e089e;background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer" @click="
+              view.queryParam.Keyword = item.Actress;
+            fetchSearch();
+            ">{{ item.Actress?.substring(0, 6) }}</a>
+            <a style="color: rgb(239, 30, 30);background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer"
+              @click="copyText(item.Code)">{{ formatCode(item.Code) }}</a>
+            <a style="color: rgb(22, 26, 227);background-color: rgba(0, 0, 0, 0.1);" class="mr10 cursor-pointer"
+              @click="copyText(item.Title)">{{ item.SizeStr }}</a>
+            <span>{{ formatTitle(item.Title) }}</span>
+          </div>
         </div>
       </q-card>
     </div>
@@ -519,8 +503,27 @@ onMounted(async () => {
 .example-item {
   padding: 2px;
   width: 220px;
-  height: auto;
+  height: 360px;
   overflow: hidden;
+}
+
+.example-top {
+  padding: 0;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  height: 2rem;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 999;
+}
+
+.example-top-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: fit-content;
 }
 
 .item-img {
@@ -532,6 +535,12 @@ onMounted(async () => {
 
 .mr10 {
   margin-right: 4px;
+}
+
+.movie-type-select {
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 85px;
+  color: #e80ee8;
 }
 
 .movieTypeSelectItem {
@@ -575,6 +584,16 @@ onMounted(async () => {
   border-radius: 8px;
   background-color: #007bff;
   color: white;
+}
+
+.tools {
+  background-color: rgba(250, 250, 250, 0.2);
+  display: flex;
+  flex-direction: column;
+
+  .tools-third{
+    height: 44px;
+  }
 }
 
 .page-sticky {

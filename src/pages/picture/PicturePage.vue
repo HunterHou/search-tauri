@@ -24,9 +24,8 @@
         :ellipses="false" :max="view.resultData.TotalPage || 0" :max-pages="6" boundary-numbers />
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-      <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id" >
-        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Url)" class="item-img"
-          @click="searchFiles(item.Name)">
+      <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
+        <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Url)" class="item-img" @click="viewImages(item)">
         </q-img>
         <div style="
               padding: 0;
@@ -47,7 +46,7 @@
               <span>{{ item.SizeStr }}</span>
             </q-chip>
           </div>
-          <q-btn color="orange" v-if="item.Name" :label="item.Name?.substring(0, 10)" @click="viewImages(item)" />
+          <q-btn color="orange" v-if="item.Name" :label="item.Name?.substring(0, 10)" @click="searchFiles(item.Name)" />
           <q-chip @click.stop="() => { }" square color="green" text-color="white"
             style="width: fit-content; margin-right: 0px; padding: 0 6px">
             <span> {{ item.Cnt }}</span>
