@@ -83,7 +83,7 @@
       </div>
     </q-page-sticky>
 
-    <div class="row justify-center q-gutter-sm q-mt-sm">
+    <div class="row justify-center q-gutter-sm example">
       <q-card class="example-item" v-for="item in view.resultData.Data" :key="item.Id">
         <div class="absolute-top example-top">
           <div @click.stop="() => { }" class="example-top-left">
@@ -500,6 +500,12 @@ onMounted(async () => {
 });
 </script>
 <style lang="scss" scoped>
+
+.example{
+  margin-top: 0px;
+}
+
+
 .example-item {
   padding: 2px;
   width: 220px;
@@ -509,8 +515,8 @@ onMounted(async () => {
 
 .example-top {
   padding: 0;
-  margin: 0;
-  background-color: rgba(0, 0, 0, 0);
+  margin: 2px;
+  background-color: rgba(0, 0, 0, 0.0);
   display: flex;
   height: 2rem;
   flex-direction: row;

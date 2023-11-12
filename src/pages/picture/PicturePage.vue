@@ -24,31 +24,17 @@
         :ellipses="false" :max="view.resultData.TotalPage || 0" :max-pages="6" boundary-numbers />
     </div>
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-      <q-card class="q-ma-sm example-item" v-for="item in view.resultData.Data" :key="item.Id">
+      <q-card class="q-ma-sm" v-for="item in view.resultData.Data" :key="item.Id">
         <q-img fit="fill" loading="lazy" :src="convertFileSrc(item.Url)" class="item-img" @click="viewImages(item)">
         </q-img>
-        <div style="
-              padding: 0;
-              margin-bottom: -30px,
-              background-color: rgba(0, 0, 0, 0);
-              display: flex;
-              flex-direction: row;
-              justify-content: space-between;
-              width: 100%;
-            ">
-          <div @click.stop="() => { }" style="
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                width: fit-content;
-              ">
-            <q-chip square color="red" text-color="white" style="margin-left: 0px; padding: 0 4px">
-              <span>{{ item.SizeStr }}</span>
-            </q-chip>
-          </div>
-          <q-btn color="orange" v-if="item.Name" :label="item.Name?.substring(0, 10)" @click="searchFiles(item.Name)" />
-          <q-chip @click.stop="() => { }" square color="green" text-color="white"
-            style="width: fit-content; margin-right: 0px; padding: 0 6px">
+        <div class="example-tools absolute-bottom">
+          <q-chip square color="red" text-color="white" size="md">
+            <span>{{ item.SizeStr }}</span>
+          </q-chip>
+          <q-chip square color="orange" size="md" text-color="white" v-if="item.Name" @click="searchFiles(item.Name)">
+            <span> {{ item.Name?.substring(0, 10) }}</span>
+          </q-chip>
+          <q-chip square color="green" size="md" text-color="white">
             <span> {{ item.Cnt }}</span>
           </q-chip>
         </div>
@@ -118,9 +104,12 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
-.example-item {
-  width: fit-content;
-  height: fit-content;
+.example-tools {
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .item-img {

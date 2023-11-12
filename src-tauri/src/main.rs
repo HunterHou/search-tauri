@@ -137,8 +137,8 @@ fn tag_size_map() -> Vec<TypeAnalyzer> {
     let map = STATIC_TAG_SIZE.try_lock().unwrap().clone();
     let mut res = map.into_values().collect::<Vec<TypeAnalyzer>>();
     res.sort_by(|v1, v2| v2.Cnt.cmp(&v1.Cnt));
-    if res.len() > 60 {
-        res = res[0..60].to_vec();
+    if res.len() > 70 {
+        res = res[0..70].to_vec();
     }
     return res;
 }

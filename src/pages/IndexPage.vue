@@ -1,13 +1,13 @@
 <template>
+  <q-banner inline-actions rounded class="bg-blue text-white q-mt-sd" style="position: relative;height: 4rem;">
+    <div class="text-h5 q-pa-md">文件扫描分析</div>
+    <template v-slot:action>
+      <q-btn style="background: #ff0080; color: white" label="扫描" icon="search" :loading="indexLoading" size="small"
+        @click="refreshIndex()" />
+      <q-btn color="green" class="q-ml-md" label="刷新" icon="refresh" @click="f5" />
+    </template>
+  </q-banner>
   <div>
-    <q-banner inline-actions rounded class="bg-blue text-white q-mt-sd" style="position: relative">
-      <div class="text-h5 q-pa-md">文件扫描分析</div>
-      <template v-slot:action>
-        <q-btn style="background: #ff0080; color: white" label="扫描" icon="search" :loading="indexLoading" size="small"
-          @click="refreshIndex()" />
-        <q-btn color="green" class="q-ml-md" label="刷新" icon="refresh" @click="f5" />
-      </template>
-    </q-banner>
     <div v-if="tableData.length == 0 && tagData.length == 0 && scanTime.length == 0">
       <h3>数据分析中ing</h3>
     </div>
@@ -16,12 +16,7 @@
         <template v-slot:before>
           <div class="q-pa-md">
             <div class="text-h5 q-mb-md">标签分布</div>
-            <div class="q-gutter-sm" style="
-              display: flex;
-              flex-direction: row;
-              flex-wrap: wrap;
-              justify-content: flex-start;
-            ">
+            <div class="q-gutter-sm tags-map">
               <div v-for="tag in tagData" :key="tag" style="width: auto">
                 <q-btn color="secondary" class="btn-fixed-width" v-if="tag.Cnt > 1" @click="folderGotoMenu(tag.Name)">
                   {{ `${tag.Name} (${tag.Cnt})` }}
@@ -204,3 +199,12 @@ const f5 = () => {
   // window.location.reload();
 };
 </script>
+
+<style lang="scss" scoped>
+.tags-map {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+</style>
