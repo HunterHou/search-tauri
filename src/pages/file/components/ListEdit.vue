@@ -1,5 +1,5 @@
 <template>
-  <q-dialog ref="dialogRef" class="card-q" @hide="dialogHide" @before-show="beforeShow">
+  <q-dialog ref="dialogRef" @hide="dialogHide" @before-show="beforeShow">
     <q-card class="card-q">
       <q-tabs v-model="tab" class="bg-purple text-white" style="" align="justify" narrow-indicator>
         <q-tab name="filelist" label="批量操作" />
@@ -43,18 +43,16 @@
             <q-btn class="q-mr-sm" size="sm" color="secondary" icon="delete" @click="deleteBySelector">删除</q-btn>
           </div>
           <div class="q-gutter-sm q-mt-sm">
-            <div v-ripple v-for="item in view.resultData.Data" :key="item.Id" style="
-                border: 1px dotted purple;
-                padding: 2px;
-                border-radius: 10px;
-                background-color: burlywood;
-              ">
+            <div v-ripple v-for="item in view.resultData.Data" :key="item.Id" class="list-item">
               <div style="display: flex; flex-direction: column">
-                <q-item-label>
-                  <span v-if="view.cutListIds.indexOf(item.Id) >= 0" style="color: red">剪切中：：</span>{{ item.Title }}【{{
-                    item.SizeStr }}】
-                </q-item-label>
-                <div style="display: flex; flex-direction: row">
+                <div>
+                  <span>【{{ item.SizeStr }}】</span>
+                  <span>【{{ item.Actress }}】</span>
+                  <span>【{{ item.Code }}】</span>
+                  <span>{{ item.Title }}</span>
+                  <span v-if="view.cutListIds.indexOf(item.Id) >= 0" style="color: red">剪切中：：</span>
+                </div>
+                <div class="list-item-tools">
                   <q-checkbox size="sm" v-model="view.selector" :val="item.Id" color="red" />
                   <q-btn-dropdown class="q-mr-sm" size="sm" :label="item.MovieType" type="primary" color="teal">
                     <q-list>
@@ -74,11 +72,11 @@
                   <q-btn size="sm" class="q-mr-sm" color="black-1" @click="moveThis(item)" icon="near_me" />
                   <q-btn class="q-mr-sm" size="sm" color="secondary" icon="open_in_new"
                     @click="explorerBySystem({ Path: item.DirPath })" />
-                  <q-btn size="sm" class="q-mr-sm" color="black" icon="ti-pencil-alt2"
-                    @click="item.showCut = true"></q-btn>
+                  <q-btn size="sm" class="q-mr-sm" icon="ti-pencil-alt2" @click="item.showCut = true"></q-btn>
                   <q-btn size="sm" class="q-mr-sm" color="green" @click="toMp4(item)">toMp4</q-btn>
-                  <q-btn color="red" v-for="ta in item.Tags" :key="ta" @click="commonExec(CloseTag(item.Id, ta), true)">{{
-                    `- ${ta}` }}</q-btn>
+                  <q-btn color="red" v-for="ta in item.Tags" :key="ta" v-if="ta"
+                    @click="commonExec(CloseTag(item.Id, ta), true)">{{
+                      `- ${ta}` }}</q-btn>
                 </div>
                 <div v-if="item.showCut" style="
                     display: flex;
@@ -406,9 +404,22 @@ defineExpose({
 .card-q {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 86vh;
   width: 70vw !important;
   max-width: 70vw !important;
+}
+
+.list-item {
+  border: 2px dotted purple;
+  padding: 1px;
+  border-radius: 6px;
+  background-color: rgb(247, 232, 213);
+}
+
+.list-item-tools {
+  display: flex;
+  flex-direction: row;
+  height: 2rem;
 }
 
 .tag-item {

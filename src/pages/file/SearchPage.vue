@@ -561,10 +561,6 @@ onMounted(async () => {
 
 }
 
-.text-subtitles {
-  height: 6rem;
-}
-
 .q-card__section--vert {
   padding: 2px;
 }
@@ -598,12 +594,13 @@ onMounted(async () => {
   flex-direction: column;
 
   .tools-third{
-    height: 44px;
+    height: 46px;
+    padding: 0px 2px;
   }
 }
 
 .page-sticky {
   width: 4rem;
-  height: 3rem;
+  height: 4rem;
 }
 </style>

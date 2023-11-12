@@ -66,8 +66,6 @@ fn search_index(params: &str) -> RequestFileParam {
     if res.DocsTypes.len() > 0 {
         request.FileType.extend(res.DocsTypes.clone());
     }
-    println!("search_index request{:?}", res.ImageTypes);
-    println!("search_index request{:?}", res.DocsTypes);
     if *QUERY_DB {
         return request;
     } else {
