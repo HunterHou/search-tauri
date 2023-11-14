@@ -295,12 +295,14 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         if original_file.is_empty() {
             return ResultParam::error("原始文件为空");
         }
+       
         if file.Jpg.len() > 0 && file.Jpg.starts_with("http") {
-            service_http::download(
+            println!("fileJpg:{:?}", file.Jpg);
+            let _ = service_http::download(
                 &file.Jpg,
                 &original_file.DirPath,
                 &original_file.Name,
-                "jpg",
+                "jpg",true,
             );
         }
 

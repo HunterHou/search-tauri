@@ -107,6 +107,7 @@ const editItemSubmit = async (MoveOut) => {
     FileType = "",
     MovieType = "",
     Path = "",
+    Jpg = "",
     DirPath = "",
   } = view.item;
   let code = Code.trim();
@@ -142,6 +143,7 @@ const editItemSubmit = async (MoveOut) => {
     Name: name,
     Code: code,
     Title,
+    Jpg,
     Actress,
     MoveOut,
     NoRefresh: true,

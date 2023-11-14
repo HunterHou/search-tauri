@@ -114,7 +114,7 @@ fn actress_map(params: &str) -> RequestActressParam {
     // println!("actress_map {:?}-{:?}", start, end);
     let mut page_data = actress_lib[start..end].to_vec();
     for e in &mut page_data {
-        e.Images.retain(|e|service_disk::file_exists(e));
+        e.Images.retain(|e| service_disk::file_exists(e));
     }
     request.Data = page_data.clone();
     // println!("actress_map {:?}", request);
@@ -210,7 +210,8 @@ fn rename_model(params: &str, is_move: bool) -> ResultParam {
             FileModel::new()
         }
     };
-    return service_disk::rename_file_model(&file, &is_move);
+    let res = service_disk::rename_file_model(&file, &is_move);
+    return res;
 }
 
 #[tauri::command]
