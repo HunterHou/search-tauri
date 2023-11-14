@@ -9,7 +9,7 @@ use walkdir::DirEntry;
 use walkdir::WalkDir;
 
 use crate::code::utils_do_file_name::tagstr_from_name;
-
+use super::service_http;
 use super::const_param::STATIC_ACTRESS;
 use super::const_param::STATIC_ACTRESS_LIST;
 use super::const_param::STATIC_DATA;
@@ -294,6 +294,8 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         };
         if original_file.is_empty() {
             return ResultParam::error("原始文件为空");
+        }
+        if file.Jpg.len() > 0 && file.Jpg.starts_with("http") {
         }
 
         let metadata = Path::new(file.Name.as_str());
