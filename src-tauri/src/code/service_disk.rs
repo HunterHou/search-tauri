@@ -8,8 +8,6 @@ use std::time::SystemTime;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
 
-use crate::code::utils_do_file_name::tagstr_from_name;
-use super::service_http;
 use super::const_param::STATIC_ACTRESS;
 use super::const_param::STATIC_ACTRESS_LIST;
 use super::const_param::STATIC_DATA;
@@ -22,6 +20,8 @@ use super::model_actress::ActressModel;
 use super::model_actress::TypeAnalyzer;
 use super::model_file::FileModel;
 use super::model_params::ResultParam;
+use super::service_http;
+use crate::code::utils_do_file_name::tagstr_from_name;
 /**
  * 这个函数用于遍历指定目录下的文件，并将文件信息封装成FileModel对象的集合返回。
  * 首先判断目录是否存在，若不存在则返回空的文件列表。
@@ -296,6 +296,12 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
             return ResultParam::error("原始文件为空");
         }
         if file.Jpg.len() > 0 && file.Jpg.starts_with("http") {
+            service_http::download(
+                &file.Jpg,
+                &original_file.DirPath,
+                &original_file.Name,
+                "jpg",
+            );
         }
 
         let metadata = Path::new(file.Name.as_str());
