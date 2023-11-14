@@ -250,6 +250,7 @@ pub fn delete_file(path: &str) -> bool {
         if res.is_err() {
             return false;
         }
+        println!("delete file:{}", path);
         return true;
     }
     return false;
@@ -336,7 +337,6 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
             let new_tags = "《".to_string() + &file.Tags.iter().as_slice().join(",") + "》";
             println!("new_tags:{}", &new_tags);
             if original_file.Tags.len() > 0 {
-               
                 println!("original_tags:{}", &original_tags);
                 original_name = original_name.replace(&original_tags, &new_tags);
             } else {
@@ -345,7 +345,6 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         }
         println!("original_name:{}", &original_name);
         let new_type = "{{".to_string() + &file.MovieType + "}}";
-        
 
         if !original_name.contains(&original_type) {
             original_name.push_str(&new_type);

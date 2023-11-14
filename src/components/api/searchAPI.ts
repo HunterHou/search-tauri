@@ -45,7 +45,7 @@ export const DeleteFolerByPath = async (data: string) => {
 
 export const DeleteFile = async (data: FileModel) => {
   const res = await invoke("delete_model", {
-    path: data,
+    path: data.Id,
   });
   return res;
 };
