@@ -7,7 +7,10 @@ use crate::code::{
 };
 
 use super::{
-    const_param::STATIC_DATA,
+    const_param::{
+        STATIC_ACTRESS, STATIC_ACTRESS_LIST, STATIC_DATA, STATIC_DIR_SIZE, STATIC_TAG_SIZE,
+        STATIC_TYPE_SIZE,
+    },
     model_file::FileModel,
     model_params::{RequestFileParam, ResultData},
     utils_do_file_name::int_to_size_str,
@@ -41,7 +44,12 @@ pub fn wrapper_request(req: &RequestFileParam, res: &ResultData) -> RequestFileP
 pub fn search_disk(dir_paths: Vec<String>) -> Result<i32, Error> {
     let start = SystemTime::now();
     STATIC_LIST.lock().unwrap().clear();
+    STATIC_ACTRESS.lock().unwrap().clear();
+    STATIC_TYPE_SIZE.lock().unwrap().clear();
+    STATIC_TAG_SIZE.lock().unwrap().clear();
+    STATIC_DIR_SIZE.lock().unwrap().clear();
     STATIC_DATA.lock().unwrap().clear();
+    STATIC_ACTRESS_LIST.lock().unwrap().clear();
     let mut handles = vec![];
     for dir_path in dir_paths {
         let dir = String::from(dir_path);
@@ -61,9 +69,7 @@ pub fn search_disk(dir_paths: Vec<String>) -> Result<i32, Error> {
     for handle in handles {
         handle.join().unwrap();
     }
-    thread::spawn(move || {
-        cache_analyzer()
-    });
+    thread::spawn(move || cache_analyzer());
     // cache_analyzer();
     println!("search_disk over:{:?}", end.ok());
     Ok(0)
