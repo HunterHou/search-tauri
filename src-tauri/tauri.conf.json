@@ -93,8 +93,7 @@
         "resizable": true,
         "title": "search-app",
         "width": 1280,
-        "height": 900,
-        "transparent": true
+        "height": 900
       }
     ]
   }
