@@ -206,7 +206,7 @@ onMounted(() => {
     if (tableData.value.length == 0) {
       loadTypeSize();
     }
-  }, 10000);
+  }, 5000);
 });
 
 const openThis = async (data) => {
