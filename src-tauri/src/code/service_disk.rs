@@ -21,7 +21,7 @@ use super::model_actress::TypeAnalyzer;
 use super::model_file::FileModel;
 use super::model_params::ResultParam;
 use super::service_http;
-use crate::code::utils_do_file_name::tagstr_from_name;
+use crate::code::utils_do_file_name::{tags_from_name, tagstr_from_name};
 /**
  * 这个函数用于遍历指定目录下的文件，并将文件信息封装成FileModel对象的集合返回。
  * 首先判断目录是否存在，若不存在则返回空的文件列表。
@@ -295,20 +295,22 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         if original_file.is_empty() {
             return ResultParam::error("原始文件为空");
         }
-       
+
         if file.Jpg.len() > 0 && file.Jpg.starts_with("http") {
             println!("fileJpg:{:?}", file.Jpg);
             let _ = service_http::download(
                 &file.Jpg,
                 &original_file.DirPath,
                 &original_file.Name,
-                "jpg",true,
+                "jpg",
+                true,
             );
         }
 
         let metadata = Path::new(file.Name.as_str());
         let new_name = metadata.file_stem().unwrap().to_str().unwrap();
         let mut original_name = original_file.DirPath.clone();
+        let original_tag_arr = tags_from_name(&original_file.Name);
         let original_tags = "《".to_string() + &tagstr_from_name(&original_file.Name) + "》";
         let original_type = "{{".to_string() + &original_file.MovieType + "}}";
         if *is_move {
@@ -346,7 +348,8 @@ pub fn rename_file_model(file: &FileModel, is_move: &bool) -> ResultParam {
         if file.Tags.len() > 0 {
             let new_tags = "《".to_string() + &file.Tags.iter().as_slice().join(",") + "》";
             println!("new_tags:{}", &new_tags);
-            if original_file.Tags.len() > 0 {
+            println!("original_file.Tags:{:?}", &original_file.Tags);
+            if original_tag_arr.len() > 0 {
                 println!("original_tags:{}", &original_tags);
                 original_name = original_name.replace(&original_tags, &new_tags);
             } else {
@@ -429,9 +432,9 @@ pub fn add_tag(id: &str, tag: &str) -> ResultParam {
     if !tags.contains(&new_tag) {
         tags.insert(0, new_tag);
     }
-    println!("add_tag-new_tags:{:?}", &tags);
+    tags.retain(|e| e.len() > 0);
     original_file.Tags = tags;
-
+    println!("add_tag-new_tags:{:?}", &original_file.Tags);
     rename_file_model(&original_file, &false);
     return ResultParam::ok();
 }

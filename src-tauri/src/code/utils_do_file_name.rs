@@ -134,8 +134,10 @@ pub fn tags_from_name(name: &str) -> Vec<String> {
     let tag_str = tagstr_from_name(name);
     let mut tags = Vec::new();
     let location: Vec<&str> = tag_str.split(",").collect();
+
     for str in location {
         tags.push(String::from(str))
     }
+    tags.retain(|e| e.len() > 0);
     return tags;
 }
